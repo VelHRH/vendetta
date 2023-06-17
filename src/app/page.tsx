@@ -6,6 +6,21 @@ export default async function Home() {
  return (
   <>
    <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
+   <p className="text-red-500 dark:text-green-500">Hi stranger</p>
   </>
  );
 }

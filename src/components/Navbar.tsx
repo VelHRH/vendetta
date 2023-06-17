@@ -16,7 +16,7 @@ const Navbar = async () => {
   .eq("id", user?.id)
   .single();
  return (
-  <div className="fixed h-[80px] bg-slate-200 dark:bg-slate-950 shadow-lg flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-10 w-full">
+  <div className="fixed h-[80px] bg-slate-100/90 dark:bg-slate-900/90 shadow-xl shadow-slate-100/90 dark:shadow-slate-900/90 backdrop-blur-sm flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-10 w-full">
    <Link href="/" className="flex gap-2">
     <p>Logo</p>
     <p>Vendetta</p>
