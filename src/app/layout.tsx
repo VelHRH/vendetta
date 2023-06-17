@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import createClient from "../lib/supabase-server";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { Providers } from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,8 +28,10 @@ export default async function RootLayout({
   <html lang="en">
    <body className={inter.className}>
     <AuthProvider accessToken={accessToken}>
-     <Navbar />
-     {children}
+     <Providers>
+      <Navbar />
+      {children}
+     </Providers>
     </AuthProvider>
    </body>
   </html>
