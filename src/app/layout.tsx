@@ -29,7 +29,6 @@ export default async function RootLayout({
    <body className={inter.className}>
     <AuthProvider accessToken={accessToken}>
      <Providers>
-      {/* @ts-expect-error Server Component */}
       <Navbar />
       {children}
      </Providers>
