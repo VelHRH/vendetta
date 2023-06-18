@@ -16,7 +16,11 @@ const Auth = ({ initialView }: { initialView: string }) => {
   case VIEWS.SIGN_UP:
    return <SignUp />;
   default:
-   return <SignIn />;
+   return (
+    <div className="w-2/5 container mx-auto ">
+     <SignIn />
+    </div>
+   );
  }
 };
 

@@ -17,7 +17,7 @@ const SwitchTheme: FC = () => {
  return (
   <button
    onClick={themeChanger}
-   className="duration-300 p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800"
+   className="duration-200 p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800"
   >
    {theme === "dark" ? <MoonStar /> : <SunIcon />}
   </button>

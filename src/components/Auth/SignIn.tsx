@@ -3,6 +3,8 @@
 import supabase from "@/lib/supabase-browser";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Icons } from "../Icons";
+import Input from "../ui/Input";
 
 const SingIn = () => {
  const [email, setEmail] = useState<string>("");
@@ -31,37 +33,28 @@ const SingIn = () => {
  }
 
  return (
-  <>
+  <div className="flex flex-col gap-7 items-center w-full bg-slate-100 dark:bg-slate-900 p-10 rounded-md">
+   <p className="text-4xl font-semibold">Welcome back</p>
    <form
     onSubmit={(e) => handleSubmit(e)}
-    className="w-1/3 container mx-auto flex flex-col fotn-semibold gap-4 bg-pink-300 p-5 rounded-lg"
+    className="flex flex-col gap-4 w-full"
    >
-    <p className="text-3xl">Sing In</p>
-    <input
-     value={email}
-     placeholder="Email"
-     onChange={(e) => setEmail(e.target.value)}
-     className={`p-2 w-full text-xl rounded-md`}
-    />
-    <input
-     value={password}
-     placeholder="Password"
-     type="password"
-     onChange={(e) => setPassword(e.target.value)}
-     className={`p-2 w-full text-xl rounded-md`}
-    />
+    <Input value={email} setValue={setEmail} placeholder="Email" />
+    <Input value={password} setValue={setPassword} placeholder="Password" />
 
-    <button className="w-full text-center py-1 rounded-full hover:bg-pink-600 bg-pink-500">
+    <button className="w-full text-center p-2 rounded-md mt-1 dark:hover:bg-slate-300 dark:bg-slate-100 hover:bg-slate-950 bg-slate-800 duration-200 font-semibold text-xl dark:text-black text-white">
      Sign In
     </button>
    </form>
+   <p className="text-2xl font-semibold">or</p>
    <button
     onClick={signInWithGoogle}
-    className="w-full text-center py-1 rounded-full hover:bg-pink-600 bg-pink-500"
+    className="w-full flex justify-center gap-3 items-center p-2 rounded-md dark:hover:bg-slate-300 dark:bg-slate-100 hover:bg-slate-950 bg-slate-800 duration-200 font-semibold text-xl dark:text-black text-white"
    >
-    GOOGLE
+    <Icons.google className="h-5 aspect-square" />
+    Sign In With Google
    </button>
-  </>
+  </div>
  );
 };
 
