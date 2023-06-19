@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/hooks/use-toast";
 import supabase from "@/lib/supabase-browser";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,6 +26,11 @@ const SingIn = () => {
    if (error) throw error;
    router.push("/");
   } catch (err) {
+   toast({
+    title: "Error while signing in",
+    description: "Wrong email or password",
+    variant: "destructive",
+   });
   } finally {
    setLoading(false);
   }
@@ -38,6 +44,11 @@ const SingIn = () => {
    });
    router.push("/");
   } catch {
+   toast({
+    title: "Error while signing in",
+    description: "There was an error while logging with Google",
+    variant: "destructive",
+   });
   } finally {
    setLoading(false);
   }

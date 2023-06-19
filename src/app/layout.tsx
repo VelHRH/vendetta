@@ -4,6 +4,7 @@ import createClient from "../lib/supabase-server";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Providers } from "@/components/Providers";
+import { Toaster } from "@/components/ui/Toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default async function RootLayout({
      <Providers>
       <Navbar />
       {children}
+      <Toaster />
      </Providers>
     </AuthProvider>
    </body>
