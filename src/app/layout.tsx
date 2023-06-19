@@ -14,10 +14,8 @@ export const metadata = {
 
 export default async function RootLayout({
  children,
- authModal,
 }: {
  children: React.ReactNode;
- authModal: React.ReactNode;
 }) {
  const supabase = createClient();
 
@@ -32,7 +30,6 @@ export default async function RootLayout({
     <AuthProvider accessToken={accessToken}>
      <Providers>
       <Navbar />
-      {authModal}
       {children}
      </Providers>
     </AuthProvider>

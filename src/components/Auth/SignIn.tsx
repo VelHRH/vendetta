@@ -1,34 +1,45 @@
 "use client";
 
 import supabase from "@/lib/supabase-browser";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icons } from "../Icons";
+import { Button, buttonVariants } from "../ui/Button";
 import Input from "../ui/Input";
 
 const SingIn = () => {
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
+ const [loading, setLoading] = useState<boolean>(false);
 
  const router = useRouter();
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  const { error } = await supabase.auth.signInWithPassword({
-   email,
-   password,
-  });
-
-  if (!error) {
+  setLoading(true);
+  try {
+   const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+   });
+   if (error) throw error;
    router.push("/");
+  } catch (err) {
+  } finally {
+   setLoading(false);
   }
  };
 
  async function signInWithGoogle() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-   provider: "google",
-  });
-  if (!error) {
+  setLoading(true);
+  try {
+   const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+   });
    router.push("/");
+  } catch {
+  } finally {
+   setLoading(false);
   }
  }
 
@@ -40,20 +51,36 @@ const SingIn = () => {
     className="flex flex-col gap-4 w-full"
    >
     <Input value={email} setValue={setEmail} placeholder="Email" />
-    <Input value={password} setValue={setPassword} placeholder="Password" />
+    <Input
+     value={password}
+     setValue={setPassword}
+     placeholder="Password"
+     type="password"
+    />
 
-    <button className="w-full text-center p-2 rounded-md mt-1 dark:hover:bg-slate-300 dark:bg-slate-100 hover:bg-slate-950 bg-slate-800 duration-200 font-semibold text-xl dark:text-black text-white">
+    <Button className="w-full text-lg" size="lg" isLoading={loading}>
      Sign In
-    </button>
+    </Button>
    </form>
    <p className="text-2xl font-semibold">or</p>
-   <button
+   <Button
     onClick={signInWithGoogle}
-    className="w-full flex justify-center gap-3 items-center p-2 rounded-md dark:hover:bg-slate-300 dark:bg-slate-100 hover:bg-slate-950 bg-slate-800 duration-200 font-semibold text-xl dark:text-black text-white"
+    className="w-full text-lg"
+    size="lg"
+    isLoading={loading}
+    icon={<Icons.google className="aspect-square h-5" />}
    >
-    <Icons.google className="h-5 aspect-square" />
     Sign In With Google
-   </button>
+   </Button>
+   <p>
+    Have no account yet?
+    <Link
+     href="/sign-up"
+     className="hover:underline ml-2 font-semibold underline-offset-4"
+    >
+     Sign Up
+    </Link>
+   </p>
   </div>
  );
 };

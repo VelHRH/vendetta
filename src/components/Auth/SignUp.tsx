@@ -1,51 +1,91 @@
 "use client";
 
 import supabase from "@/lib/supabase-browser";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Icons } from "../Icons";
+import { Button, buttonVariants } from "../ui/Button";
+import Input from "../ui/Input";
 
 const SingUp = () => {
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
- const [errorMsg, setErrorMsg] = useState<string>("");
- const [successMsg, setSuccessMsg] = useState<string>("");
+ const [fullname, setFullname] = useState<string>("");
+ const [loading, setLoading] = useState<boolean>(false);
+ const router = useRouter();
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  const { error } = await supabase.auth.signUp({
-   email,
-   password,
-  });
-
-  if (error) {
-   setErrorMsg(error.message);
-  } else {
-   setSuccessMsg("Go confirm your password");
+  setLoading(true);
+  try {
+   const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+     data: {
+      full_name: fullname,
+     },
+    },
+   });
+   if (error) throw error;
+  } catch (err) {
+  } finally {
+   setLoading(false);
   }
  };
+
+ async function signInWithGoogle() {
+  setLoading(true);
+  try {
+   const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+   });
+   router.push("/");
+  } catch {
+  } finally {
+   setLoading(false);
+  }
+ }
  return (
-  <form
-   onSubmit={(e) => handleSubmit(e)}
-   className="w-1/3 container mx-auto flex flex-col fotn-semibold gap-4 bg-pink-300 p-5 rounded-lg"
-  >
-   <p className="text-3xl">SingUp</p>
-   <input
-    value={email}
-    placeholder="Email"
-    onChange={(e) => setEmail(e.target.value)}
-    className={`p-2 w-full text-xl rounded-md`}
-   />
-   <input
-    value={password}
-    placeholder="Password"
-    type="password"
-    onChange={(e) => setPassword(e.target.value)}
-    className={`p-2 w-full text-xl rounded-md`}
-   />
-   <button className="w-full text-center py-1 rounded-full hover:bg-pink-600 bg-pink-500">
-    Sign Up
-   </button>
-   {errorMsg !== "" && <p className="text-red-500">{errorMsg}</p>}
-   {successMsg !== "" && <p className="text-green-500">{successMsg}</p>}
-  </form>
+  <div className="flex flex-col gap-7 items-center w-full bg-slate-100 dark:bg-slate-900 p-10 rounded-md">
+   <p className="text-4xl font-semibold">Register in Vendetta</p>
+   <form
+    onSubmit={(e) => handleSubmit(e)}
+    className="flex flex-col gap-4 w-full"
+   >
+    <Input value={email} setValue={setEmail} placeholder="Email" />
+    <Input
+     value={password}
+     setValue={setPassword}
+     placeholder="Password"
+     type="password"
+    />
+    <Input value={fullname} setValue={setFullname} placeholder="Full name" />
+
+    <Button className="w-full text-lg" size="lg" isLoading={loading}>
+     Sign Up
+    </Button>
+   </form>
+   <p className="text-2xl font-semibold">or</p>
+   <Button
+    onClick={signInWithGoogle}
+    className="w-full text-lg"
+    size="lg"
+    isLoading={loading}
+    icon={<Icons.google className="aspect-square h-5" />}
+   >
+    Sign Up With Google
+   </Button>
+   <p>
+    Already registered?
+    <Link
+     href="/sign-in"
+     className="hover:underline ml-2 font-semibold underline-offset-4"
+    >
+     Sign In
+    </Link>
+   </p>
+  </div>
  );
 };
 

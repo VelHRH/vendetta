@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, buttonVariants } from "../ui/Button";
 import { useAuth } from "./AuthProvider";
 
 export default function SignOut() {
@@ -13,9 +14,5 @@ export default function SignOut() {
   }
  }
 
- return (
-  <button className="w-full h-full" onClick={handleSignOut}>
-   Sign Out
-  </button>
- );
+ return <Button onClick={handleSignOut}>Sign Out</Button>;
 }

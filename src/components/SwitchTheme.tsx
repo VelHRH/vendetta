@@ -2,6 +2,8 @@
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { MoonStar, SunIcon } from "lucide-react";
+import { Button, buttonVariants } from "./ui/Button";
+import { cn } from "@/lib/utils";
 
 const SwitchTheme: FC = () => {
  const { systemTheme, theme, setTheme } = useTheme();
@@ -15,12 +17,12 @@ const SwitchTheme: FC = () => {
   setTheme(currentTheme === "light" ? "dark" : "light");
  };
  return (
-  <button
+  <Button
    onClick={themeChanger}
-   className="duration-200 p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800"
+   className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
   >
    {theme === "dark" ? <MoonStar /> : <SunIcon />}
-  </button>
+  </Button>
  );
 };
 

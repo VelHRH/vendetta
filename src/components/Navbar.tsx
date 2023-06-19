@@ -2,6 +2,7 @@ import Link from "next/link";
 import createClient from "../lib/supabase-server";
 import SignOut from "./Auth/SignOut";
 import SwitchTheme from "./SwitchTheme";
+import { buttonVariants } from "./ui/Button";
 
 const Navbar = async () => {
  const supabase = createClient();
@@ -39,9 +40,14 @@ const Navbar = async () => {
    </div>
    <div className="gap-2 flex">
     <SwitchTheme />
-    <div className="px-2 py-1 bg-black text-white rounded-md">
-     {user ? <SignOut /> : <Link href="/sign-in">Sign In</Link>}
-    </div>
+
+    {user ? (
+     <SignOut />
+    ) : (
+     <Link href="/sign-in" className={buttonVariants()}>
+      Sign In
+     </Link>
+    )}
    </div>
   </div>
  );
