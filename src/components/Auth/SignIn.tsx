@@ -13,11 +13,13 @@ const SingIn = () => {
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
  const [loading, setLoading] = useState<boolean>(false);
+ const [isError, setIsError] = useState<boolean>(false);
 
  const router = useRouter();
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
+  setIsError(true);
   try {
    const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -61,12 +63,18 @@ const SingIn = () => {
     onSubmit={(e) => handleSubmit(e)}
     className="flex flex-col gap-4 w-full"
    >
-    <Input value={email} setValue={setEmail} placeholder="Email" />
+    <Input
+     value={email}
+     setValue={setEmail}
+     placeholder="Email"
+     isError={isError && email.length === 0 ? true : false}
+    />
     <Input
      value={password}
      setValue={setPassword}
      placeholder="Password"
      type="password"
+     isError={isError && password.length === 0 ? true : false}
     />
 
     <Button className="w-full text-lg" size="lg" isLoading={loading}>

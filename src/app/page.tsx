@@ -27,7 +27,7 @@ export default async function Home() {
      <div className="bg-red-500 rounded-md aspect-video hover:bg-red-700 duration-200 cursor-pointer"></div>
      <div className="bg-red-500 rounded-md aspect-video hover:bg-red-700 duration-200 cursor-pointer"></div>
     </div>
-    <button className="text-lg self-center hover:underline duration-200 mt-3">
+    <button className="text-lg self-center hover:underline font-semibold underline-offset-4 mt-3">
      More
     </button>
    </div>

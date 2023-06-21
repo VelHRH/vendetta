@@ -5,12 +5,21 @@ interface InputProps {
  setValue: (value: string) => void;
  placeholder: string;
  type?: string;
+ isError?: boolean;
 }
 
-const Input: FC<InputProps> = ({ setValue, value, placeholder, type }) => {
+const Input: FC<InputProps> = ({
+ setValue,
+ value,
+ placeholder,
+ type,
+ isError,
+}) => {
  return (
   <fieldset
-   className={`relative border-[3px] p-3 w-full border-slate-500 duration-500 rounded-md`}
+   className={`relative border-[3px] p-3 w-full border-slate-500 duration-500 rounded-md ${
+    isError && "border-red-600"
+   }`}
   >
    <input
     placeholder={placeholder}
@@ -19,7 +28,11 @@ const Input: FC<InputProps> = ({ setValue, value, placeholder, type }) => {
     value={value}
     type={type || "text"}
    />
-   <legend className="px-2 font-semibold text-slate-500 hidden peer-focus:flex leading-[.16rem]">
+   <legend
+    className={`px-2 font-semibold text-slate-500 hidden peer-focus:flex leading-[.16rem] ${
+     isError && "text-red-600"
+    }`}
+   >
     {placeholder}
    </legend>
   </fieldset>

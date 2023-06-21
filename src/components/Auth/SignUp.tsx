@@ -15,10 +15,13 @@ const SingUp = () => {
  const [fullname, setFullname] = useState<string>("");
  const [username, setUsername] = useState<string>("");
  const [loading, setLoading] = useState<boolean>(false);
+ const [isError, setIsError] = useState<boolean>(false);
  const router = useRouter();
+
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
+  setIsError(true);
   try {
    const { error, data } = await supabase.auth.signUp({
     email,
@@ -49,9 +52,10 @@ const SingUp = () => {
  async function signInWithGoogle() {
   setLoading(true);
   try {
-   const { data, error } = await supabase.auth.signInWithOAuth({
+   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
    });
+   if (error) throw error.message;
    router.push("/");
   } catch {
    toast({
@@ -70,15 +74,31 @@ const SingUp = () => {
     onSubmit={(e) => handleSubmit(e)}
     className="flex flex-col gap-4 w-full"
    >
-    <Input value={email} setValue={setEmail} placeholder="Email" />
+    <Input
+     value={email}
+     setValue={setEmail}
+     placeholder="Email"
+     isError={isError && email.length === 0 ? true : false}
+    />
     <Input
      value={password}
      setValue={setPassword}
      placeholder="Password"
      type="password"
+     isError={isError && password.length === 0 ? true : false}
     />
-    <Input value={username} setValue={setUsername} placeholder="Username" />
-    <Input value={fullname} setValue={setFullname} placeholder="Full name" />
+    <Input
+     value={username}
+     setValue={setUsername}
+     placeholder="Username"
+     isError={isError && username.length === 0 ? true : false}
+    />
+    <Input
+     value={fullname}
+     setValue={setFullname}
+     placeholder="Full name"
+     isError={isError && fullname.length === 0 ? true : false}
+    />
 
     <Button className="w-full text-lg" size="lg" isLoading={loading}>
      Sign Up

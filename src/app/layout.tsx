@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Providers } from "@/components/Providers";
 import { Toaster } from "@/components/ui/Toaster";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +28,7 @@ export default async function RootLayout({
  const accessToken = session?.access_token || null;
  return (
   <html lang="en">
-   <body className={inter.className}>
+   <body className={cn(inter.className, "antialiased")}>
     <AuthProvider accessToken={accessToken}>
      <Providers>
       <Navbar />

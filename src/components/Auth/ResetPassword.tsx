@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import supabase from "@/lib/supabase-browser";
 import Link from "next/link";
 import { useState } from "react";
-import { Button, buttonVariants } from "../ui/Button";
+import { Button } from "../ui/Button";
 import Input from "../ui/Input";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -13,18 +13,22 @@ const ResetPassword = () => {
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
  const [loading, setLoading] = useState<boolean>(false);
+ const [isError, setIsError] = useState<boolean>(false);
  const searchParams = useSearchParams();
  const router = useRouter();
 
  const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
+  setIsError(true);
   try {
    const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_BASE_URL}/reset-password`,
    });
 
-   if (error) throw error.message;
+   if (error) {
+    throw error.message;
+   }
    toast({
     title: "Password reset link sent",
     description: "Check your email and follow instructions",
@@ -44,10 +48,13 @@ const ResetPassword = () => {
  const handleChange = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
+  setIsError(true);
   try {
    const { error } = await supabase.auth.updateUser({ password });
 
-   if (error) throw error.message;
+   if (error) {
+    throw error.message;
+   }
    toast({
     title: "Password updated",
     description: "You can sign in with it now",
@@ -78,6 +85,8 @@ const ResetPassword = () => {
        value={password}
        setValue={setPassword}
        placeholder="New password"
+       type="password"
+       isError={isError && password.length === 0 ? true : false}
       />
 
       <Button className="w-full text-lg" size="lg" isLoading={loading}>
@@ -101,7 +110,12 @@ const ResetPassword = () => {
       onSubmit={(e) => handleSend(e)}
       className="flex flex-col gap-4 w-full"
      >
-      <Input value={email} setValue={setEmail} placeholder="Email" />
+      <Input
+       value={email}
+       setValue={setEmail}
+       placeholder="Email"
+       isError={isError && email.length === 0 ? true : false}
+      />
 
       <Button className="w-full text-lg" size="lg" isLoading={loading}>
        Send me
