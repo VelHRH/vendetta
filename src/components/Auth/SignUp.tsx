@@ -13,22 +13,28 @@ const SingUp = () => {
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
  const [fullname, setFullname] = useState<string>("");
+ const [username, setUsername] = useState<string>("");
  const [loading, setLoading] = useState<boolean>(false);
  const router = useRouter();
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
   try {
-   const { error } = await supabase.auth.signUp({
+   const { error, data } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-     data: {
-      full_name: fullname,
-     },
-    },
    });
+
    if (error) throw error.message;
+   await supabase
+    .from("profiles")
+    .update({ username, full_name: fullname })
+    .eq("id", data.user!.id);
+   toast({
+    title: "Confirmation sent",
+    description: "Check your email and confirm adress",
+    variant: "default",
+   });
   } catch (err: string | any) {
    toast({
     title: "Error while signing up",
@@ -71,6 +77,7 @@ const SingUp = () => {
      placeholder="Password"
      type="password"
     />
+    <Input value={username} setValue={setUsername} placeholder="Username" />
     <Input value={fullname} setValue={setFullname} placeholder="Full name" />
 
     <Button className="w-full text-lg" size="lg" isLoading={loading}>

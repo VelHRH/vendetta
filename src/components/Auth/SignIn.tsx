@@ -92,6 +92,15 @@ const SingIn = () => {
      Sign Up
     </Link>
    </p>
+   <p>
+    Forgot password?
+    <Link
+     href="/reset-password"
+     className="hover:underline ml-2 font-semibold underline-offset-4"
+    >
+     Reset
+    </Link>
+   </p>
   </div>
  );
 };
