@@ -20,11 +20,13 @@ const Dropdown: FC<DropdownProps> = ({
  placeholder,
 }) => {
  return (
-  <div className={`w-full p-1`}>
+  <div className={`w-full text-lg relative`}>
    <button
     onClick={() => setIsSelect(!isSelect)}
-    className={`flex items-center justify-between font-semibold border-[3px] p-3 w-full border-slate-500 rounded-md ${
-     value === "" ? "text-slate-500" : "text-slate-900 dark:text-slate-50"
+    className={`flex items-center justify-between border-[3px] p-3 w-full border-slate-500 rounded-md ${
+     value === ""
+      ? "text-slate-400 font-medium"
+      : "text-slate-900 dark:text-slate-50 font-semibold"
     }`}
    >
     {value === "" ? placeholder || "Choose..." : value}
@@ -32,7 +34,7 @@ const Dropdown: FC<DropdownProps> = ({
    </button>
 
    {isSelect && (
-    <div className="bg-slate-200 dark:bg-slate-800 rounded-md mt-2 p-2">
+    <div className="bg-slate-200 dark:bg-slate-800 rounded-md mt-2 p-2 absolute w-full z-20">
      {array?.map((item, id) => (
       <button
        key={id}

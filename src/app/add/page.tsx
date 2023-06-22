@@ -3,6 +3,7 @@ import { ChevronsRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Label from "@/components/ui/Label";
 
 const Add: FC = () => {
  return (
@@ -11,40 +12,48 @@ const Add: FC = () => {
     href="/add/wrestler"
     className={cn(
      buttonVariants({ variant: "subtle" }),
-     "text-2xl font-bold flex gap-1 items-center justify-between p-10"
+     "flex gap-1 items-center justify-between p-10"
     )}
    >
-    <p>Add wrestler</p>
+    <Label size="medium" className="font-bold">
+     Add wrestler
+    </Label>
     <ChevronsRight size={30} />
    </Link>
    <Link
     href="/add/show"
     className={cn(
      buttonVariants({ variant: "subtle" }),
-     "text-2xl font-bold flex gap-1 items-center justify-between p-10"
+     "flex gap-1 items-center justify-between p-10"
     )}
    >
-    <p>Add show</p>
+    <Label size="medium" className="font-bold">
+     Add wrestler
+    </Label>
     <ChevronsRight size={30} />
    </Link>
    <Link
     href="/add/match"
     className={cn(
      buttonVariants({ variant: "subtle" }),
-     "text-2xl font-bold flex gap-1 items-center justify-between p-10"
+     "flex gap-1 items-center justify-between p-10"
     )}
    >
-    <p>Add match</p>
+    <Label size="medium" className="font-bold">
+     Add wrestler
+    </Label>
     <ChevronsRight size={30} />
    </Link>
    <Link
     href="/add/title"
     className={cn(
      buttonVariants({ variant: "subtle" }),
-     "text-2xl font-bold flex gap-1 items-center justify-between p-10"
+     "flex gap-1 items-center justify-between p-10"
     )}
    >
-    <p>Add title</p>
+    <Label size="medium" className="font-bold">
+     Add wrestler
+    </Label>
     <ChevronsRight size={30} />
    </Link>
   </div>

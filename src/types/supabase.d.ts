@@ -61,6 +61,7 @@ interface Database {
      created_at: string | null;
      height: number | null;
      id: number;
+     moves: string[] | null;
      name: string | null;
      real_name: string | null;
      sex: string | null;
@@ -76,6 +77,7 @@ interface Database {
      created_at?: string | null;
      height?: number | null;
      id?: number;
+     moves?: string[] | null;
      name?: string | null;
      real_name?: string | null;
      sex?: string | null;
@@ -91,6 +93,7 @@ interface Database {
      created_at?: string | null;
      height?: number | null;
      id?: number;
+     moves?: string[] | null;
      name?: string | null;
      real_name?: string | null;
      sex?: string | null;

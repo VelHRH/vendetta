@@ -12,7 +12,7 @@ const Label: FC<LabelProps> = ({ size, children, className, ...props }) => {
    className={cn(
     `${
      size === "small" ? "text-xl" : size === "medium" ? "text-2xl" : "text-4xl"
-    } self-center`,
+    } text-center`,
     className
    )}
    {...props}

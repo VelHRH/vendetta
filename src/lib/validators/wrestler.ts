@@ -1,0 +1,18 @@
+import { TypeOf, z } from "zod";
+
+export const WrestlerValidator = z.object({
+ name: z.string().min(1),
+ realname: z.string(),
+ sex: z.string(),
+ height: z.number(),
+ weight: z.number(),
+ birth: z.string(),
+ city: z.string(),
+ country: z.string(),
+ styles: z.array(z.string()),
+ trainers: z.array(z.string()),
+ careerstart: z.string(),
+ moves: z.array(z.string()),
+});
+
+export type CreateWrestlerPayload = z.infer<typeof WrestlerValidator>;
