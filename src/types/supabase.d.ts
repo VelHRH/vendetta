@@ -54,6 +54,7 @@ interface Database {
    };
    wrestlers: {
     Row: {
+     avgRating: number;
      born: string | null;
      career_start: string | null;
      city: string | null;
@@ -63,6 +64,7 @@ interface Database {
      id: number;
      moves: string[] | null;
      name: string | null;
+     ratings: Json[] | null;
      real_name: string | null;
      sex: string | null;
      style: string[] | null;
@@ -70,6 +72,7 @@ interface Database {
      weight: number | null;
     };
     Insert: {
+     avgRating?: number;
      born?: string | null;
      career_start?: string | null;
      city?: string | null;
@@ -79,6 +82,7 @@ interface Database {
      id?: number;
      moves?: string[] | null;
      name?: string | null;
+     ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;
      style?: string[] | null;
@@ -86,6 +90,7 @@ interface Database {
      weight?: number | null;
     };
     Update: {
+     avgRating?: number;
      born?: string | null;
      career_start?: string | null;
      city?: string | null;
@@ -95,6 +100,7 @@ interface Database {
      id?: number;
      moves?: string[] | null;
      name?: string | null;
+     ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;
      style?: string[] | null;

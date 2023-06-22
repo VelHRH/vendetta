@@ -17,8 +17,8 @@ const Input: FC<InputProps> = ({
 }) => {
  return (
   <fieldset
-   className={`relative border-[3px] p-3 w-full border-slate-500 duration-500 rounded-md ${
-    isError && "border-red-600"
+   className={`relative border-[3px] p-3 w-full duration-500 rounded-md ${
+    isError ? "border-red-600" : "border-slate-500"
    }`}
   >
    <input
@@ -29,8 +29,8 @@ const Input: FC<InputProps> = ({
     type={type || "text"}
    />
    <legend
-    className={`px-2 font-semibold text-slate-500 hidden peer-focus:flex leading-[.16rem] ${
-     isError && "text-red-600"
+    className={`px-2 font-semibold hidden peer-focus:flex leading-[.16rem] ${
+     isError ? "text-red-600" : "text-slate-500"
     }`}
    >
     {placeholder}

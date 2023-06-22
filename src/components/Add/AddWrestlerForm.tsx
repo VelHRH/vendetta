@@ -28,9 +28,10 @@ const AddWrestlerForm: FC = () => {
 
  const router = useRouter();
 
+ console.log(isError, name.length);
+
  const { mutate: createWrestler, isLoading } = useMutation({
   mutationFn: async () => {
-   setIsError(true);
    const payload: CreateWrestlerPayload = {
     name,
     realname,
@@ -39,8 +40,8 @@ const AddWrestlerForm: FC = () => {
     country,
     height: parseFloat(height),
     weight: parseFloat(weight),
-    styles: styles.replace(/\s/g, "").split(","),
-    trainers: trainers.replace(/\s/g, "").split(","),
+    styles: styles.split(",").filter((style) => style.trim()),
+    trainers: trainers.split(",").filter((trainer) => trainer.trim()),
     birth,
     careerstart,
     moves: moves.replace(/\s/g, "").split(","),
@@ -51,7 +52,6 @@ const AddWrestlerForm: FC = () => {
   onError: (err) => {
    if (err instanceof AxiosError) {
     if (err.response?.status === 422) {
-     console.log(err.response?.status);
      return toast({
       title: "Input error",
       description: "Not all fields are filled out correctly",
@@ -66,7 +66,7 @@ const AddWrestlerForm: FC = () => {
    });
   },
   onSuccess: (data) => {
-   router.push(`/wrestler/${data}`);
+   router.push(`/wrestler`);
   },
  });
 
@@ -90,41 +90,25 @@ const AddWrestlerForm: FC = () => {
       placeholder="Height"
       value={height}
       setValue={setHeight}
-      isError={isError && height.length === 0 ? true : false}
       type="number"
+      isError={isError && height.length === 0}
      />
      <Input
       placeholder="Weight"
       value={weight}
       setValue={setWeight}
-      isError={isError && weight.length === 0 ? true : false}
       type="number"
+      isError={isError && weight.length === 0}
      />
      <Input
       placeholder="Date of birth"
       value={birth}
       setValue={setBirth}
-      isError={isError && birth.length === 0 ? true : false}
       type="date"
      />
-     <Input
-      placeholder="Country"
-      value={country}
-      setValue={setCountry}
-      isError={isError && country.length === 0 ? true : false}
-     />
-     <Input
-      placeholder="City"
-      value={city}
-      setValue={setCity}
-      isError={isError && city.length === 0 ? true : false}
-     />
-     <Input
-      placeholder="Real name"
-      value={realname}
-      setValue={setRealname}
-      isError={isError && realname.length === 0 ? true : false}
-     />
+     <Input placeholder="Country" value={country} setValue={setCountry} />
+     <Input placeholder="City" value={city} setValue={setCity} />
+     <Input placeholder="Real name" value={realname} setValue={setRealname} />
     </div>
    </div>
    <div className="w-full">
@@ -136,38 +120,37 @@ const AddWrestlerForm: FC = () => {
       placeholder="In-ring name"
       value={name}
       setValue={setName}
-      isError={isError && name.length === 0 ? true : false}
+      isError={isError && name.length === 0}
      />
      <Input
       placeholder="Start of career"
       value={careerstart}
       setValue={setCareerstart}
-      isError={isError && careerstart.length === 0 ? true : false}
       type="date"
      />
      <Input
       placeholder="Wrestling style(s) (enter with ,)"
       value={styles}
       setValue={setStyles}
-      isError={isError && styles.length === 0 ? true : false}
      />
      <Input
       placeholder="Trainer(s) (enter with ,)"
       value={trainers}
       setValue={setTrainers}
-      isError={isError && trainers.length === 0 ? true : false}
      />
      <Input
       placeholder="Key move(s) (enter with ,)"
       value={moves}
       setValue={setMoves}
-      isError={isError && moves.length === 0 ? true : false}
      />
     </div>
    </div>
    <Button
     isLoading={isLoading}
-    onClick={() => createWrestler()}
+    onClick={() => {
+     setIsError(true);
+     createWrestler();
+    }}
     size="lg"
     className="w-1/2"
    >

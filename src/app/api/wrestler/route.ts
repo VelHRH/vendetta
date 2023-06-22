@@ -19,15 +19,15 @@ export async function POST(req: Request) {
     style: wrestler.styles,
     weight: wrestler.weight,
     height: wrestler.height,
-    born: wrestler.birth,
+    born: wrestler.birth === "" ? "01-01-2000" : wrestler.birth,
     country: wrestler.country,
     city: wrestler.city,
     moves: wrestler.moves,
-    career_start: wrestler.careerstart,
+    career_start:
+     wrestler.careerstart === "" ? "01-01-2000" : wrestler.careerstart,
    })
    .select();
   if (error) throw error;
-  console.log(data);
   return new Response(data![0].id.toString());
  } catch (err) {
   if (err instanceof z.ZodError) {
