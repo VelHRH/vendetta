@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 interface LabelProps extends React.HTMLAttributes<HTMLDivElement> {
  size?: "small" | "medium" | "big";
- children: string;
+ children: ReactNode;
 }
 
 const Label: FC<LabelProps> = ({ size, children, className, ...props }) => {
