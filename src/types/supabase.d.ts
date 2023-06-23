@@ -70,6 +70,7 @@ interface Database {
      style: string[] | null;
      trainer: string[] | null;
      weight: number | null;
+     wrestler_img: string | null;
     };
     Insert: {
      avgRating?: number;
@@ -88,6 +89,7 @@ interface Database {
      style?: string[] | null;
      trainer?: string[] | null;
      weight?: number | null;
+     wrestler_img?: string | null;
     };
     Update: {
      avgRating?: number;
@@ -106,6 +108,7 @@ interface Database {
      style?: string[] | null;
      trainer?: string[] | null;
      weight?: number | null;
+     wrestler_img?: string | null;
     };
     Relationships: [];
    };

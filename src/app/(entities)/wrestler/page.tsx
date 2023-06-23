@@ -1,23 +1,20 @@
-import { FC } from "react";
 import createClient from "@/lib/supabase-server";
 import Label from "@/components/ui/Label";
+import WrestlerElem from "@/components/Wrestler/WrestlerElem";
 
 const Wrestlers = async () => {
  const supabase = createClient();
  const { data: wrestlers } = await supabase.from("wrestlers").select("*");
  return (
-  <div className="w-full">
+  <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All wrestlers</Label>
+   <div className="flex justify-between items-center p-2">
+    <p className="text-center w-1/2">Wrestler</p>
+    <p className="text-center flex-1">Last show</p>
+    <p className="text-center w-32">Rating</p>
+   </div>
    {wrestlers?.map((wrestler, index) => (
-    <button
-     key={wrestler.id}
-     className="w-full dark:bg-slate-800 bg-slate-200 mt-2 flex justify-between p-2 rounded-xl hover:scale-105 duration-200"
-    >
-     <p>
-      {index + 1}. {wrestler.name}
-     </p>
-     {wrestler.avgRating}
-    </button>
+    <WrestlerElem key={index} place={index + 1} wrestler={wrestler} />
    ))}
   </div>
  );
