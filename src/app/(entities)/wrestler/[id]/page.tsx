@@ -2,6 +2,7 @@ import Image from "next/image";
 import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Label from "@/components/ui/Label";
+import { DEFAULT_IMAGE } from "@/config";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -22,10 +23,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
    <div className="h-80 w-80 aspect-square relative">
     <Image
      alt="Wrestler image"
-     src={
-      wrestler.wrestler_img ||
-      "https://brytpkxacsmzbawwiqcr.supabase.co/storage/v1/object/public/wrestlers/default.png"
-     }
+     src={wrestler.wrestler_img || DEFAULT_IMAGE}
      fill
      className="object-cover rounded-md"
     />
@@ -40,7 +38,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       Start of in-ring career: {beginCareer.toLocaleDateString()}
      </Label>
      <Label size="small">
-      Experience: {Math.abs(experience.getUTCFullYear() - 1970) + 2} years
+      Experience: {Math.abs(experience.getUTCFullYear() - 1970) + 4} years
      </Label>
      <Label size="small" className="flex gap-2 items-center">
       Trainers:

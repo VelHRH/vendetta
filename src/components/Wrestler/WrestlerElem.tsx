@@ -1,3 +1,4 @@
+import { DEFAULT_IMAGE } from "@/config";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
@@ -18,10 +19,7 @@ const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place }) => {
     <div className="h-full aspect-square relative">
      <Image
       alt="Wrestler image"
-      src={
-       wrestler.wrestler_img ||
-       "https://brytpkxacsmzbawwiqcr.supabase.co/storage/v1/object/public/wrestlers/default.png"
-      }
+      src={wrestler.wrestler_img || DEFAULT_IMAGE}
       fill
       className="object-cover rounded-md"
      />
