@@ -1,8 +1,8 @@
 import Image from "next/image";
 import createClient from "@/lib/supabase-server";
-import { notFound } from "next/navigation";
 import Label from "@/components/ui/Label";
 import { DEFAULT_IMAGE } from "@/config";
+import { notFound } from "next/navigation";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();

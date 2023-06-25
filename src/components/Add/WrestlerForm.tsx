@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { useState } from "react";
 import Dropdown from "@/components/ui/Dropdown";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
@@ -12,23 +12,40 @@ import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase-browser";
 import { Upload } from "lucide-react";
 import Image from "next/image";
+import { revalidatePath } from "next/cache";
 
-const AddWrestlerForm: FC = () => {
- const [sex, setSex] = useState<string>("");
- const [realname, setRealname] = useState<string>("");
- const [height, setHeight] = useState<string>("");
- const [weight, setWeight] = useState<string>("");
- const [birth, setBirth] = useState<string>("");
- const [city, setCity] = useState<string>("");
- const [country, setCountry] = useState<string>("");
- const [name, setName] = useState<string>("");
- const [styles, setStyles] = useState<string>("");
- const [trainers, setTrainers] = useState<string>("");
- const [moves, setMoves] = useState<string>("");
- const [careerstart, setCareerstart] = useState<string>("");
+const WrestlerForm = ({
+ wrestler,
+}: {
+ wrestler?: Database["public"]["Tables"]["wrestlers"]["Row"];
+}) => {
+ const [sex, setSex] = useState<string>(wrestler?.sex || "");
+ const [realname, setRealname] = useState<string>(wrestler?.real_name || "");
+ const [height, setHeight] = useState<string>(
+  wrestler?.height?.toString() || ""
+ );
+ const [weight, setWeight] = useState<string>(
+  wrestler?.weight?.toString() || ""
+ );
+ const [birth, setBirth] = useState<string>(wrestler?.born || "");
+ const [city, setCity] = useState<string>(wrestler?.city || "");
+ const [country, setCountry] = useState<string>(wrestler?.country || "");
+ const [name, setName] = useState<string>(wrestler?.name || "");
+ const [styles, setStyles] = useState<string>(
+  wrestler?.style?.join(", ") || ""
+ );
+ const [trainers, setTrainers] = useState<string>(
+  wrestler?.trainer?.join(", ") || ""
+ );
+ const [moves, setMoves] = useState<string>(wrestler?.moves?.join(", ") || "");
+ const [careerstart, setCareerstart] = useState<string>(
+  wrestler?.career_start || ""
+ );
+ const [imgUrl, setImgUrl] = useState<string | null>(
+  wrestler?.wrestler_img || null
+ );
  const [isSelectSex, setIsSelectSex] = useState<boolean>(false);
  const [isError, setIsError] = useState<boolean>(false);
- const [imgUrl, setImgUrl] = useState<string | null>(null);
 
  const router = useRouter();
 
@@ -109,6 +126,52 @@ const AddWrestlerForm: FC = () => {
   },
   onSuccess: (data) => {
    router.push(`/wrestler/${data}`);
+   router.refresh();
+  },
+ });
+
+ const { mutate: updateWrestler, isLoading: isLoadingUpdate } = useMutation({
+  mutationFn: async () => {
+   const payload: CreateWrestlerPayload = {
+    name,
+    realname,
+    sex,
+    city,
+    country,
+    height: parseFloat(height),
+    weight: parseFloat(weight),
+    styles: styles.split(",").filter((style) => style.trim()),
+    trainers: trainers.split(",").filter((trainer) => trainer.trim()),
+    birth,
+    careerstart,
+    wrestler_img: imgUrl || undefined,
+    moves: moves.replace(/\s/g, "").split(","),
+   };
+   const { data } = await axios.put(
+    `/api/wrestler?id=${wrestler!.id}`,
+    payload
+   );
+   return data as string;
+  },
+  onError: (err) => {
+   if (err instanceof AxiosError) {
+    if (err.response?.status === 422) {
+     return toast({
+      title: "Input error",
+      description: "Not all fields are filled out correctly",
+      variant: "destructive",
+     });
+    }
+   }
+   toast({
+    title: "There was an error",
+    description: "Could not update the wrestler",
+    variant: "destructive",
+   });
+  },
+  onSuccess: (data) => {
+   router.push(`/wrestler/${data}`);
+   router.refresh();
   },
  });
 
@@ -216,18 +279,18 @@ const AddWrestlerForm: FC = () => {
     </div>
    </div>
    <Button
-    isLoading={isLoading}
+    isLoading={isLoading || isLoadingUpdate}
     onClick={() => {
      setIsError(true);
-     createWrestler();
+     wrestler ? updateWrestler() : createWrestler();
     }}
     size="lg"
     className="w-1/2"
    >
-    Create
+    {wrestler ? "Update" : "Create"}
    </Button>
   </div>
  );
 };
 
-export default AddWrestlerForm;
+export default WrestlerForm;

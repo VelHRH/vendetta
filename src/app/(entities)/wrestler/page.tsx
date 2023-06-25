@@ -4,7 +4,10 @@ import WrestlerElem from "@/components/Wrestler/WrestlerElem";
 
 const Wrestlers = async () => {
  const supabase = createClient();
- const { data: wrestlers } = await supabase.from("wrestlers").select("*");
+ const { data: wrestlers } = await supabase
+  .from("wrestlers")
+  .select("*")
+  .order("id", { ascending: false });
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All wrestlers</Label>
