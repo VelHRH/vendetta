@@ -4,6 +4,7 @@ import Label from "@/components/ui/Label";
 import { DEFAULT_IMAGE } from "@/config";
 import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
+import CommentForm from "@/components/Add/CommentForm";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -26,7 +27,6 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const experience = new Date(Date.now() - beginCareer);
  // @ts-ignore
  const age = new Date(Date.now() - birthday);
-
  return (
   <>
    <div className="w-full flex gap-5">
@@ -110,14 +110,16 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <p className="font-bold text-7xl">{wrestler.avgRating}</p>
     </div>
    </div>
+   <Label className="font-bold self-start">Your rating:</Label>
+   <CommentForm type="wrestler" itemId={parseFloat(params.id)} />
    <Label className="font-bold self-start">Comments:</Label>
-   <div className="flex flex-col gap-4 w-full mt-2">
+   <div className="flex flex-col gap-4 w-full mt-2 mb-5">
     {comments?.map((comment) => (
      <Comment
       key={comment.id}
       author={comment.author}
       rating={comment.rating}
-      date={comment.date}
+      date={comment.created_at?.toString() || ""}
       text={comment.text}
      />
     ))}

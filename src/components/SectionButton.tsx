@@ -10,7 +10,6 @@ interface SectionButtonProps {
 
 const SectionButton: FC<SectionButtonProps> = ({ children, link }) => {
  const pathname = usePathname();
- console.log(pathname.slice(pathname.lastIndexOf("/")));
  return (
   <Link
    href={`${link}/${children !== "Overview" ? children.toLowerCase() : ""}`}

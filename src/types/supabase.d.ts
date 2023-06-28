@@ -13,7 +13,6 @@ interface Database {
     Row: {
      author: string;
      created_at: string | null;
-     date: string;
      id: number;
      item_id: number | null;
      rating: number;
@@ -23,7 +22,6 @@ interface Database {
     Insert: {
      author: string;
      created_at?: string | null;
-     date: string;
      id?: number;
      item_id?: number | null;
      rating: number;
@@ -33,7 +31,6 @@ interface Database {
     Update: {
      author?: string;
      created_at?: string | null;
-     date?: string;
      id?: number;
      item_id?: number | null;
      rating?: number;
