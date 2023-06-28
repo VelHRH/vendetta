@@ -11,6 +11,7 @@ export const WrestlerValidator = z.object({
  country: z.string(),
  styles: z.array(z.string()),
  trainers: z.array(z.string()),
+ nicknames: z.array(z.string()),
  careerstart: z.string(),
  moves: z.array(z.string()),
  wrestler_img: z.string().optional(),

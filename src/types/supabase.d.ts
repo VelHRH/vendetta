@@ -1,8 +1,47 @@
-type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
+type Json =
+ | string
+ | number
+ | boolean
+ | null
+ | { [key: string]: Json | undefined }
+ | Json[];
 
 interface Database {
  public: {
   Tables: {
+   comments: {
+    Row: {
+     author: string;
+     created_at: string | null;
+     date: string;
+     id: number;
+     item_id: number | null;
+     rating: number;
+     text: string;
+     type: string;
+    };
+    Insert: {
+     author: string;
+     created_at?: string | null;
+     date: string;
+     id?: number;
+     item_id?: number | null;
+     rating: number;
+     text: string;
+     type: string;
+    };
+    Update: {
+     author?: string;
+     created_at?: string | null;
+     date?: string;
+     id?: number;
+     item_id?: number | null;
+     rating?: number;
+     text?: string;
+     type?: string;
+    };
+    Relationships: [];
+   };
    profiles: {
     Row: {
      avatar_url: string | null;
@@ -64,6 +103,7 @@ interface Database {
      id: number;
      moves: string[] | null;
      name: string | null;
+     nickname: string[] | null;
      ratings: Json[] | null;
      real_name: string | null;
      sex: string | null;
@@ -83,6 +123,7 @@ interface Database {
      id?: number;
      moves?: string[] | null;
      name?: string | null;
+     nickname?: string[] | null;
      ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;
@@ -102,6 +143,7 @@ interface Database {
      id?: number;
      moves?: string[] | null;
      name?: string | null;
+     nickname?: string[] | null;
      ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;

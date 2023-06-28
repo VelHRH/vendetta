@@ -9,7 +9,7 @@ const Add: FC = () => {
  return (
   <div className="w-full h-2/3 grid grid-cols-4 grid-rows-3 gap-4">
    <Link
-    href="/add/wrestler"
+    href="/wrestler/add"
     className={cn(
      buttonVariants({ variant: "subtle" }),
      "flex gap-1 items-center justify-between p-10"
@@ -21,7 +21,7 @@ const Add: FC = () => {
     <ChevronsRight size={30} />
    </Link>
    <Link
-    href="/add/show"
+    href="/show/add"
     className={cn(
      buttonVariants({ variant: "subtle" }),
      "flex gap-1 items-center justify-between p-10"
@@ -33,7 +33,7 @@ const Add: FC = () => {
     <ChevronsRight size={30} />
    </Link>
    <Link
-    href="/add/match"
+    href="/match/add"
     className={cn(
      buttonVariants({ variant: "subtle" }),
      "flex gap-1 items-center justify-between p-10"
@@ -45,7 +45,7 @@ const Add: FC = () => {
     <ChevronsRight size={30} />
    </Link>
    <Link
-    href="/add/title"
+    href="/title/add"
     className={cn(
      buttonVariants({ variant: "subtle" }),
      "flex gap-1 items-center justify-between p-10"

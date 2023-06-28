@@ -66,7 +66,7 @@ export async function PUT(req: Request) {
     career_start:
      wrestler.careerstart === "" ? "01-01-2000" : wrestler.careerstart,
    })
-   .eq("id", parseFloat(id))
+   .eq("id", parseFloat(id || ""))
    .select();
   if (error) throw error;
   return new Response(data![0].id.toString());

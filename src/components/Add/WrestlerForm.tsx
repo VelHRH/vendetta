@@ -37,6 +37,9 @@ const WrestlerForm = ({
  const [trainers, setTrainers] = useState<string>(
   wrestler?.trainer?.join(", ") || ""
  );
+ const [nicknames, setNicknames] = useState<string>(
+  wrestler?.nickname?.join(", ") || ""
+ );
  const [moves, setMoves] = useState<string>(wrestler?.moves?.join(", ") || "");
  const [careerstart, setCareerstart] = useState<string>(
   wrestler?.career_start || ""
@@ -96,6 +99,7 @@ const WrestlerForm = ({
     sex,
     city,
     country,
+    nicknames: nicknames.split(",").filter((nickname) => nickname.trim()),
     height: parseFloat(height),
     weight: parseFloat(weight),
     styles: styles.split(",").filter((style) => style.trim()),
@@ -142,6 +146,7 @@ const WrestlerForm = ({
     weight: parseFloat(weight),
     styles: styles.split(",").filter((style) => style.trim()),
     trainers: trainers.split(",").filter((trainer) => trainer.trim()),
+    nicknames: nicknames.split(",").filter((nickname) => nickname.trim()),
     birth,
     careerstart,
     wrestler_img: imgUrl || undefined,
@@ -247,6 +252,11 @@ const WrestlerForm = ({
       placeholder="Key move(s) (enter with ,)"
       value={moves}
       setValue={setMoves}
+     />
+     <Input
+      placeholder="Nickname(s) (enter with ,)"
+      value={nicknames}
+      setValue={setNicknames}
      />
 
      <div className="w-full h-full flex items-center">
