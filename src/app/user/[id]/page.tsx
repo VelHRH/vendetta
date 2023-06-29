@@ -1,21 +1,17 @@
 import createClient from "@/lib/supabase-server";
-import { FC } from "react";
 
 const Profile = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
- const { data: user } = await supabase
+ const { data: profile } = await supabase
   .from("users")
-  .select("*")
+  .select()
   .eq("username", params.id)
   .single();
+ const {
+  data: { user },
+ } = await supabase.auth.getUser();
 
- return (
-  <div className="flex w-full gap-3">
-   <div className="w-1/3 bg-slate-200 dark:bg-slate-800 rounded-md p-5">
-    {user!.id}
-   </div>
-  </div>
- );
+ return <div>opfvpos</div>;
 };
 
 export default Profile;

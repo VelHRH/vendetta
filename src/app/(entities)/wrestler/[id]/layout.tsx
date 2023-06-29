@@ -35,9 +35,13 @@ const Layout = async ({ children, params }: LayoutProps) => {
     </Link>
    </div>
    <div className="flex gap-2">
-    <SectionButton link={`/wrestler/${params.id}`}>Overview</SectionButton>
-    <SectionButton link={`/wrestler/${params.id}`}>Matches</SectionButton>
-    <SectionButton link={`/wrestler/${params.id}`}>Titles</SectionButton>
+    <SectionButton link={`/wrestler/${params.id}`} isMain>
+     Overview
+    </SectionButton>
+    <SectionButton link={`/wrestler/${params.id}/matches`}>
+     Matches
+    </SectionButton>
+    <SectionButton link={`/wrestler/${params.id}/titles`}>Titles</SectionButton>
    </div>
    {children}
   </div>

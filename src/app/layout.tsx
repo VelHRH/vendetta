@@ -1,5 +1,5 @@
 import { AuthProvider } from "../components/Auth/AuthProvider";
-import { Inter } from "next/font/google";
+import { PT_Mono, Roboto_Mono, Geologica } from "next/font/google";
 import createClient from "../lib/supabase-server";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -7,7 +7,7 @@ import { Providers } from "@/components/Providers";
 import { Toaster } from "@/components/ui/Toaster";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const mono = Geologica({ subsets: ["latin"] });
 
 export const metadata = {
  title: "Vendetta",
@@ -28,7 +28,7 @@ export default async function RootLayout({
  const accessToken = session?.access_token || null;
  return (
   <html lang="en">
-   <body className={cn(inter.className, "antialiased")}>
+   <body className={cn(mono.className, "antialiased")}>
     <AuthProvider accessToken={accessToken}>
      <Providers>
       <Navbar />

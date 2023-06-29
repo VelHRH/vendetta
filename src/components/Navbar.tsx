@@ -14,7 +14,7 @@ const Navbar = async () => {
  } = await supabase.auth.getUser();
  const { data: profile } = await supabase
   .from("users")
-  .select("username")
+  .select()
   .eq("id", user?.id)
   .single();
  return (
@@ -37,16 +37,18 @@ const Navbar = async () => {
      >
       Wrestlers
      </Link>
-     <Link
-      href="/add"
-      className={cn(
-       buttonVariants({ variant: "subtle" }),
-       "p-2 flex gap-1 items-center"
-      )}
-     >
-      <Plus />
-      Add
-     </Link>
+     {profile?.role === "admin" && (
+      <Link
+       href="/add"
+       className={cn(
+        buttonVariants({ variant: "subtle" }),
+        "p-2 flex gap-1 items-center"
+       )}
+      >
+       <Plus />
+       Add
+      </Link>
+     )}
     </div>
    </div>
    <div className="gap-2 flex">

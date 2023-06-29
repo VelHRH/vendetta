@@ -6,17 +6,18 @@ import { FC } from "react";
 interface SectionButtonProps {
  children: string;
  link: string;
+ isMain?: boolean;
 }
 
-const SectionButton: FC<SectionButtonProps> = ({ children, link }) => {
+const SectionButton: FC<SectionButtonProps> = ({ children, link, isMain }) => {
  const pathname = usePathname();
  return (
   <Link
-   href={`${link}/${children !== "Overview" ? children.toLowerCase() : ""}`}
+   href={link}
    className={`p-2 text-lg rounded-md ${
-    pathname.slice(pathname.lastIndexOf("/") + 1) === children.toLowerCase() ||
-    (!isNaN(parseFloat(pathname.slice(pathname.lastIndexOf("/") + 1))) &&
-     children === "Overview")
+    pathname.slice(pathname.lastIndexOf("/") + 1) ===
+     link.slice(link.lastIndexOf("/") + 1) ||
+    ((pathname.match(new RegExp("/", "g")) || []).length === 2 && isMain)
      ? "bg-transparent"
      : "dark:bg-slate-800 bg-slate-200 hover:scale-105 duration-300"
    } `}
