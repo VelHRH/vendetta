@@ -21,6 +21,10 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  if (!wrestler) {
   notFound();
  }
+ const {
+  data: { user },
+ } = await supabase.auth.getUser();
+
  const beginCareer = new Date(wrestler.career_start!.toString());
  const birthday = new Date(wrestler.born!.toString());
  // @ts-ignore
@@ -110,8 +114,13 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <p className="font-bold text-7xl">{wrestler.avgRating}</p>
     </div>
    </div>
-   <Label className="font-bold self-start">Your rating:</Label>
-   <CommentForm type="wrestler" itemId={parseFloat(params.id)} />
+   {user && (
+    <>
+     <Label className="font-bold self-start">Your rating:</Label>
+     <CommentForm type="wrestler" itemId={parseFloat(params.id)} />
+    </>
+   )}
+
    <Label className="font-bold self-start">Comments:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
     {comments?.map((comment) => (

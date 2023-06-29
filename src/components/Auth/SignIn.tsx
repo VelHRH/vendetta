@@ -26,7 +26,7 @@ const SingIn = () => {
     password,
    });
    if (error) throw error;
-   router.push("/");
+   router.back();
   } catch (err) {
    toast({
     title: "Error while signing in",
@@ -41,9 +41,11 @@ const SingIn = () => {
  async function signInWithGoogle() {
   setLoading(true);
   try {
-   const { data, error } = await supabase.auth.signInWithOAuth({
+   const { data: signedUser, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
    });
+   if (error) throw error.message;
+
    router.push("/");
   } catch {
    toast({

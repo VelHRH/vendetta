@@ -23,14 +23,26 @@ const SingUp = () => {
   setLoading(true);
   setIsError(true);
   try {
+   const { data: isExistEmail } = await supabase
+    .from("users")
+    .select()
+    .eq("email", email)
+    .single();
+   if (isExistEmail) throw "The email is already registered";
+   const { data: isExistUsername } = await supabase
+    .from("users")
+    .select()
+    .eq("username", username)
+    .single();
+   if (isExistUsername) throw "The username is already in use";
    const { error, data } = await supabase.auth.signUp({
     email,
     password,
    });
-
    if (error) throw error.message;
+
    await supabase
-    .from("profiles")
+    .from("users")
     .update({ username, full_name: fullname })
     .eq("id", data.user!.id);
    toast({
@@ -39,6 +51,7 @@ const SingUp = () => {
     variant: "default",
    });
   } catch (err: string | any) {
+   setLoading(false);
    toast({
     title: "Error while signing up",
     description: err,
