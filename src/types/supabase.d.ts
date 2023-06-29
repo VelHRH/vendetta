@@ -39,40 +39,6 @@ interface Database {
     };
     Relationships: [];
    };
-   profiles: {
-    Row: {
-     avatar_url: string | null;
-     full_name: string | null;
-     id: string;
-     role: string;
-     updated_at: string | null;
-     username: string | null;
-    };
-    Insert: {
-     avatar_url?: string | null;
-     full_name?: string | null;
-     id: string;
-     role?: string;
-     updated_at?: string | null;
-     username?: string | null;
-    };
-    Update: {
-     avatar_url?: string | null;
-     full_name?: string | null;
-     id?: string;
-     role?: string;
-     updated_at?: string | null;
-     username?: string | null;
-    };
-    Relationships: [
-     {
-      foreignKeyName: "profiles_id_fkey";
-      columns: ["id"];
-      referencedRelation: "users";
-      referencedColumns: ["id"];
-     }
-    ];
-   };
    shows: {
     Row: {
      created_at: string | null;
@@ -85,6 +51,33 @@ interface Database {
     Update: {
      created_at?: string | null;
      id?: number;
+    };
+    Relationships: [];
+   };
+   users: {
+    Row: {
+     created_at: string | null;
+     email: string | null;
+     full_name: string | null;
+     id: string;
+     role: string;
+     username: string | null;
+    };
+    Insert: {
+     created_at?: string | null;
+     email?: string | null;
+     full_name?: string | null;
+     id: string;
+     role?: string;
+     username?: string | null;
+    };
+    Update: {
+     created_at?: string | null;
+     email?: string | null;
+     full_name?: string | null;
+     id?: string;
+     role?: string;
+     username?: string | null;
     };
     Relationships: [];
    };

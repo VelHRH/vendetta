@@ -4,7 +4,7 @@ import createClient from "../lib/supabase-server";
 import SignOut from "./Auth/SignOut";
 import SwitchTheme from "./SwitchTheme";
 import { buttonVariants } from "./ui/Button";
-import { Plus } from "lucide-react";
+import { Plus, UserCircle2 } from "lucide-react";
 
 const Navbar = async () => {
  const supabase = createClient();
@@ -12,10 +12,9 @@ const Navbar = async () => {
  const {
   data: { user },
  } = await supabase.auth.getUser();
-
- const { data, error, status } = await supabase
-  .from("profiles")
-  .select(`full_name, username, avatar_url`)
+ const { data: profile } = await supabase
+  .from("users")
+  .select("username")
   .eq("id", user?.id)
   .single();
  return (
@@ -54,7 +53,16 @@ const Navbar = async () => {
     <SwitchTheme />
 
     {user ? (
-     <SignOut />
+     <>
+      <Link
+       href={`/user/${profile?.username}`}
+       className={buttonVariants({ variant: "subtle" })}
+      >
+       <UserCircle2 />
+       {profile?.username}
+      </Link>
+      <SignOut />
+     </>
     ) : (
      <Link href="/sign-in" className={buttonVariants()}>
       Sign In
