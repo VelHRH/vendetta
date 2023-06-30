@@ -1,17 +1,16 @@
-type Json =
- | string
- | number
- | boolean
- | null
- | { [key: string]: Json | undefined }
- | Json[];
+type Json = {
+ authorId?: string;
+ rating?: number;
+ id?: string;
+ username?: string;
+};
 
 interface Database {
  public: {
   Tables: {
    comments: {
     Row: {
-     author: string;
+     author: Json | null;
      created_at: string | null;
      id: number;
      item_id: number | null;
@@ -20,7 +19,7 @@ interface Database {
      type: string;
     };
     Insert: {
-     author: string;
+     author?: Json | null;
      created_at?: string | null;
      id?: number;
      item_id?: number | null;
@@ -29,7 +28,7 @@ interface Database {
      type: string;
     };
     Update: {
-     author?: string;
+     author?: Json | null;
      created_at?: string | null;
      id?: number;
      item_id?: number | null;

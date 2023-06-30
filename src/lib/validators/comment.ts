@@ -4,6 +4,7 @@ export const CommentValidator = z.object({
  text: z.string().min(100),
  rating: z.number(),
  author: z.string(),
+ authorId: z.string(),
  type: z.string(),
  itemId: z.number(),
 });

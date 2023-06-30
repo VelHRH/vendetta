@@ -12,9 +12,16 @@ import Dropdown from "../ui/Dropdown";
 interface CommentFormProps {
  type: string;
  itemId: number;
+ author: string;
+ authorId: string;
 }
 
-const CommentForm: FC<CommentFormProps> = ({ type, itemId }) => {
+const CommentForm: FC<CommentFormProps> = ({
+ type,
+ itemId,
+ author,
+ authorId,
+}) => {
  const [text, setText] = useState<string>("");
  const [rating, setRating] = useState<string>("");
  const [isSelectRating, setIsSelectRating] = useState<boolean>(false);
@@ -27,7 +34,8 @@ const CommentForm: FC<CommentFormProps> = ({ type, itemId }) => {
     rating: parseFloat(rating),
     type,
     itemId,
-    author: "Vel",
+    author,
+    authorId,
    };
    const { data } = await axios.post("/api/comment", payload);
    return data as string;
@@ -74,6 +82,7 @@ const CommentForm: FC<CommentFormProps> = ({ type, itemId }) => {
    />
    <Button
     onClick={() => addComment()}
+    isLoading={isLoading}
     className="self-end text-xl"
     size={"lg"}
    >
