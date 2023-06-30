@@ -141,6 +141,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        rating={loggedUserComment.rating}
        date={loggedUserComment.created_at!.toString()}
        text={loggedUserComment.text}
+       id={loggedUserComment.id}
       />
      )}
     </>

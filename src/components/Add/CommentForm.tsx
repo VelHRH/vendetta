@@ -53,7 +53,7 @@ const CommentForm: FC<CommentFormProps> = ({
    }
    toast({
     title: "There was an error",
-    description: "Could not create the wrestler",
+    description: "Could not create the comment",
     variant: "destructive",
    });
   },
@@ -78,7 +78,7 @@ const CommentForm: FC<CommentFormProps> = ({
     placeholder="Justify your rating..."
     value={text}
     onChange={(e) => setText(e.target.value)}
-    className="w-full border-2 border-slate-500 p-5 rounded-md bg-transparent"
+    className="w-full border-2 border-slate-500 p-5 rounded-md bg-transparent h-64"
    />
    <Button
     onClick={() => addComment()}

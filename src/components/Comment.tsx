@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
+import DeleteItemButton from "./DeleteItemButton";
 import Label from "./ui/Label";
 
 interface CommentProps {
@@ -7,9 +8,10 @@ interface CommentProps {
  author: string;
  rating: number;
  date: string;
+ id?: number;
 }
 
-const Comment: FC<CommentProps> = ({ text, author, rating, date }) => {
+const Comment: FC<CommentProps> = ({ text, author, rating, date, id }) => {
  const dateConvert = new Date(date);
  return (
   <div className="w-full p-7 bg-slate-200 dark:bg-slate-800 flex flex-col rounded-sm text-lg">
@@ -29,6 +31,11 @@ const Comment: FC<CommentProps> = ({ text, author, rating, date }) => {
      <p className="font-bold text-xl text-slate-500">
       {dateConvert.toLocaleDateString()}
      </p>
+     {id && (
+      <div className="gsp-2 flex">
+       <DeleteItemButton id={id} />
+      </div>
+     )}
     </div>
    </div>
    {text}
