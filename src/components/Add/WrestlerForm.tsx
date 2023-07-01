@@ -182,7 +182,9 @@ const WrestlerForm = ({
 
  return (
   <div className="flex flex-col items-center gap-10 w-full">
-   <Label className="font-bold">Creating new wrestler...</Label>
+   <Label className="font-bold">
+    {wrestler ? "Editing wrestler..." : "Creating new wrestler..."}
+   </Label>
    <div className="w-full">
     <Label size="medium" className="font-bold text-start mb-5">
      Personal data:

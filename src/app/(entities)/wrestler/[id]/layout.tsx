@@ -20,6 +20,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
   .select("*")
   .eq("id", params.id)
   .single();
+ const {
+  data: { user },
+ } = await supabase.auth.getUser();
  if (!wrestler) {
   notFound();
  }
@@ -27,12 +30,16 @@ const Layout = async ({ children, params }: LayoutProps) => {
   <div className="flex flex-col gap-5 items-center">
    <div className="flex gap-2">
     <Label className="font-bold">{wrestler?.name!}</Label>
-    <Link
-     href={`/wrestler/edit?id=${wrestler.id}`}
-     className={buttonVariants({ variant: "subtle" })}
-    >
-     <Pencil />
-    </Link>
+    {user &&
+     (user.id === "41608919-15c0-4bbd-b91e-b3407a0c3520" ||
+      user.id === "4caeee0b-5b66-4ba0-9fad-2c1ba9284238") && (
+      <Link
+       href={`/wrestler/edit?id=${wrestler.id}`}
+       className={buttonVariants({ variant: "subtle" })}
+      >
+       <Pencil />
+      </Link>
+     )}
    </div>
    <div className="flex gap-2">
     <SectionButton link={`/wrestler/${params.id}`} isMain>

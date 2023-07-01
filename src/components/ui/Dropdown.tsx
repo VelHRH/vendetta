@@ -39,11 +39,6 @@ const Dropdown: FC<DropdownProps> = ({
      {array?.map((item, id) => (
       <button
        key={id}
-       style={{
-        color: ratingColor({
-         rating: parseFloat(item),
-        }),
-       }}
        onClick={() => {
         setValue(item);
         setIsSelect(false);
