@@ -7,7 +7,7 @@ const Wrestlers = async () => {
  const { data: wrestlers } = await supabase
   .from("wrestlers")
   .select("*")
-  .order("id", { ascending: false });
+  .order("avgRating", { ascending: false });
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All wrestlers</Label>

@@ -50,6 +50,61 @@ export async function POST(req: Request) {
  }
 }
 
+export async function PUT(req: Request) {
+ try {
+  const body = await req.json();
+  const supabase = createClient();
+
+  const { data: comment, error: commentError } = await supabase
+   .from("comments")
+   .select()
+   .eq("id", body.id)
+   .single();
+  if (!comment || commentError) throw "Error with getting this comment";
+
+  const { data, error } = await supabase
+   .from(comment.type)
+   .select()
+   .eq("id", comment.item_id)
+   .single();
+  if (!data || error) throw "Error with getting rated item";
+
+  data.ratings![
+   data.ratings!.findIndex((d: any) => d.authorId === comment.author!.id)
+  ].rating = body.rating;
+  const { error: updateItemError } = await supabase
+   .from(comment.type)
+   .update({
+    avgRating:
+     data.ratings?.length! !== 0
+      ? (data.avgRating * data.ratings?.length! -
+         comment.rating +
+         body.rating) /
+        data.ratings?.length!
+      : 0,
+    ratings: data.ratings!,
+   })
+   .eq("id", comment.item_id);
+  if (updateItemError) throw "Update item error";
+  const { error: updateError } = await supabase
+   .from("comments")
+   .update({
+    rating: body.rating,
+    text: body.text,
+   })
+   .eq("id", body.id);
+  if (updateError) throw "Update comment error";
+
+  return new Response("Success");
+ } catch (err) {
+  console.log(err);
+  if (err instanceof z.ZodError) {
+   return new Response(err.message, { status: 422 });
+  }
+  return new Response("Error while updating", { status: 500 });
+ }
+}
+
 export async function PATCH(req: Request) {
  try {
   const body = await req.json();
@@ -83,7 +138,7 @@ export async function PATCH(req: Request) {
     ratings: data.ratings!,
    })
    .eq("id", comment.item_id);
-  if (updateError) throw updateError;
+  if (updateError) throw "Update item error";
 
   const { error: deleteError } = await supabase
    .from("comments")

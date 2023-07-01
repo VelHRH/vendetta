@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
-import DeleteItemButton from "./DeleteItemButton";
+import EditComment from "./EditComment";
 import Label from "./ui/Label";
 
 interface CommentProps {
@@ -9,9 +9,19 @@ interface CommentProps {
  rating: number;
  date: string;
  id?: number;
+ type?: string;
+ authorId?: string;
 }
 
-const Comment: FC<CommentProps> = ({ text, author, rating, date, id }) => {
+const Comment: FC<CommentProps> = ({
+ text,
+ author,
+ rating,
+ date,
+ id,
+ type,
+ authorId,
+}) => {
  const dateConvert = new Date(date);
  return (
   <div className="w-full p-7 bg-slate-200 dark:bg-slate-800 flex flex-col rounded-sm text-lg">
@@ -33,7 +43,14 @@ const Comment: FC<CommentProps> = ({ text, author, rating, date, id }) => {
      </p>
      {id && (
       <div className="gsp-2 flex">
-       <DeleteItemButton id={id} />
+       <EditComment
+        id={id}
+        type={type!}
+        author={author}
+        authorId={authorId!}
+        text={text}
+        rating={rating}
+       />
       </div>
      )}
     </div>

@@ -5,6 +5,7 @@ import { DEFAULT_IMAGE } from "@/config";
 import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
+import RatingChart from "@/components/RatingChart";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -17,7 +18,8 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
   .from("comments")
   .select("*")
   .eq("item_id", params.id)
-  .eq("type", "wrestlers");
+  .eq("type", "wrestlers")
+  .order("created_at", { ascending: true });
  if (!wrestler) {
   notFound();
  }
@@ -121,12 +123,18 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="medium" className="font-bold self-start">
       Rating:
      </Label>
-     <p className="font-bold text-7xl">{wrestler.avgRating.toFixed(2)}</p>
+     <p className="font-bold text-7xl">
+      {(
+       (wrestler.avgRating * wrestler.ratings?.length! + 6) /
+       (wrestler.ratings?.length! + 1)
+      ).toFixed(2)}
+     </p>
     </div>
    </div>
 
    {user && (
     <>
+     <RatingChart />
      <Label className="font-bold self-start">Your comment:</Label>
      {!loggedUserComment ? (
       <CommentForm
@@ -138,10 +146,12 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      ) : (
       <Comment
        author={profile!.username || ""}
+       authorId={profile!.id}
        rating={loggedUserComment.rating}
        date={loggedUserComment.created_at!.toString()}
        text={loggedUserComment.text}
        id={loggedUserComment.id}
+       type="wrestlers"
       />
      )}
     </>
@@ -150,20 +160,15 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
    <Label className="font-bold self-start mt-10">Comments:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
     {comments?.length !== 0
-     ? comments
-        ?.sort(
-         (a, b) =>
-          new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime()
-        )
-        .map((comment) => (
-         <Comment
-          key={comment.id}
-          author={comment.author!.username || ""}
-          rating={comment.rating}
-          date={comment.created_at?.toString() || ""}
-          text={comment.text}
-         />
-        ))
+     ? comments?.map((comment) => (
+        <Comment
+         key={comment.id}
+         author={comment.author!.username || ""}
+         rating={comment.rating}
+         date={comment.created_at?.toString() || ""}
+         text={comment.text}
+        />
+       ))
      : "No comments here yet."}
    </div>
   </>

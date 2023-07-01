@@ -23,7 +23,7 @@ const Dropdown: FC<DropdownProps> = ({
   <div className={`w-full text-lg relative`}>
    <button
     onClick={() => setIsSelect(!isSelect)}
-    className={`flex items-center justify-between border-[3px] p-3 w-full border-slate-500 rounded-md ${
+    className={`flex items-center justify-between border-[3px] p-3 bg-slate-100 dark:bg-slate-900 w-full border-slate-500 rounded-md ${
      value === ""
       ? "text-slate-400 font-medium"
       : "text-slate-900 dark:text-slate-50 font-semibold"
