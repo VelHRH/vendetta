@@ -54,7 +54,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       className="object-cover rounded-md"
      />
     </div>
-    <div className="w-1/2 p-3 flex flex-col gap-10">
+    <div className="flex-1 p-3 flex flex-col gap-10">
      <div className="flex flex-col pb-10 gap-5 border-b-2 border-slate-500 w-full items-start">
       <Label size="medium" className="font-bold mb-3 pb-3">
        Character information:
@@ -119,7 +119,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">Weight: {wrestler.weight} kg</Label>
      </div>
     </div>
-    <div className="flex-1 h-60 rounded-md dark:bg-slate-800 bg-slate-200 flex flex-col gap-5 items-center p-5">
+    <div className="w-1/4 h-[600px] rounded-md dark:bg-slate-800 bg-slate-200 flex flex-col gap-5 items-center p-5">
      <Label size="medium" className="font-bold self-start">
       Rating:
      </Label>
@@ -129,12 +129,19 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        (wrestler.ratings?.length! + 1)
       ).toFixed(2)}
      </p>
+     <RatingChart
+      data={Array.from({ length: 11 }, (_, index) =>
+       comments!.reduce(
+        (count, comment) => count + (comment.rating === 10 - index ? 1 : 0),
+        0
+       )
+      )}
+     />
     </div>
    </div>
 
    {user && (
     <>
-     <RatingChart />
      <Label className="font-bold self-start">Your comment:</Label>
      {!loggedUserComment ? (
       <CommentForm
