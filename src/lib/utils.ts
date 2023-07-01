@@ -13,8 +13,23 @@ export function createColors() {
   let red = Math.round(((10 - i) / 10) * 255);
 
   data.push(i);
-  backgroundColors.push(`rgb(${red}, ${green}, 0)`);
+  backgroundColors.push(`rgb(${red}, ${green}, 50)`);
  }
 
  return backgroundColors;
+}
+
+export function ratingDataGenerate(
+ comments: Database["public"]["Tables"]["comments"]["Row"][]
+) {
+ return Array.from({ length: 11 }, (_, index) =>
+  comments!.reduce(
+   (count, comment) => count + (comment.rating === 10 - index ? 1 : 0),
+   0
+  )
+ );
+}
+
+export function ratingColor({ rating }: { rating: number }) {
+ return createColors()[10 - Math.ceil(rating)];
 }

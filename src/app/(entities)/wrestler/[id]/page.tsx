@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
 import RatingChart from "@/components/RatingChart";
+import { createColors, ratingColor, ratingDataGenerate } from "@/lib/utils";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -123,20 +124,22 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="medium" className="font-bold self-start">
       Rating:
      </Label>
-     <p className="font-bold text-7xl">
+     <p
+      style={{
+       color: ratingColor({
+        rating:
+         (wrestler.avgRating * wrestler.ratings?.length! + 6) /
+         (wrestler.ratings?.length! + 1),
+       }),
+      }}
+      className={`font-bold text-7xl`}
+     >
       {(
        (wrestler.avgRating * wrestler.ratings?.length! + 6) /
        (wrestler.ratings?.length! + 1)
       ).toFixed(2)}
      </p>
-     <RatingChart
-      data={Array.from({ length: 11 }, (_, index) =>
-       comments!.reduce(
-        (count, comment) => count + (comment.rating === 10 - index ? 1 : 0),
-        0
-       )
-      )}
-     />
+     <RatingChart data={ratingDataGenerate(comments!)} />
     </div>
    </div>
 

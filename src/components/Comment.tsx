@@ -1,3 +1,4 @@
+import { ratingColor } from "@/lib/utils";
 import Link from "next/link";
 import { FC } from "react";
 import EditComment from "./EditComment";
@@ -35,7 +36,15 @@ const Comment: FC<CommentProps> = ({
      </Label>
     </Link>
     <div className="flex justify-between items-center flex-1">
-     <Label size="medium" className="font-bold text-green-700">
+     <Label
+      size="medium"
+      style={{
+       color: ratingColor({
+        rating: rating,
+       }),
+      }}
+      className="font-bold text-green-700"
+     >
       {rating}
      </Label>
      <p className="font-bold text-xl text-slate-500">

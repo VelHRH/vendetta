@@ -1,4 +1,5 @@
 "use client";
+import { ratingColor } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { FC } from "react";
 
@@ -34,10 +35,15 @@ const Dropdown: FC<DropdownProps> = ({
    </button>
 
    {isSelect && (
-    <div className="bg-slate-200 dark:bg-slate-800 rounded-md mt-2 p-2 absolute w-full z-20">
+    <div className="bg-slate-200 dark:bg-slate-800 rounded-md mt-2 p-2 absolute w-full z-20 shadow-lg shadow-slate-950">
      {array?.map((item, id) => (
       <button
        key={id}
+       style={{
+        color: ratingColor({
+         rating: parseFloat(item),
+        }),
+       }}
        onClick={() => {
         setValue(item);
         setIsSelect(false);

@@ -1,6 +1,7 @@
 import Label from "@/components/ui/Label";
 import { COLORS } from "@/config";
 import createClient from "@/lib/supabase-server";
+import { ratingColor } from "@/lib/utils";
 import Link from "next/link";
 
 const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
@@ -27,9 +28,12 @@ const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
        {wrestlers?.find((wrestler) => wrestler.id === comment.item_id)?.name}
       </div>
       <div
-       className={`dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center text-${
-        COLORS[comment.rating]
-       }`}
+       style={{
+        color: ratingColor({
+         rating: comment.rating,
+        }),
+       }}
+       className={`dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center`}
       >
        {comment.rating}
       </div>

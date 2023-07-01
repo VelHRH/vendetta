@@ -1,4 +1,5 @@
 import { DEFAULT_IMAGE } from "@/config";
+import { ratingColor } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
@@ -35,7 +36,16 @@ const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place }) => {
     Четоввмвмвмвмв ам
    </div>
 
-   <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center">
+   <div
+    style={{
+     color: ratingColor({
+      rating:
+       (wrestler.avgRating * wrestler.ratings?.length! + 6) /
+       (wrestler.ratings?.length! + 1),
+     }),
+    }}
+    className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center"
+   >
     {(
      (wrestler.avgRating * wrestler.ratings?.length! + 6) /
      (wrestler.ratings?.length! + 1)
