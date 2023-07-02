@@ -32,6 +32,7 @@ export async function POST(req: Request) {
   if (error) throw error;
   return new Response(data![0].id.toString());
  } catch (err) {
+  console.log(err);
   if (err instanceof z.ZodError) {
    return new Response(err.message, { status: 422 });
   }

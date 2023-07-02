@@ -124,21 +124,25 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="medium" className="font-bold self-start">
       Rating:
      </Label>
-     <p
-      style={{
-       color: ratingColor({
-        rating:
-         (wrestler.avgRating * wrestler.ratings?.length! + 6) /
-         (wrestler.ratings?.length! + 1),
-       }),
-      }}
-      className={`font-bold text-7xl`}
-     >
-      {(
-       (wrestler.avgRating * wrestler.ratings?.length! + 6) /
-       (wrestler.ratings?.length! + 1)
-      ).toFixed(2)}
-     </p>
+     {wrestler.ratings?.length! !== 0 ? (
+      <p
+       style={{
+        color: ratingColor({
+         rating:
+          (wrestler.avgRating * wrestler.ratings?.length! + 6) /
+          (wrestler.ratings?.length! + 1),
+        }),
+       }}
+       className={`font-bold text-7xl`}
+      >
+       {(
+        (wrestler.avgRating * wrestler.ratings?.length! + 6) /
+        (wrestler.ratings?.length! + 1)
+       ).toFixed(2)}
+      </p>
+     ) : (
+      <p className={`font-bold text-7xl`}>--</p>
+     )}
      <RatingChart data={ratingDataGenerate(comments!)} />
     </div>
    </div>
