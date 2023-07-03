@@ -29,10 +29,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  if (!profile) {
   notFound();
  }
- const { data: comments } = await supabase
-  .from("comments")
-  .select()
-  .eq("author", params.slug);
+ const { data: comments } = await supabase.from("comments").select();
  return (
   <div className="flex gap-5 items-start">
    <div className="w-1/4 bg-slate-200 dark:bg-slate-800 rounded-md p-5 flex flex-col h-auto">
@@ -59,19 +56,38 @@ const Layout = async ({ children, params }: LayoutProps) => {
     <div className="flex flex-col gap-2 items-start">
      <Label size="small">
       Rated matches:{" "}
-      {comments?.filter((comment) => comment.type === "match").length}
+      {
+       comments?.filter(
+        (comment) =>
+         comment.type === "matches" && comment.author?.username === params.slug
+       ).length
+      }
      </Label>
      <Label size="small">
       Rated wrestlers:{" "}
-      {comments?.filter((comment) => comment.type === "wrestler").length}
+      {
+       comments?.filter(
+        (comment) =>
+         comment.type === "wrestlers" &&
+         comment.author?.username === params.slug
+       ).length
+      }
      </Label>
      <Label size="small">
       Rated shows:{" "}
-      {comments?.filter((comment) => comment.type === "show").length}
+      {
+       comments?.filter(
+        (comment) =>
+         comment.type === "shows" && comment.author?.username === params.slug
+       ).length
+      }
      </Label>
     </div>
     {user?.id === profile.id && (
-     <Link href="#" className={cn(buttonVariants(), "w-full mt-10")}>
+     <Link
+      href={`/user/${params.slug}/edit`}
+      className={cn(buttonVariants(), "w-full mt-10")}
+     >
       Edit
      </Link>
     )}

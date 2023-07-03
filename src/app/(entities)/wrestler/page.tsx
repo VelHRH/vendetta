@@ -1,13 +1,11 @@
 import createClient from "@/lib/supabase-server";
 import Label from "@/components/ui/Label";
 import WrestlerElem from "@/components/Wrestler/WrestlerElem";
+import { normalizeRating } from "@/lib/utils";
 
 const Wrestlers = async () => {
  const supabase = createClient();
- const { data: wrestlers } = await supabase
-  .from("wrestlers")
-  .select("*")
-  .order("avgRating", { ascending: false });
+ const { data: wrestlers } = await supabase.from("wrestlers").select("*");
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All wrestlers</Label>
@@ -16,9 +14,15 @@ const Wrestlers = async () => {
     <p className="text-center flex-1">Last show</p>
     <p className="text-center w-32">Rating</p>
    </div>
-   {wrestlers?.map((wrestler, index) => (
-    <WrestlerElem key={index} place={index + 1} wrestler={wrestler} />
-   ))}
+   {wrestlers
+    ?.sort(
+     (a, b) =>
+      normalizeRating({ ratings: b.ratings!, avgRating: b.avgRating }) -
+      normalizeRating({ ratings: a.ratings!, avgRating: a.avgRating })
+    )
+    .map((wrestler, index) => (
+     <WrestlerElem key={index} place={index + 1} wrestler={wrestler} />
+    ))}
   </div>
  );
 };

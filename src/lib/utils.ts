@@ -33,3 +33,14 @@ export function ratingDataGenerate(
 export function ratingColor({ rating }: { rating: number }) {
  return createColors()[10 - Math.ceil(rating)];
 }
+
+export function normalizeRating({
+ avgRating,
+ ratings,
+}: {
+ avgRating: number;
+ ratings: Json[];
+}) {
+ if (ratings.length === 0) return 0;
+ return (avgRating * ratings.length! + 6) / (ratings.length! + 1);
+}

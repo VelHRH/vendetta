@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
 import RatingChart from "@/components/RatingChart";
-import { createColors, ratingColor, ratingDataGenerate } from "@/lib/utils";
+import { normalizeRating, ratingColor, ratingDataGenerate } from "@/lib/utils";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -38,12 +38,18 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
   ? comments?.find((com) => com.author!.id === user.id)
   : undefined;
 
+ const now = new Date();
  const beginCareer = new Date(wrestler.career_start!.toString());
  const birthday = new Date(wrestler.born!.toString());
- // @ts-ignore
- const experience = new Date(Date.now() - beginCareer);
- // @ts-ignore
- const age = new Date(Date.now() - birthday);
+
+ const experience = new Date(
+  new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
+   beginCareer.getTime()
+ );
+ const age = new Date(
+  new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
+   birthday.getTime()
+ );
  return (
   <>
    <div className="w-full flex gap-5">
@@ -78,7 +84,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        Start of in-ring career: {beginCareer.toLocaleDateString()}
       </Label>
       <Label size="small">
-       Experience: {Math.abs(experience.getUTCFullYear() - 1970) + 4} years
+       Experience: {Math.abs(experience.getUTCFullYear() - 1970)} years
       </Label>
       <Label size="small" className="flex gap-2 items-center">
        Trainers:
@@ -110,7 +116,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">Real name: {wrestler.real_name}</Label>
       <Label size="small">Sex: {wrestler.sex}</Label>
       <Label size="small">
-       Age: {Math.abs(age.getUTCFullYear() - 1970) + 4} years
+       Age: {Math.abs(age.getUTCFullYear() - 1970)} years
       </Label>
       <Label size="small">Birthday: {wrestler.born}</Label>
       <Label size="small">
@@ -128,17 +134,18 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <p
        style={{
         color: ratingColor({
-         rating:
-          (wrestler.avgRating * wrestler.ratings?.length! + 6) /
-          (wrestler.ratings?.length! + 1),
+         rating: normalizeRating({
+          ratings: wrestler.ratings!,
+          avgRating: wrestler.avgRating,
+         }),
         }),
        }}
        className={`font-bold text-7xl`}
       >
-       {(
-        (wrestler.avgRating * wrestler.ratings?.length! + 6) /
-        (wrestler.ratings?.length! + 1)
-       ).toFixed(2)}
+       {normalizeRating({
+        ratings: wrestler.ratings!,
+        avgRating: wrestler.avgRating,
+       }).toFixed(2)}
       </p>
      ) : (
       <p className={`font-bold text-7xl`}>--</p>
