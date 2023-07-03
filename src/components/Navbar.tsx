@@ -5,6 +5,7 @@ import SignOut from "./Auth/SignOut";
 import SwitchTheme from "./SwitchTheme";
 import { buttonVariants } from "./ui/Button";
 import { Plus, UserCircle2 } from "lucide-react";
+import { Icons } from "./Icons";
 
 const Navbar = async () => {
  const supabase = createClient();
@@ -21,7 +22,7 @@ const Navbar = async () => {
   <div className="fixed h-[80px] text-xl z-50 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-10 w-full">
    <div className="flex gap-14 items-center">
     <Link href="/" className="flex gap-2 font-bold items-center">
-     <p>Logo</p>
+     <Icons.logo className="h-[50px] w-[52px] text-slate-900 dark:text-slate-100" />
      <p>Vendetta</p>
     </Link>
     <div className="flex gap-5 items-center">
