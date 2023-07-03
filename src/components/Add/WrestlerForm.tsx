@@ -47,7 +47,11 @@ const WrestlerForm = ({
  const [imgUrl, setImgUrl] = useState<string | null>(
   wrestler?.wrestler_img || null
  );
+ const [isVendetta, setIsVendetta] = useState<string>(
+  wrestler ? (wrestler.isVendetta ? "Yes" : "No") : ""
+ );
  const [isSelectSex, setIsSelectSex] = useState<boolean>(false);
+ const [isSelectVendetta, setIsSelectVendetta] = useState<boolean>(false);
  const [isError, setIsError] = useState<boolean>(false);
 
  const router = useRouter();
@@ -106,6 +110,7 @@ const WrestlerForm = ({
     trainers: trainers.split(",").filter((trainer) => trainer.trim()),
     birth,
     careerstart,
+    isVendetta: isVendetta !== "No",
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
    };
@@ -239,6 +244,14 @@ const WrestlerForm = ({
       value={careerstart}
       setValue={setCareerstart}
       type="date"
+     />
+     <Dropdown
+      array={["Yes", "No"]}
+      value={isVendetta}
+      setValue={setIsVendetta}
+      isSelect={isSelectVendetta}
+      setIsSelect={setIsSelectVendetta}
+      placeholder="Signd to Vendetta? (YES by default)"
      />
      <Input
       placeholder="Wrestling style(s) (enter with ,)"

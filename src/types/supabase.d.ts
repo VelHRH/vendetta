@@ -90,6 +90,7 @@ interface Database {
      created_at: string | null;
      height: number | null;
      id: number;
+     isVendetta: boolean;
      moves: string[] | null;
      name: string | null;
      nickname: string[] | null;
@@ -110,6 +111,7 @@ interface Database {
      created_at?: string | null;
      height?: number | null;
      id?: number;
+     isVendetta?: boolean;
      moves?: string[] | null;
      name?: string | null;
      nickname?: string[] | null;
@@ -130,6 +132,7 @@ interface Database {
      created_at?: string | null;
      height?: number | null;
      id?: number;
+     isVendetta?: boolean;
      moves?: string[] | null;
      name?: string | null;
      nickname?: string[] | null;

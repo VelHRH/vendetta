@@ -9,6 +9,7 @@ export const WrestlerValidator = z.object({
  birth: z.string(),
  city: z.string(),
  country: z.string(),
+ isVendetta: z.boolean().optional(),
  styles: z.array(z.string()),
  trainers: z.array(z.string()),
  nicknames: z.array(z.string()),

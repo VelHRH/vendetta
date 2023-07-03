@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     country: wrestler.country,
     city: wrestler.city,
     moves: wrestler.moves,
+    isVendetta: wrestler.isVendetta,
     wrestler_img: wrestler.wrestler_img,
     career_start:
      wrestler.careerstart === "" ? "01-01-2000" : wrestler.careerstart,
@@ -64,6 +65,7 @@ export async function PUT(req: Request) {
     country: wrestler.country,
     city: wrestler.city,
     moves: wrestler.moves,
+    isVendetta: wrestler.isVendetta,
     wrestler_img: wrestler.wrestler_img,
     career_start:
      wrestler.careerstart === "" ? "01-01-2000" : wrestler.careerstart,
