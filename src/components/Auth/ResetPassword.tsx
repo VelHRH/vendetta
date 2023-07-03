@@ -31,7 +31,8 @@ const ResetPassword = () => {
    }
    toast({
     title: "Password reset link sent",
-    description: "Check your email and follow instructions",
+    description:
+     "Check your email and follow instructions (it can take some time)",
     variant: "default",
    });
   } catch (err: string | any) {

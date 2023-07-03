@@ -1,3 +1,5 @@
+import EditUserForm from "@/components/Add/EditUserForm";
+import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 
@@ -15,7 +17,18 @@ const EditProfile = async ({ params }: { params: { slug: string } }) => {
  if (!user || params.slug !== profile?.username) {
   notFound();
  }
- return <div>page</div>;
+ return (
+  <>
+   <Label className="font-bold mb-2">Edit profile:</Label>
+   <div className="flex flex-col gap-7 items-center">
+    <EditUserForm
+     username={profile.username}
+     fullName={profile.full_name}
+     id={profile.id}
+    />
+   </div>
+  </>
+ );
 };
 
 export default EditProfile;

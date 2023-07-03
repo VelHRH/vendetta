@@ -103,7 +103,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
      <SectionButton link={`/user/${params.slug}/shows`}>Shows</SectionButton>
      <SectionButton link={`/user/${params.slug}/edit`}>Edit</SectionButton>
     </div>
-    {children}
+    <div className="flex flex-col gap-3">{children}</div>
    </div>
   </div>
  );

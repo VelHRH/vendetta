@@ -14,7 +14,7 @@ const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
  const { data: wrestlers } = await supabase.from("wrestlers").select();
 
  return (
-  <div className="flex flex-col gap-3">
+  <>
    <Label className="font-bold mb-2">Rated wrestlers:</Label>
    {comments
     ?.filter((comment) => comment.author?.username === params.slug)
@@ -39,7 +39,7 @@ const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
       </div>
      </Link>
     ))}
-  </div>
+  </>
  );
 };
 

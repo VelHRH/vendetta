@@ -46,7 +46,7 @@ const SingUp = () => {
     .update({ username, full_name: fullname })
     .eq("id", data.user!.id);
    toast({
-    title: "Confirmation sent",
+    title: "Confirmation ",
     description: "Check your email and confirm adress",
     variant: "default",
    });
