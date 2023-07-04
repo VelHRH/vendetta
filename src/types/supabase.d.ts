@@ -1,6 +1,4 @@
 type Json = {
- authorId?: string;
- rating?: number;
  id?: string;
  username?: string;
 };
@@ -8,7 +6,7 @@ type Json = {
 interface Database {
  public: {
   Tables: {
-   comments: {
+   comments_shows: {
     Row: {
      author: Json | null;
      created_at: string | null;
@@ -16,7 +14,6 @@ interface Database {
      item_id: number | null;
      rating: number;
      text: string;
-     type: string;
     };
     Insert: {
      author?: Json | null;
@@ -25,7 +22,6 @@ interface Database {
      item_id?: number | null;
      rating: number;
      text: string;
-     type: string;
     };
     Update: {
      author?: Json | null;
@@ -34,22 +30,132 @@ interface Database {
      item_id?: number | null;
      rating?: number;
      text?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "comments_shows_item_id_fkey";
+      columns: ["item_id"];
+      referencedRelation: "wrestlers";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
+   comments_wrestlers: {
+    Row: {
+     author: Json | null;
+     created_at: string | null;
+     id: number;
+     item_id: number | null;
+     rating: number;
+     text: string;
+    };
+    Insert: {
+     author?: Json | null;
+     created_at?: string | null;
+     id?: number;
+     item_id?: number | null;
+     rating: number;
+     text: string;
+    };
+    Update: {
+     author?: Json | null;
+     created_at?: string | null;
+     id?: number;
+     item_id?: number | null;
+     rating?: number;
+     text?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "comments_wrestlers_item_id_fkey";
+      columns: ["item_id"];
+      referencedRelation: "wrestlers";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
+   matches: {
+    Row: {
+     avgRating: number | null;
+     created_at: string | null;
+     id: number;
+     isFinished: boolean | null;
+     participants: Json[];
+     show: number;
+     time: string | null;
+     title: Json[] | null;
+     tournament: number | null;
+     type: string;
+    };
+    Insert: {
+     avgRating?: number | null;
+     created_at?: string | null;
+     id?: number;
+     isFinished?: boolean | null;
+     participants: Json[];
+     show: number;
+     time?: string | null;
+     title?: Json[] | null;
+     tournament?: number | null;
      type?: string;
     };
-    Relationships: [];
+    Update: {
+     avgRating?: number | null;
+     created_at?: string | null;
+     id?: number;
+     isFinished?: boolean | null;
+     participants?: Json[];
+     show?: number;
+     time?: string | null;
+     title?: Json[] | null;
+     tournament?: number | null;
+     type?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "matches_show_fkey";
+      columns: ["show"];
+      referencedRelation: "shows";
+      referencedColumns: ["id"];
+     }
+    ];
    };
    shows: {
     Row: {
+     arena: string;
+     attendance: number | null;
+     avgRating: number;
      created_at: string | null;
      id: number;
+     location: string;
+     name: string;
+     promotion: string[] | null;
+     type: string;
+     upload_date: string | null;
     };
     Insert: {
+     arena: string;
+     attendance?: number | null;
+     avgRating?: number;
      created_at?: string | null;
      id?: number;
+     location: string;
+     name: string;
+     promotion?: string[] | null;
+     type: string;
+     upload_date?: string | null;
     };
     Update: {
+     arena?: string;
+     attendance?: number | null;
+     avgRating?: number;
      created_at?: string | null;
      id?: number;
+     location?: string;
+     name?: string;
+     promotion?: string[] | null;
+     type?: string;
+     upload_date?: string | null;
     };
     Relationships: [];
    };
@@ -78,7 +184,14 @@ interface Database {
      role?: string;
      username?: string | null;
     };
-    Relationships: [];
+    Relationships: [
+     {
+      foreignKeyName: "users_id_fkey";
+      columns: ["id"];
+      referencedRelation: "users";
+      referencedColumns: ["id"];
+     }
+    ];
    };
    wrestlers: {
     Row: {
@@ -94,7 +207,6 @@ interface Database {
      moves: string[] | null;
      name: string | null;
      nickname: string[] | null;
-     ratings: Json[] | null;
      real_name: string | null;
      sex: string | null;
      style: string[] | null;
@@ -115,7 +227,6 @@ interface Database {
      moves?: string[] | null;
      name?: string | null;
      nickname?: string[] | null;
-     ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;
      style?: string[] | null;
@@ -136,7 +247,6 @@ interface Database {
      moves?: string[] | null;
      name?: string | null;
      nickname?: string[] | null;
-     ratings?: Json[] | null;
      real_name?: string | null;
      sex?: string | null;
      style?: string[] | null;

@@ -81,6 +81,7 @@ const CommentForm: FC<CommentFormProps> = ({
   mutationFn: async () => {
    const payload = {
     text,
+    type,
     rating: parseFloat(rating),
     id: commetId,
    };

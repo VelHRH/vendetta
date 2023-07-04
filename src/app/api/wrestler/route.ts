@@ -27,7 +27,6 @@ export async function POST(req: Request) {
     wrestler_img: wrestler.wrestler_img,
     career_start:
      wrestler.careerstart === "" ? "01-01-2000" : wrestler.careerstart,
-    ratings: [],
    })
    .select();
   if (error) throw error;

@@ -31,7 +31,7 @@ const EditComment: FC<DeleteItemButtonProps> = ({
 
  const { mutate: deleteComment, isLoading } = useMutation({
   mutationFn: async () => {
-   const { data } = await axios.patch("/api/comment", { id });
+   const { data } = await axios.patch("/api/comment", { id, type });
    return data as string;
   },
   onError: (err) => {

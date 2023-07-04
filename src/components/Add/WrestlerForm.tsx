@@ -12,8 +12,6 @@ import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase-browser";
 import { Upload } from "lucide-react";
 import Image from "next/image";
-import { revalidatePath } from "next/cache";
-
 const WrestlerForm = ({
  wrestler,
 }: {

@@ -9,34 +9,36 @@ export async function POST(req: Request) {
 
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  const { data: comments, error: getCommentsError } = await supabase
+   .from(`comments_${comment.type}`)
+   .select()
+   .eq("item_id", comment.itemId);
+  if (getCommentsError) throw getCommentsError;
+  if (comments!.find((c) => c.author!.id === comment.authorId))
+   throw "The item is already rated by you";
+
+  const { data: item } = await supabase
    .from(comment.type)
    .select()
    .eq("id", comment.itemId)
    .single();
-  if (error) throw error;
-  if (data.ratings?.find((c: Json) => c.authorId === comment.authorId))
-   throw new Error();
 
-  const { error: commentError } = await supabase.from("comments").insert({
-   type: comment.type,
-   author: { id: comment.authorId, username: comment.author },
-   text: comment.text,
-   item_id: comment.itemId,
-   rating: comment.rating,
-  });
+  const { error: commentError } = await supabase
+   .from(`comments_${comment.type}`)
+   .insert({
+    author: { id: comment.authorId, username: comment.author },
+    text: comment.text,
+    item_id: comment.itemId,
+    rating: comment.rating,
+   });
   if (commentError) throw commentError;
-
-  let ratings = data?.ratings!;
-  ratings.push({ authorId: comment.authorId, rating: comment.rating });
 
   const { error: ratingError } = await supabase
    .from(comment.type)
    .update({
-    ratings: ratings,
     avgRating:
-     (data?.avgRating! * (ratings.length - 1) + comment.rating) /
-     ratings.length,
+     (item!.avgRating * comments.length + comment.rating) /
+     (comments.length + 1),
    })
    .eq("id", comment.itemId);
   if (ratingError) throw ratingError;
@@ -56,38 +58,35 @@ export async function PUT(req: Request) {
   const supabase = createClient();
 
   const { data: comment, error: commentError } = await supabase
-   .from("comments")
+   .from(`comments_${body.type}`)
    .select()
    .eq("id", body.id)
    .single();
   if (!comment || commentError) throw "Error with getting this comment";
 
-  const { data, error } = await supabase
-   .from(comment.type)
+  const { data: comments } = await supabase
+   .from(`comments_${body.type}`)
+   .select()
+   .eq("item_id", comment.item_id);
+
+  const { data: item, error } = await supabase
+   .from(body.type)
    .select()
    .eq("id", comment.item_id)
    .single();
-  if (!data || error) throw "Error with getting rated item";
+  if (!item || error) throw "Error with getting rated item";
 
-  data.ratings![
-   data.ratings!.findIndex((d: any) => d.authorId === comment.author!.id)
-  ].rating = body.rating;
   const { error: updateItemError } = await supabase
-   .from(comment.type)
+   .from(body.type)
    .update({
     avgRating:
-     data.ratings?.length! !== 0
-      ? (data.avgRating * data.ratings?.length! -
-         comment.rating +
-         body.rating) /
-        data.ratings?.length!
-      : 0,
-    ratings: data.ratings!,
+     (item.avgRating * comments!.length - comment.rating + body.rating) /
+     comments!.length,
    })
    .eq("id", comment.item_id);
   if (updateItemError) throw "Update item error";
   const { error: updateError } = await supabase
-   .from("comments")
+   .from(`comments_${body.type}`)
    .update({
     rating: body.rating,
     text: body.text,
@@ -109,39 +108,37 @@ export async function PATCH(req: Request) {
  try {
   const body = await req.json();
   const supabase = createClient();
+
   const { data: comment, error: commentError } = await supabase
-   .from("comments")
+   .from(`comments_${body.type}`)
    .select()
    .eq("id", body.id)
    .single();
   if (!comment || commentError) throw "Error with getting this comment";
 
-  const { data, error } = await supabase
-   .from(comment.type)
+  const { data: comments } = await supabase
+   .from(`comments_${body.type}`)
+   .select()
+   .eq("item_id", comment.item_id);
+
+  const { data: item, error } = await supabase
+   .from(body.type)
    .select()
    .eq("id", comment.item_id)
    .single();
-  if (!data || error) throw "Error with getting rated item";
+  if (!item || error) throw "Error with getting rated item";
 
-  data.ratings!.splice(
-   data.ratings!.findIndex((d: any) => d.authorId === comment.author!.id),
-   1
-  );
-  const { error: updateError } = await supabase
-   .from(comment.type)
+  const { error: updateItemError } = await supabase
+   .from(body.type)
    .update({
     avgRating:
-     data.ratings?.length! !== 0
-      ? (data.avgRating * (data.ratings?.length! + 1) - comment.rating) /
-        data.ratings?.length!
-      : 0,
-    ratings: data.ratings!,
+     (item.avgRating * comments!.length - comment.rating) /
+     (comments!.length - 1),
    })
    .eq("id", comment.item_id);
-  if (updateError) throw "Update item error";
-
+  if (updateItemError) throw "Update item error";
   const { error: deleteError } = await supabase
-   .from("comments")
+   .from(`comments_${body.type}`)
    .delete()
    .eq("id", body.id);
   if (deleteError) throw "Delete comment error";

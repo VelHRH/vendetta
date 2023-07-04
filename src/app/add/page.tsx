@@ -28,7 +28,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add wrestler
+     Add show
     </Label>
     <ChevronsRight size={30} />
    </Link>
@@ -40,7 +40,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add wrestler
+     Add match
     </Label>
     <ChevronsRight size={30} />
    </Link>
@@ -52,7 +52,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add wrestler
+     Add title
     </Label>
     <ChevronsRight size={30} />
    </Link>

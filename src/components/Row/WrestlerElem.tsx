@@ -6,10 +6,11 @@ import { FC } from "react";
 
 interface WrestlerElemProps {
  wrestler: Database["public"]["Tables"]["wrestlers"]["Row"];
+ comments: Database["public"]["Tables"]["comments_wrestlers"]["Row"][];
  place: number;
 }
 
-const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place }) => {
+const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place, comments }) => {
  return (
   <Link
    href={`/wrestler/${wrestler.id}`}
@@ -36,12 +37,12 @@ const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place }) => {
     Четоввмвмвмвмв ам
    </div>
 
-   {wrestler.ratings?.length !== 0 ? (
+   {comments.length !== 0 ? (
     <div
      style={{
       color: ratingColor({
        rating: normalizeRating({
-        ratings: wrestler.ratings!,
+        ratings: comments.length,
         avgRating: wrestler.avgRating,
        }),
       }),
@@ -49,7 +50,7 @@ const WrestlerElem: FC<WrestlerElemProps> = ({ wrestler, place }) => {
      className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center"
     >
      {normalizeRating({
-      ratings: wrestler.ratings!,
+      ratings: comments.length,
       avgRating: wrestler.avgRating,
      }).toFixed(2)}
     </div>

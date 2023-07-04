@@ -12,15 +12,9 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: wrestler } = await supabase
   .from("wrestlers")
-  .select("*")
+  .select("*, comments_wrestlers(*)")
   .eq("id", params.id)
   .single();
- const { data: comments } = await supabase
-  .from("comments")
-  .select("*")
-  .eq("item_id", params.id)
-  .eq("type", "wrestlers")
-  .order("created_at", { ascending: true });
  if (!wrestler) {
   notFound();
  }
@@ -35,7 +29,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
   .single();
 
  const loggedUserComment = user
-  ? comments?.find((com) => com.author!.id === user.id)
+  ? wrestler.comments_wrestlers.find((com) => com.author!.id === user.id)
   : undefined;
 
  const now = new Date();
@@ -83,8 +77,13 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">
        Start of in-ring career: {beginCareer.toLocaleDateString()}
       </Label>
+
       <Label size="small">
        Experience: {Math.abs(experience.getUTCFullYear() - 1970)} years
+      </Label>
+      <Label size="small">
+       Статус:{" "}
+       {wrestler.isVendetta ? "подписан Vendetta" : "на правах фрилансера"}
       </Label>
       <Label size="small" className="flex gap-2 items-center">
        Trainers:
@@ -130,12 +129,12 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="medium" className="font-bold self-start">
       Rating:
      </Label>
-     {wrestler.ratings?.length! !== 0 ? (
+     {wrestler.comments_wrestlers.length! !== 0 ? (
       <p
        style={{
         color: ratingColor({
          rating: normalizeRating({
-          ratings: wrestler.ratings!,
+          ratings: wrestler.comments_wrestlers.length,
           avgRating: wrestler.avgRating,
          }),
         }),
@@ -143,14 +142,14 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        className={`font-bold text-7xl`}
       >
        {normalizeRating({
-        ratings: wrestler.ratings!,
+        ratings: wrestler.comments_wrestlers.length,
         avgRating: wrestler.avgRating,
        }).toFixed(2)}
       </p>
      ) : (
       <p className={`font-bold text-7xl`}>--</p>
      )}
-     <RatingChart data={ratingDataGenerate(comments!)} />
+     <RatingChart data={ratingDataGenerate(wrestler.comments_wrestlers!)} />
     </div>
    </div>
 
@@ -180,8 +179,8 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
 
    <Label className="font-bold self-start mt-10">Comments:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
-    {comments?.length !== 0
-     ? comments?.map((comment) => (
+    {wrestler.comments_wrestlers.length !== 0
+     ? wrestler.comments_wrestlers.map((comment) => (
         <Comment
          key={comment.id}
          author={comment.author!.username || ""}

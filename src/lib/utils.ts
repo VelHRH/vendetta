@@ -39,8 +39,8 @@ export function normalizeRating({
  ratings,
 }: {
  avgRating: number;
- ratings: Json[];
+ ratings: number;
 }) {
- if (ratings.length === 0) return 0;
- return (avgRating * ratings.length! + 6) / (ratings.length! + 1);
+ if (ratings === 0) return 0;
+ return (avgRating * ratings + 6) / (ratings + 1);
 }
