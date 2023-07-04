@@ -35,7 +35,7 @@ interface Database {
      {
       foreignKeyName: "comments_shows_item_id_fkey";
       columns: ["item_id"];
-      referencedRelation: "wrestlers";
+      referencedRelation: "shows";
       referencedColumns: ["id"];
      }
     ];

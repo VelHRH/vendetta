@@ -20,7 +20,9 @@ export function createColors() {
 }
 
 export function ratingDataGenerate(
- comments: Database["public"]["Tables"]["comments"]["Row"][]
+ comments:
+  | Database["public"]["Tables"]["comments_wrestlers"]["Row"][]
+  | Database["public"]["Tables"]["comments_shows"]["Row"][]
 ) {
  return Array.from({ length: 11 }, (_, index) =>
   comments!.reduce(

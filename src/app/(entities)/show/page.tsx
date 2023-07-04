@@ -8,7 +8,6 @@ const AllShows = async ({}) => {
  const { data: shows, error } = await supabase
   .from("shows")
   .select("*, comments_shows(*)");
- console.log(error);
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All shows</Label>
