@@ -1,36 +1,32 @@
 "use client";
-import { ratingColor } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 interface DropdownProps {
  array: string[];
  value: string;
  setValue: (value: string) => void;
- isSelect: boolean;
- setIsSelect: (value: boolean) => void;
- placeholder?: string;
+ placeholder: string;
 }
 
 const Dropdown: FC<DropdownProps> = ({
  array,
  value,
  setValue,
- isSelect,
- setIsSelect,
  placeholder,
 }) => {
+ const [isSelect, setIsSelect] = useState<boolean>(false);
  return (
   <div className={`w-full text-lg relative`}>
    <button
     onClick={() => setIsSelect(!isSelect)}
     className={`flex items-center justify-between border-[3px] p-3 bg-slate-100 dark:bg-slate-900 w-full border-slate-500 rounded-md ${
-     value === ""
+     value === "" || isSelect
       ? "text-slate-400 font-medium"
       : "text-slate-900 dark:text-slate-50 font-semibold"
     }`}
    >
-    {value === "" ? placeholder || "Choose..." : value}
+    {value === "" || isSelect ? placeholder : value}
     {isSelect ? <ChevronUp /> : <ChevronDown />}
    </button>
 

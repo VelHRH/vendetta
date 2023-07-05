@@ -31,6 +31,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const loggedUserComment = user
   ? show.comments_shows.find((com) => com.author!.id === user.id)
   : undefined;
+
  return (
   <>
    <div className="w-full flex gap-5">
@@ -118,15 +119,17 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
    <Label className="font-bold self-start mt-10">Comments:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
     {show.comments_shows.length !== 0
-     ? show.comments_shows.map((comment) => (
-        <Comment
-         key={comment.id}
-         author={comment.author!.username || ""}
-         rating={comment.rating}
-         date={comment.created_at?.toString() || ""}
-         text={comment.text}
-        />
-       ))
+     ? show.comments_shows
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((comment) => (
+         <Comment
+          key={comment.id}
+          author={comment.author!.username || ""}
+          rating={comment.rating}
+          date={comment.created_at?.toString() || ""}
+          text={comment.text}
+         />
+        ))
      : "No comments here yet."}
    </div>
   </>

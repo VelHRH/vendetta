@@ -9,7 +9,7 @@ interface Database {
    comments_shows: {
     Row: {
      author: Json | null;
-     created_at: string | null;
+     created_at: string;
      id: number;
      item_id: number | null;
      rating: number;
@@ -17,7 +17,7 @@ interface Database {
     };
     Insert: {
      author?: Json | null;
-     created_at?: string | null;
+     created_at?: string;
      id?: number;
      item_id?: number | null;
      rating: number;
@@ -25,7 +25,7 @@ interface Database {
     };
     Update: {
      author?: Json | null;
-     created_at?: string | null;
+     created_at?: string;
      id?: number;
      item_id?: number | null;
      rating?: number;
@@ -43,7 +43,7 @@ interface Database {
    comments_wrestlers: {
     Row: {
      author: Json | null;
-     created_at: string | null;
+     created_at: string;
      id: number;
      item_id: number | null;
      rating: number;
@@ -51,7 +51,7 @@ interface Database {
     };
     Insert: {
      author?: Json | null;
-     created_at?: string | null;
+     created_at?: string;
      id?: number;
      item_id?: number | null;
      rating: number;
@@ -59,7 +59,7 @@ interface Database {
     };
     Update: {
      author?: Json | null;
-     created_at?: string | null;
+     created_at?: string;
      id?: number;
      item_id?: number | null;
      rating?: number;

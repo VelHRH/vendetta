@@ -188,15 +188,17 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
    <Label className="font-bold self-start mt-10">Comments:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
     {wrestler.comments_wrestlers.length !== 0
-     ? wrestler.comments_wrestlers.map((comment) => (
-        <Comment
-         key={comment.id}
-         author={comment.author!.username || ""}
-         rating={comment.rating}
-         date={comment.created_at?.toString() || ""}
-         text={comment.text}
-        />
-       ))
+     ? wrestler.comments_wrestlers
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((comment) => (
+         <Comment
+          key={comment.id}
+          author={comment.author!.username || ""}
+          rating={comment.rating}
+          date={comment.created_at?.toString() || ""}
+          text={comment.text}
+         />
+        ))
      : "No comments here yet."}
    </div>
   </>

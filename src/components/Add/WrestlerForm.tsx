@@ -48,8 +48,6 @@ const WrestlerForm = ({
  const [isVendetta, setIsVendetta] = useState<string>(
   wrestler ? (wrestler.isVendetta ? "Yes" : "No") : ""
  );
- const [isSelectSex, setIsSelectSex] = useState<boolean>(false);
- const [isSelectVendetta, setIsSelectVendetta] = useState<boolean>(false);
  const [isError, setIsError] = useState<boolean>(false);
 
  const router = useRouter();
@@ -152,6 +150,7 @@ const WrestlerForm = ({
     nicknames: nicknames.split(",").filter((nickname) => nickname.trim()),
     birth,
     careerstart,
+    isVendetta: isVendetta !== "No",
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
    };
@@ -197,8 +196,6 @@ const WrestlerForm = ({
       array={["Male", "Female", "Undefined"]}
       value={sex}
       setValue={setSex}
-      isSelect={isSelectSex}
-      setIsSelect={setIsSelectSex}
       placeholder="Choose sex..."
      />
      <Input
@@ -247,8 +244,6 @@ const WrestlerForm = ({
       array={["Yes", "No"]}
       value={isVendetta}
       setValue={setIsVendetta}
-      isSelect={isSelectVendetta}
-      setIsSelect={setIsSelectVendetta}
       placeholder="Signd to Vendetta? (YES by default)"
      />
      <Input

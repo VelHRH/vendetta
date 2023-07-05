@@ -37,7 +37,6 @@ const CommentForm: FC<CommentFormProps> = ({
 }) => {
  const [text, setText] = useState<string>(content || "");
  const [rating, setRating] = useState<string>(stars?.toString() || "");
- const [isSelectRating, setIsSelectRating] = useState<boolean>(false);
  const router = useRouter();
 
  const { mutate: addComment, isLoading: isLoadingAdd } = useMutation({
@@ -120,8 +119,6 @@ const CommentForm: FC<CommentFormProps> = ({
     array={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]}
     value={rating}
     setValue={setRating}
-    isSelect={isSelectRating}
-    setIsSelect={setIsSelectRating}
     placeholder="Choose rating..."
    />
    <textarea
