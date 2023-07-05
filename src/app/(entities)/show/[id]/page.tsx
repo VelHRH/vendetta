@@ -36,7 +36,9 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="small">Посещаемость: {show.attendance}</Label>
     </div>
     <div>
-     <Label>Результаты матчей:</Label>
+     <Label className="font-bold" size="medium">
+      Результаты матчей:
+     </Label>
     </div>
    </div>
    <div className="w-1/4 h-[600px] rounded-md dark:bg-slate-800 bg-slate-200 flex flex-col gap-5 items-center p-5">

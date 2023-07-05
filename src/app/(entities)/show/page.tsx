@@ -12,7 +12,7 @@ const AllShows = async ({}) => {
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5">All shows</Label>
    <div className="flex justify-between items-center p-2">
-    <p className="text-center w-1/2">Wrestler</p>
+    <p className="text-center w-1/2">Show</p>
     <p className="text-center flex-1">Uploaded</p>
     <p className="text-center w-32">Rating</p>
    </div>

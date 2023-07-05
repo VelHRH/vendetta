@@ -69,6 +69,45 @@ const ShowForm = ({
   },
  });
 
+ const { mutate: updateShow, isLoading: isLoadingUpdate } = useMutation({
+  mutationFn: async () => {
+   const payload: CreateShowPayload = {
+    name,
+    date,
+    promotions:
+     promotions.split(",").filter((p) => p.trim()).length === 0
+      ? ["Vendetta Federation"]
+      : promotions.split(",").filter((p) => p.trim()),
+    showType,
+    location,
+    arena,
+    attendance: parseFloat(attendance) || undefined,
+   };
+   const { data } = await axios.put(`/api/show?id=${show!.id}`, payload);
+   return data as string;
+  },
+  onError: (err) => {
+   if (err instanceof AxiosError) {
+    if (err.response?.status === 422) {
+     return toast({
+      title: "Input error",
+      description: "Not all fields are filled out correctly",
+      variant: "destructive",
+     });
+    }
+   }
+   toast({
+    title: "There was an error",
+    description: "Could not update the show",
+    variant: "destructive",
+   });
+  },
+  onSuccess: (data) => {
+   router.push(`/show/${data}`);
+   router.refresh();
+  },
+ });
+
  return (
   <div className="flex flex-col items-center gap-10 w-full">
    <Label className="font-bold">
@@ -115,10 +154,10 @@ const ShowForm = ({
     </div>
    </div>
    <Button
-    isLoading={isLoading}
+    isLoading={isLoading || isLoadingUpdate}
     onClick={() => {
      setIsError(true);
-     createShow();
+     show ? updateShow() : createShow();
     }}
     size="lg"
     className="w-1/2"

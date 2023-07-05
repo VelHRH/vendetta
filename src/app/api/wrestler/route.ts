@@ -78,6 +78,6 @@ export async function PUT(req: Request) {
   if (err instanceof z.ZodError) {
    return new Response(err.message, { status: 422 });
   }
-  return new Response("Error while creating", { status: 500 });
+  return new Response("Error while updating", { status: 500 });
  }
 }
