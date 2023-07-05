@@ -39,7 +39,7 @@ export async function PUT(req: Request) {
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
-  console.log(id);
+
   const supabase = createClient();
 
   const { data, error } = await supabase

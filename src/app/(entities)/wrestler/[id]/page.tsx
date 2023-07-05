@@ -7,6 +7,7 @@ import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
 import RatingChart from "@/components/RatingChart";
 import { normalizeRating, ratingColor, ratingDataGenerate } from "@/lib/utils";
+import InfoElement from "@/components/InfoElement";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -64,47 +65,40 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        <Label size="small">
         Also known as:{" "}
         {wrestler.nickname.map((t) => (
-         <div
-          className="p-1 text-base rounded-md bg-slate-200 dark:bg-slate-800"
-          key={t}
-         >
-          {t}
-         </div>
+         <InfoElement key={t}>{t}</InfoElement>
         ))}
        </Label>
       )}
-      <Label size="small">Total matches: 0</Label>
       <Label size="small">
-       Start of in-ring career: {beginCareer.toLocaleDateString()}
+       Total matches: <InfoElement>0</InfoElement>
+      </Label>
+      <Label size="small">
+       Start of in-ring career:{" "}
+       <InfoElement>{beginCareer.toLocaleDateString()}</InfoElement>
       </Label>
 
       <Label size="small">
-       Experience: {Math.abs(experience.getUTCFullYear() - 1970)} years
+       Experience:{" "}
+       <InfoElement>
+        {Math.abs(experience.getUTCFullYear() - 1970)} years
+       </InfoElement>
       </Label>
       <Label size="small">
-       Статус:{" "}
-       {wrestler.isVendetta ? "подписан Vendetta" : "на правах фрилансера"}
+       Статус:
+       <InfoElement>
+        {wrestler.isVendetta ? "подписан Vendetta" : "на правах фрилансера"}
+       </InfoElement>
       </Label>
       <Label size="small" className="flex gap-2 items-center">
        Trainers:
        {wrestler.trainer?.map((t) => (
-        <div
-         className="p-1 text-base rounded-md bg-slate-200 dark:bg-slate-800"
-         key={t}
-        >
-         {t}
-        </div>
+        <InfoElement key={t}>{t}</InfoElement>
        ))}
       </Label>
       <Label size="small" className="flex gap-2 items-center">
        Wrestling styles:
        {wrestler.style?.map((s) => (
-        <div
-         className="p-1 text-base rounded-md bg-slate-200 dark:bg-slate-800"
-         key={s}
-        >
-         {s}
-        </div>
+        <InfoElement key={s}>{s}</InfoElement>
        ))}
       </Label>
      </div>
@@ -112,17 +106,31 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="medium" className="font-bold mb-3 pb-3">
        Personal information:
       </Label>
-      <Label size="small">Real name: {wrestler.real_name}</Label>
-      <Label size="small">Sex: {wrestler.sex}</Label>
       <Label size="small">
-       Age: {Math.abs(age.getUTCFullYear() - 1970)} years
+       Real name: <InfoElement>{wrestler.real_name}</InfoElement>
       </Label>
-      <Label size="small">Birthday: {wrestler.born}</Label>
       <Label size="small">
-       Birthplace: {wrestler.city}, {wrestler.country}
+       Sex: <InfoElement>{wrestler.sex}</InfoElement>
       </Label>
-      <Label size="small">Height: {wrestler.height} cm</Label>
-      <Label size="small">Weight: {wrestler.weight} kg</Label>
+      <Label size="small">
+       Age:{" "}
+       <InfoElement>{Math.abs(age.getUTCFullYear() - 1970)} years</InfoElement>
+      </Label>
+      <Label size="small">
+       Birthday: <InfoElement>{wrestler.born}</InfoElement>
+      </Label>
+      <Label size="small">
+       Birthplace:{" "}
+       <InfoElement>
+        {wrestler.city}, {wrestler.country}
+       </InfoElement>
+      </Label>
+      <Label size="small">
+       Height: <InfoElement>{wrestler.height} cm</InfoElement>
+      </Label>
+      <Label size="small">
+       Weight: <InfoElement>{wrestler.weight} kg</InfoElement>
+      </Label>
      </div>
     </div>
     <div className="w-1/4 h-[600px] rounded-md dark:bg-slate-800 bg-slate-200 flex flex-col gap-5 items-center p-5">

@@ -10,7 +10,7 @@ const AllShows = async ({}) => {
   .select("*, comments_shows(*)");
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5">All shows</Label>
+   <Label className="font-bold mb-5 justify-center">All shows</Label>
    <div className="flex justify-between items-center p-2">
     <p className="text-center w-1/2">Show</p>
     <p className="text-center flex-1">Uploaded</p>
