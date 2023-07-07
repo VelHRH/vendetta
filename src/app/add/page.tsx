@@ -16,7 +16,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add wrestler
+     Новый рестлер
     </Label>
     <ChevronsRight size={30} />
    </Link>
@@ -28,7 +28,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add show
+     Новое шоу
     </Label>
     <ChevronsRight size={30} />
    </Link>
@@ -40,7 +40,7 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add match
+     Новый матч
     </Label>
     <ChevronsRight size={30} />
    </Link>
@@ -52,7 +52,19 @@ const Add: FC = () => {
     )}
    >
     <Label size="medium" className="font-bold">
-     Add title
+     Новый титул
+    </Label>
+    <ChevronsRight size={30} />
+   </Link>
+   <Link
+    href="/tournament/add"
+    className={cn(
+     buttonVariants({ variant: "subtle" }),
+     "flex gap-1 items-center justify-between p-10"
+    )}
+   >
+    <Label size="medium" className="font-bold">
+     Новый турнир
     </Label>
     <ChevronsRight size={30} />
    </Link>

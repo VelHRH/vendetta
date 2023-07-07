@@ -2,7 +2,7 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { FC, useState } from "react";
 
-interface DropdownProps {
+interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
  array: string[];
  value: string;
  setValue: (value: string) => void;
@@ -14,10 +14,11 @@ const Dropdown: FC<DropdownProps> = ({
  value,
  setValue,
  placeholder,
+ className,
 }) => {
  const [isSelect, setIsSelect] = useState<boolean>(false);
  return (
-  <div className={`w-full text-lg relative`}>
+  <div className={`w-full text-lg relative ${className}`}>
    <button
     onClick={() => setIsSelect(!isSelect)}
     className={`flex items-center justify-between border-[3px] p-3 bg-slate-100 dark:bg-slate-900 w-full border-slate-500 rounded-md ${

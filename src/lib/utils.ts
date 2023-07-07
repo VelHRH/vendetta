@@ -46,3 +46,7 @@ export function normalizeRating({
  if (ratings === 0) return 0;
  return (avgRating * ratings + 6) / (ratings + 1);
 }
+
+export function getBaseLog(x: number, y: number) {
+ return Math.log(y) / Math.log(x);
+}

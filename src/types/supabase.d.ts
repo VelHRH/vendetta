@@ -1,6 +1,14 @@
 type Json = {
- id: string;
- username: string;
+ id?: string;
+ username?: string;
+ itemName?: string;
+ items?: {
+  wrestlerId?: string;
+  wrestlerName?: string;
+  wrestlerImage?: string;
+ }[];
+ bloc?: string;
+ points?: number;
 };
 
 interface Database {
@@ -117,6 +125,12 @@ interface Database {
       columns: ["show"];
       referencedRelation: "shows";
       referencedColumns: ["id"];
+     },
+     {
+      foreignKeyName: "matches_tournament_fkey";
+      columns: ["tournament"];
+      referencedRelation: "tournaments";
+      referencedColumns: ["id"];
      }
     ];
    };
@@ -159,6 +173,45 @@ interface Database {
      show_img?: string | null;
      type?: string;
      upload_date?: string | null;
+    };
+    Relationships: [];
+   };
+   tournaments: {
+    Row: {
+     block_participants: Json[] | null;
+     created_at: string | null;
+     description: string | null;
+     end: string | null;
+     id: number;
+     name: string;
+     pass: number | null;
+     play_off_participants: Json[];
+     start: string | null;
+     type: string;
+    };
+    Insert: {
+     block_participants?: Json[] | null;
+     created_at?: string | null;
+     description?: string | null;
+     end?: string | null;
+     id?: number;
+     name: string;
+     pass?: number | null;
+     play_off_participants?: Json[];
+     start?: string | null;
+     type: string;
+    };
+    Update: {
+     block_participants?: Json[] | null;
+     created_at?: string | null;
+     description?: string | null;
+     end?: string | null;
+     id?: number;
+     name?: string;
+     pass?: number | null;
+     play_off_participants?: Json[];
+     start?: string | null;
+     type?: string;
     };
     Relationships: [];
    };

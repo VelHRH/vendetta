@@ -1,6 +1,7 @@
+import { cn } from "@/lib/utils";
 import { FC } from "react";
 
-interface InputProps {
+interface InputProps extends React.HTMLAttributes<HTMLDivElement> {
  value: string;
  setValue: (value: string) => void;
  placeholder: string;
@@ -14,12 +15,16 @@ const Input: FC<InputProps> = ({
  placeholder,
  type,
  isError,
+ className,
 }) => {
  return (
   <fieldset
-   className={`relative border-[3px] p-3 w-full duration-500 rounded-md ${
-    isError ? "border-red-600" : "border-slate-500"
-   }`}
+   className={cn(
+    `relative border-[3px] p-3 w-full duration-500 rounded-md ${
+     isError ? "border-red-600" : "border-slate-500"
+    }`,
+    className
+   )}
   >
    <input
     placeholder={placeholder}

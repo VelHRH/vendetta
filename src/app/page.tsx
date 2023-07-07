@@ -6,16 +6,17 @@ import Link from "next/link";
 
 export default async function Home() {
  const supabase = createClient();
- const { data: shows, error } = await supabase
-  .from("shows")
-  .select("*, comments_shows(*)");
+ const { data: shows, error } = await supabase.from("shows").select("*");
  const nextShow = shows
   ?.filter((s) => s.upload_date === null)
   .sort((a, b) => a.created_at!.localeCompare(b.created_at!))[0];
  return (
   <div className="flex flex-col gap-7">
    {nextShow && (
-    <div className="flex flex-col p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md cursor-pointer duration-200 hover:bg-slate-200 dark:hover:bg-slate-800">
+    <Link
+     href={`/show/${nextShow.id}`}
+     className="flex flex-col p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md cursor-pointer duration-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+    >
      <Label className="mb-5 font-semibold">Next show</Label>
 
      <div key={nextShow.id} className="flex gap-5">
@@ -52,7 +53,7 @@ export default async function Home() {
        />
       </div>
      </div>
-    </div>
+    </Link>
    )}
    <PreviousShows shows={shows!} />
   </div>

@@ -1,5 +1,4 @@
 import Label from "@/components/ui/Label";
-import { COLORS } from "@/config";
 import createClient from "@/lib/supabase-server";
 import { ratingColor } from "@/lib/utils";
 import Link from "next/link";

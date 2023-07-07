@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-
 import Label from "@/components/ui/Label";
 import { notFound } from "next/navigation";
 import { buttonVariants } from "@/components/ui/Button";
@@ -7,8 +6,7 @@ import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 import { cn } from "@/lib/utils";
 import SectionButton from "@/components/SectionButton";
-import { Info } from "lucide-react";
-import { comment } from "postcss";
+import InfoLabel from "@/components/ui/InfoLabel";
 
 interface LayoutProps {
  children: ReactNode;
@@ -36,12 +34,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
     <div className="flex flex-col gap-2 pb-5 mb-5 border-b-2 border-slate-500 items-start">
      <Label className="font-bold self-center">{profile.username}</Label>
      {profile.username === profile.id && (
-      <p className="flex text-slate-500 items-center gap-2">
-       <Info size={40} />{" "}
-       <p>
-        This username was generated automaticaly. Change it in Edit section.
-       </p>
-      </p>
+      <InfoLabel>
+       This username was generated automaticaly. Change it in Edit section.
+      </InfoLabel>
      )}
      <Label size="small" className="mt-3">
       Full name: {profile.full_name}
