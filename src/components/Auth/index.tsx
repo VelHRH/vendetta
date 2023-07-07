@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth, VIEWS } from "./AuthProvider";
-import ResetPassword from "./ResetPassword";
+import SendEmailToLogin from "./SendEmailToLogin";
 import SignIn from "./SignIn";
 
 import SignUp from "./SignUp";
@@ -23,7 +23,7 @@ const Auth = ({ initialView }: { initialView: string }) => {
   case VIEWS.FORGOTTEN_PASSWORD:
    return (
     <div className="w-2/5 container mx-auto ">
-     <ResetPassword />
+     <SendEmailToLogin />
     </div>
    );
   default:

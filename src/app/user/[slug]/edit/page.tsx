@@ -19,7 +19,7 @@ const EditProfile = async ({ params }: { params: { slug: string } }) => {
  }
  return (
   <>
-   <Label className="font-bold mb-2">Edit profile:</Label>
+   <Label className="font-bold mb-2 text-center">Edit profile:</Label>
    <div className="flex flex-col gap-7 items-center">
     <EditUserForm
      username={profile.username}

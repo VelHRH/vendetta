@@ -88,7 +88,6 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
       />
      ) : (
       <Comment
-       author={profile!.username || ""}
        authorId={profile!.id}
        rating={loggedUserComment.rating}
        date={loggedUserComment.created_at!.toString()}
@@ -108,7 +107,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
         .map((comment) => (
          <Comment
           key={comment.id}
-          author={comment.author!.username || ""}
+          authorId={comment.author!.username || ""}
           rating={comment.rating}
           date={comment.created_at?.toString() || ""}
           text={comment.text}

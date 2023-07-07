@@ -1,38 +1,43 @@
 import { ratingColor } from "@/lib/utils";
 import Link from "next/link";
-import { FC } from "react";
+import createClient from "@/lib/supabase-server";
 import EditComment from "./EditComment";
 import Label from "./ui/Label";
 
 interface CommentProps {
  text: string;
- author: string;
  rating: number;
  date: string;
  id?: number;
  type?: string;
- authorId?: string;
+ authorId: string;
 }
 
-const Comment: FC<CommentProps> = ({
+const Comment = async ({
  text,
- author,
  rating,
  date,
  id,
  type,
  authorId,
-}) => {
+}: CommentProps) => {
+ const supabase = createClient();
+ const { data: user } = await supabase
+  .from("users")
+  .select()
+  .eq("id", authorId)
+  .single();
  const dateConvert = new Date(date);
+ console.log(user?.username);
  return (
   <div className="w-full p-7 bg-slate-200 dark:bg-slate-800 flex flex-col rounded-sm text-lg">
    <div className="flex mb-5 pb-3 border-b-2 border-slate-500">
     <Link
-     href={`/user/${author}`}
+     href={`/user/${user?.username}`}
      className="hover:underline underline-offset-4 w-1/2"
     >
      <Label size="medium" className="font-bold text-start">
-      {author}
+      {user?.username}
      </Label>
     </Link>
     <div className="flex justify-between items-center flex-1">
@@ -55,7 +60,7 @@ const Comment: FC<CommentProps> = ({
        <EditComment
         id={id}
         type={type!}
-        author={author}
+        author={user?.username || ""}
         authorId={authorId!}
         text={text}
         rating={rating}

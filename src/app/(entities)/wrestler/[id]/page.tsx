@@ -5,8 +5,6 @@ import { DEFAULT_IMAGE } from "@/config";
 import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
-import RatingChart from "@/components/RatingChart";
-import { normalizeRating, ratingColor, ratingDataGenerate } from "@/lib/utils";
 import InfoElement from "@/components/InfoElement";
 import RatingBlock from "@/components/RatingBlock";
 
@@ -152,7 +150,6 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       />
      ) : (
       <Comment
-       author={profile!.username || ""}
        authorId={profile!.id}
        rating={loggedUserComment.rating}
        date={loggedUserComment.created_at!.toString()}
@@ -172,7 +169,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
         .map((comment) => (
          <Comment
           key={comment.id}
-          author={comment.author!.username || ""}
+          authorId={comment.author!.id || ""}
           rating={comment.rating}
           date={comment.created_at?.toString() || ""}
           text={comment.text}
