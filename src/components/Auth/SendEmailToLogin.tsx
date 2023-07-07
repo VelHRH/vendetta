@@ -23,7 +23,7 @@ const SendEmailToLogin = () => {
     .eq("email", email)
     .single();
    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_BASE_URL}/user/${profile?.username}/edit`,
+    redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_BASE_URL}/user/${profile?.username}`,
    });
 
    if (error) {
