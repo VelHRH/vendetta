@@ -37,7 +37,8 @@ const AllShows = async ({
          ratings: a.comments_shows.length,
          avgRating: a.avgRating,
         })
-      : b.upload_date!.localeCompare(a.upload_date!)
+      : new Date(b.upload_date || new Date()).getTime() -
+        new Date(a.upload_date || new Date()).getTime()
     )
     .map((show, index) => (
      <ShowElem
