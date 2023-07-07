@@ -20,7 +20,9 @@ const ShowElem: FC<WrestlerElemProps> = ({ show, place, comments = [] }) => {
     {place}. {show.name}
    </div>
    <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full flex items-center">
-    {new Date(show.upload_date?.toString() || "").toLocaleDateString()}
+    {show.upload_date
+     ? new Date(show.upload_date.toString() || "").toLocaleDateString()
+     : "Еще не вышло"}
    </div>
 
    {comments.length !== 0 ? (

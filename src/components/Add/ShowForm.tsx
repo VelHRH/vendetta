@@ -164,13 +164,7 @@ const ShowForm = ({
      setValue={setName}
      isError={isError && name.length === 0}
     />
-    <Input
-     placeholder="Дата загрузки записи"
-     type="date"
-     value={date}
-     setValue={setDate}
-     isError={isError && date.length === 0}
-    />
+
     <Input placeholder="Тип шоу" value={showType} setValue={setShowType} />
     <Input
      placeholder="Промоушен (Vendetta Federation по умолчанию)"
@@ -221,6 +215,12 @@ const ShowForm = ({
       value={attendance}
       type="number"
       setValue={setAttendance}
+     />
+     <Input
+      placeholder="Дата загрузки записи"
+      type="date"
+      value={date}
+      setValue={setDate}
      />
     </div>
    </div>

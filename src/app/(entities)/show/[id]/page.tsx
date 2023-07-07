@@ -36,7 +36,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
 
  return (
   <>
-   <div className="w-full flex gap-5 pb-10 border-b-2 border-slate-500">
+   <div className="w-full flex gap-5 pb-10 mb-5 border-b-2 border-slate-500">
     <div className="flex-1 flex flex-col gap-5">
      {show.show_img && (
       <div className="w-2/3 container mx-auto relative aspect-video">

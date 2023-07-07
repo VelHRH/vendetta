@@ -15,7 +15,7 @@ const AllShows = async ({
   .select("*, comments_shows(*)");
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5 justify-center">All shows</Label>
+   <Label className="font-bold mb-5 justify-center">Все шоу</Label>
    <FilterDropdown
     array={["Дате", "Рейтингу"]}
     path="/show"
