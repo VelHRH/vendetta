@@ -8,6 +8,7 @@ export const ShowValidator = z.object({
  location: z.string(),
  arena: z.string(),
  attendance: z.number().optional(),
+ show_img: z.string().optional(),
 });
 
 export type CreateShowPayload = z.infer<typeof ShowValidator>;

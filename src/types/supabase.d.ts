@@ -1,6 +1,6 @@
 type Json = {
- id?: string;
- username?: string;
+ id: string;
+ username: string;
 };
 
 interface Database {
@@ -130,6 +130,7 @@ interface Database {
      location: string;
      name: string;
      promotion: string[] | null;
+     show_img: string | null;
      type: string;
      upload_date: string | null;
     };
@@ -142,6 +143,7 @@ interface Database {
      location: string;
      name: string;
      promotion?: string[] | null;
+     show_img?: string | null;
      type: string;
      upload_date?: string | null;
     };
@@ -154,6 +156,7 @@ interface Database {
      location?: string;
      name?: string;
      promotion?: string[] | null;
+     show_img?: string | null;
      type?: string;
      upload_date?: string | null;
     };

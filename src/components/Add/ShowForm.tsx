@@ -4,11 +4,13 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useMutation } from "@tanstack/react-query";
-import { CreateWrestlerPayload } from "@/lib/validators/wrestler";
 import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { CreateShowPayload } from "@/lib/validators/show";
+import { Upload } from "lucide-react";
+import Image from "next/image";
+import supabase from "@/lib/supabase-browser";
 
 const ShowForm = ({
  show,
@@ -26,9 +28,49 @@ const ShowForm = ({
  const [attendance, setAttendance] = useState<string>(
   show?.attendance?.toString() || ""
  );
+ const [imgUrl, setImgUrl] = useState<string | null>(show?.show_img || null);
  const [isError, setIsError] = useState<boolean>(false);
 
  const router = useRouter();
+
+ const uploadPoster = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  try {
+   if (!event.target.files || event.target.files.length === 0) {
+    throw new Error("You must select an image to upload.");
+   }
+
+   const file = event.target.files[0];
+   const filePath = `posters/${file.name}`;
+
+   let { error: uploadError } = await supabase.storage
+    .from("wrestlers")
+    .upload(filePath, file, {
+     cacheControl: "3600",
+     upsert: false,
+    });
+
+   if (uploadError) {
+    throw uploadError.message;
+   }
+
+   setImgUrl(
+    `https://brytpkxacsmzbawwiqcr.supabase.co/storage/v1/object/public/wrestlers/${filePath}`
+   );
+  } catch (error) {
+   if (error === "The resource already exists") {
+    return toast({
+     title: error,
+     description: "The image with this name was already uploaded",
+     variant: "destructive",
+    });
+   }
+   toast({
+    title: "Error while uploading",
+    description: "Could not upload",
+    variant: "destructive",
+   });
+  }
+ };
 
  const { mutate: createShow, isLoading } = useMutation({
   mutationFn: async () => {
@@ -43,6 +85,7 @@ const ShowForm = ({
     location,
     arena,
     attendance: parseFloat(attendance) || undefined,
+    show_img: imgUrl || undefined,
    };
    const { data } = await axios.post("/api/show", payload);
    return data as string;
@@ -82,6 +125,7 @@ const ShowForm = ({
     location,
     arena,
     attendance: parseFloat(attendance) || undefined,
+    show_img: imgUrl || undefined,
    };
    const { data } = await axios.put(`/api/show?id=${show!.id}`, payload);
    return data as string;
@@ -139,6 +183,33 @@ const ShowForm = ({
      setValue={setLocation}
     />
     <Input placeholder="Арена" value={arena} setValue={setArena} />
+    <div className="w-full h-full flex items-center">
+     <label
+      htmlFor="uploadImg"
+      className={`flex w-full h-12 p-2 justify-between items-center cursor-pointer bg-transparent border-[3px] border-slate-500 rounded-md hover:scale-105 duration-300`}
+     >
+      {imgUrl ? (
+       <>
+        <div className="h-full aspect-square relative">
+         <Image fill alt="Image" src={imgUrl} />
+        </div>
+        <Upload className={`text-4xl`} />
+       </>
+      ) : (
+       <>
+        <div className="text-lg font-semibold">Image</div>
+        <Upload className={`text-4xl`} />
+       </>
+      )}
+     </label>
+     <input
+      className="hidden"
+      type="file"
+      id="uploadImg"
+      accept="image/*"
+      onChange={uploadPoster}
+     />
+    </div>
    </div>
    <div className="w-full">
     <Label size="medium" className="font-bold text-start mb-5">

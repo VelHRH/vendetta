@@ -17,7 +17,7 @@ const Wrestlers = async ({
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">All wrestlers</Label>
    <FilterDropdown
-    array={["Все", "Vendetta", "Остальные"]}
+    array={["Vendetta", "Все", "Остальные"]}
     path="/wrestler"
     placeholder="Фильтровать"
    />
@@ -28,11 +28,11 @@ const Wrestlers = async ({
    </div>
    {wrestlers!
     .filter((a) =>
-     searchParams.filter === "Vendetta"
-      ? a.isVendetta === true
+     searchParams.filter === "Все"
+      ? a
       : searchParams.filter === "Остальные"
       ? a.isVendetta === false
-      : a
+      : a.isVendetta === true
     )
     .sort(
      (a, b) =>

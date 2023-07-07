@@ -8,6 +8,7 @@ import CommentForm from "@/components/Add/CommentForm";
 import RatingChart from "@/components/RatingChart";
 import { normalizeRating, ratingColor, ratingDataGenerate } from "@/lib/utils";
 import InfoElement from "@/components/InfoElement";
+import RatingBlock from "@/components/RatingBlock";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -133,32 +134,10 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       </Label>
      </div>
     </div>
-    <div className="w-1/4 h-[600px] rounded-md dark:bg-slate-800 bg-slate-200 flex flex-col gap-5 items-center p-5">
-     <Label size="medium" className="font-bold self-start">
-      Rating:
-     </Label>
-     {wrestler.comments_wrestlers.length! !== 0 ? (
-      <p
-       style={{
-        color: ratingColor({
-         rating: normalizeRating({
-          ratings: wrestler.comments_wrestlers.length,
-          avgRating: wrestler.avgRating,
-         }),
-        }),
-       }}
-       className={`font-bold text-7xl`}
-      >
-       {normalizeRating({
-        ratings: wrestler.comments_wrestlers.length,
-        avgRating: wrestler.avgRating,
-       }).toFixed(2)}
-      </p>
-     ) : (
-      <p className={`font-bold text-7xl`}>--</p>
-     )}
-     <RatingChart data={ratingDataGenerate(wrestler.comments_wrestlers!)} />
-    </div>
+    <RatingBlock
+     comments={wrestler.comments_wrestlers}
+     avgRating={wrestler.avgRating}
+    />
    </div>
 
    {user && (

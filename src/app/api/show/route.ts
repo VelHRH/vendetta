@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     location: show.location,
     arena: show.arena,
     attendance: show.attendance,
+    show_img: show.show_img,
    })
    .select();
   if (error) throw error;
@@ -52,6 +53,7 @@ export async function PUT(req: Request) {
     location: show.location,
     arena: show.arena,
     attendance: show.attendance,
+    show_img: show.show_img,
    })
    .eq("id", parseFloat(id || ""))
    .select();
