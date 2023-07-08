@@ -15,26 +15,26 @@ interface LayoutProps {
 
 const Layout = async ({ children, params }: LayoutProps) => {
  const supabase = createClient();
- const { data: show } = await supabase
-  .from("shows")
+ const { data: tournament } = await supabase
+  .from("tournaments")
   .select("*")
   .eq("id", params.id)
   .single();
  const {
   data: { user },
  } = await supabase.auth.getUser();
- if (!show) {
+ if (!tournament) {
   notFound();
  }
  return (
   <div className="flex flex-col gap-5 items-center">
    <div className="flex gap-2">
-    <Label className="font-bold">{show?.name!}</Label>
+    <Label className="font-bold">{tournament.name}</Label>
     {user &&
      (user.id === "41608919-15c0-4bbd-b91e-b3407a0c3520" ||
       user.id === "4caeee0b-5b66-4ba0-9fad-2c1ba9284238") && (
       <Link
-       href={`/show/edit?id=${show.id}`}
+       href={`/tournament/edit?id=${tournament.id}`}
        className={buttonVariants({ variant: "subtle" })}
       >
        <Pencil />
@@ -42,10 +42,10 @@ const Layout = async ({ children, params }: LayoutProps) => {
      )}
    </div>
    <div className="flex gap-2">
-    <SectionButton link={`/show/${params.id}`} isMain>
-     Overview
+    <SectionButton link={`/tournament/${params.id}`} isMain>
+     Общее
     </SectionButton>
-    <SectionButton link={`/show/${params.id}/card`}>Card</SectionButton>
+    <SectionButton link={`/tournament/${params.id}/card`}>Матчи</SectionButton>
    </div>
    {children}
   </div>

@@ -1,6 +1,4 @@
-import { DEFAULT_IMAGE } from "@/config";
 import { normalizeRating, ratingColor } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -17,7 +15,7 @@ const ShowElem: FC<WrestlerElemProps> = ({
 }) => {
  return (
   <Link
-   href={`/show/${tournament.id}`}
+   href={`/tournament/${tournament.id}`}
    className="w-full mb-4 flex justify-between items-center gap-4 text-xl h-12 group"
   >
    <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full">

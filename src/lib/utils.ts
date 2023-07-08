@@ -50,3 +50,15 @@ export function normalizeRating({
 export function getBaseLog(x: number, y: number) {
  return Math.log(y) / Math.log(x);
 }
+
+export function findFirstDuplicate(arr: Json[]) {
+ const seen = new Set();
+ for (let i = 0; i < arr.length; i++) {
+  const itemName = arr[i].itemName;
+  if (seen.has(itemName)) {
+   return { index: i, value: itemName };
+  }
+  seen.add(itemName);
+ }
+ return { index: -1, value: "" };
+}

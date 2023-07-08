@@ -6,6 +6,8 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
+import TournamentBracket from "@/components/TournamentBracket";
+import { findFirstDuplicate } from "@/lib/utils";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -56,34 +58,32 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        <InfoElement>
         <Link
          href={`/wrestler/${
-          tournament.play_off_participants[-1].items![0].wrestlerId
+          tournament.play_off_participants[0].items![0].wrestlerId
          }`}
+         className="hover:underline underline-offset-4"
         >
-         {tournament.play_off_participants[-1].itemName}
+         {tournament.play_off_participants[0].itemName}
         </Link>
        </InfoElement>
       </Label>
      )}
-     <Label size="small">
-      Промоушен(ы):{" "}
-      {show.promotion!.map((p) => (
-       <InfoElement key={p}>{p}</InfoElement>
-      ))}
-     </Label>
-     <Label size="small">
-      Город и страна проведения: <InfoElement>{show.location}</InfoElement>
-     </Label>
-     <Label size="small">
-      Арена: <InfoElement>{show.arena}</InfoElement>
-     </Label>
-     <Label size="small">
-      Посещаемость: <InfoElement>{show.attendance}</InfoElement>
-     </Label>
     </div>
-    <RatingBlock comments={show.comments_shows} avgRating={show.avgRating} />
+    <RatingBlock
+     comments={tournament.comments_tournaments}
+     avgRating={tournament.avgRating}
+    />
    </div>
    <div>
-    <Label className="font-bold">Результаты матчей:</Label>
+    <Label className="font-bold mb-5">Подробности турнира:</Label>
+    <TournamentBracket
+     participants={
+      findFirstDuplicate(tournament.play_off_participants).index === -1
+       ? tournament.play_off_participants.length
+       : findFirstDuplicate(tournament.play_off_participants).index
+     }
+     items={tournament.play_off_participants}
+     matches={[]}
+    />
    </div>
 
    {user && (
@@ -91,7 +91,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
      <Label className="font-bold self-start">Ваш комментарий:</Label>
      {!loggedUserComment ? (
       <CommentForm
-       type="shows"
+       type="tournaments"
        itemId={parseFloat(params.id)}
        authorId={profile!.id}
        author={profile!.username || ""}
@@ -103,7 +103,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        date={loggedUserComment.created_at!.toString()}
        text={loggedUserComment.text}
        id={loggedUserComment.id}
-       type="shows"
+       type="tournaments"
       />
      )}
     </>
@@ -111,8 +111,8 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
 
    <Label className="font-bold self-start mt-10">Комментарии:</Label>
    <div className="flex flex-col gap-4 w-full mt-2 mb-5">
-    {show.comments_shows.length !== 0
-     ? show.comments_shows
+    {tournament.comments_tournaments.length !== 0
+     ? tournament.comments_tournaments
         .sort((a, b) => b.created_at.localeCompare(a.created_at))
         .map((comment) => (
          <Comment

@@ -12,6 +12,7 @@ import Dropdown from "../ui/Dropdown";
 import InfoLabel from "../ui/InfoLabel";
 import TournamentBracket from "../TournamentBracket";
 import { CreateTournamentPayload } from "@/lib/validators/tournament";
+import { findFirstDuplicate } from "@/lib/utils";
 
 const TournamentForm = ({
  tournament,
@@ -50,17 +51,16 @@ const TournamentForm = ({
      })
  );
  const [blocks, setBlocks] = useState<string[] | undefined>(undefined);
- const [pass, setpass] = useState<string>(tournament?.pass?.toString() || "");
  const [isError, setIsError] = useState<boolean>(false);
 
  const [wrestlers, setWrestlers] = useState<
   Database["public"]["Tables"]["wrestlers"]["Row"][] | null
  >([]);
  const [number, setNumber] = useState<string>(
-  findFirstDuplicateIndex(playOff).index === -1 ||
-   findFirstDuplicateIndex(playOff).value === ""
+  findFirstDuplicate(playOff).index === -1 ||
+   findFirstDuplicate(playOff).value === ""
    ? ""
-   : findFirstDuplicateIndex(playOff).index.toString()
+   : findFirstDuplicate(playOff).index.toString()
  );
 
  useEffect(() => {
@@ -162,9 +162,9 @@ const TournamentForm = ({
      </Label>
      <InfoLabel>
       Вы выбрали обычный тип для турнира. Это значит что вы должны выбрать
-      количество участников и записать рестлеров в соответствующие ячейки.
-      Справа выбирается рестлер из существующих. Слева - имя, под которым он
-      будет выступать. Результрующая таблица показана ниже.
+      количество участников и записать рестлеров в соответствующие ячейки. Слева
+      выбирается рестлер из существующих. Справа - имя, под которым он будет
+      выступать. Результрующая таблица показана ниже.
      </InfoLabel>
      <div className="flex flex-col w-full gap-3 mt-7">
       <Dropdown
@@ -177,21 +177,6 @@ const TournamentForm = ({
        <>
         {Array.from({ length: parseFloat(number) }, (_, index) => (
          <div key={index} className="flex w-full items-start gap-10">
-          <Input
-           className="w-1/2"
-           placeholder={`Имя рестлера ${index + 1}`}
-           value={playOff[index].itemName}
-           setValue={(newValue) => {
-            setPlayOff((prevItems) => {
-             const newItems = [...prevItems];
-             newItems[index] = {
-              ...newItems[index],
-              itemName: newValue,
-             };
-             return newItems;
-            });
-           }}
-          />
           <Dropdown
            className="flex-1"
            placeholder={`Выберите рестлера ${index + 1}`}
@@ -214,6 +199,21 @@ const TournamentForm = ({
                },
                ...newItems[index].items.slice(1),
               ],
+             };
+             return newItems;
+            });
+           }}
+          />
+          <Input
+           className="w-1/2"
+           placeholder={`Имя рестлера ${index + 1}`}
+           value={playOff[index].itemName}
+           setValue={(newValue) => {
+            setPlayOff((prevItems) => {
+             const newItems = [...prevItems];
+             newItems[index] = {
+              ...newItems[index],
+              itemName: newValue,
              };
              return newItems;
             });
@@ -247,15 +247,3 @@ const TournamentForm = ({
 };
 
 export default TournamentForm;
-
-function findFirstDuplicateIndex(arr: Json[]) {
- const seen = new Set();
- for (let i = 0; i < arr.length; i++) {
-  const itemName = arr[i].itemName;
-  if (seen.has(itemName)) {
-   return { index: i, value: itemName };
-  }
-  seen.add(itemName);
- }
- return { index: -1, value: "" };
-}
