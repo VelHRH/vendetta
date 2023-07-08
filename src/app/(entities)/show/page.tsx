@@ -10,7 +10,7 @@ const AllShows = async ({
  searchParams: { filter: string };
 }) => {
  const supabase = createClient();
- const { data: shows, error } = await supabase
+ const { data: shows } = await supabase
   .from("shows")
   .select("*, comments_shows(*)");
  return (

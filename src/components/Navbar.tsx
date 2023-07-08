@@ -38,6 +38,12 @@ const Navbar = async () => {
      >
       Wrestlers
      </Link>
+     <Link
+      href="/tournament"
+      className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
+     >
+      Tournaments
+     </Link>
      {profile?.role === "admin" && (
       <Link
        href="/add"

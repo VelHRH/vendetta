@@ -18,7 +18,6 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  participants,
  items,
 }) => {
- console.log(items);
  const cols = getBaseLog(2, participants) * 2 - 1;
  return (
   <div className={`flex p-5 w-full justify-center`}>
@@ -41,7 +40,9 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
             key={index}
             className="w-full p-1 bg-slate-600  h-1/2 rounded-b-md text-slate-50"
            >
-            {items[2 * index2 + 1].itemName}
+            {items[2 * index2 + 1].items[0].wrestlerId !== "" &&
+             index === 0 &&
+             items[2 * index2 + 1].itemName}
            </div>
           </div>
          )

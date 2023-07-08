@@ -48,6 +48,40 @@ interface Database {
      }
     ];
    };
+   comments_tournaments: {
+    Row: {
+     author: Json | null;
+     created_at: string;
+     id: number;
+     item_id: number | null;
+     rating: number;
+     text: string;
+    };
+    Insert: {
+     author?: Json | null;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating: number;
+     text: string;
+    };
+    Update: {
+     author?: Json | null;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating?: number;
+     text?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "comments_tournaments_item_id_fkey";
+      columns: ["item_id"];
+      referencedRelation: "tournaments";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
    comments_wrestlers: {
     Row: {
      author: Json | null;
@@ -178,37 +212,37 @@ interface Database {
    };
    tournaments: {
     Row: {
+     avgRating: number;
      block_participants: Json[] | null;
      created_at: string | null;
      description: string | null;
      end: string | null;
      id: number;
      name: string;
-     pass: number | null;
      play_off_participants: Json[];
      start: string | null;
      type: string;
     };
     Insert: {
+     avgRating?: number;
      block_participants?: Json[] | null;
      created_at?: string | null;
      description?: string | null;
      end?: string | null;
      id?: number;
      name: string;
-     pass?: number | null;
      play_off_participants?: Json[];
      start?: string | null;
      type: string;
     };
     Update: {
+     avgRating?: number;
      block_participants?: Json[] | null;
      created_at?: string | null;
      description?: string | null;
      end?: string | null;
      id?: number;
      name?: string;
-     pass?: number | null;
      play_off_participants?: Json[];
      start?: string | null;
      type?: string;

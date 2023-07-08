@@ -4,17 +4,17 @@ import Comment from "@/components/Comment";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import RatingBlock from "@/components/RatingBlock";
+import Link from "next/link";
 
-const ShowOverview = async ({ params }: { params: { id: string } }) => {
+const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
- const { data: show } = await supabase
-  .from("shows")
-  .select("*, comments_shows(*)")
+ const { data: tournament } = await supabase
+  .from("tournaments")
+  .select("*, comments_tournaments(*)")
   .eq("id", params.id)
   .single();
- if (!show) {
+ if (!tournament) {
   notFound();
  }
 
@@ -29,29 +29,41 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
   .single();
 
  const loggedUserComment = user
-  ? show.comments_shows.find((com) => com.author!.id === user.id)
+  ? tournament.comments_tournaments.find((com) => com.author!.id === user.id)
   : undefined;
 
  return (
   <>
    <div className="w-full flex gap-5 pb-10 mb-5 border-b-2 border-slate-500">
     <div className="flex-1 flex flex-col gap-5">
-     {show.show_img && (
-      <div className="w-2/3 container mx-auto relative aspect-video">
-       <Image
-        src={show.show_img}
-        fill
-        alt="Poster"
-        className="object-cover rounded-md"
-       />
-      </div>
+     <p>{tournament.description}</p>
+     <Label size="small">
+      Тип: <InfoElement>{tournament.type}</InfoElement>
+     </Label>
+     {tournament.start && (
+      <Label size="small">
+       Дата старта: <InfoElement>{tournament.start}</InfoElement>
+      </Label>
      )}
-     <Label size="small">
-      Дата загрузки: <InfoElement>{show.upload_date}</InfoElement>
-     </Label>
-     <Label size="small">
-      Тип шоу: <InfoElement>{show.type}</InfoElement>
-     </Label>
+     {tournament.end && (
+      <Label size="small">
+       Дата окончания: <InfoElement>{tournament.end}</InfoElement>
+      </Label>
+     )}
+     {tournament.end && (
+      <Label size="small">
+       Победитель:{" "}
+       <InfoElement>
+        <Link
+         href={`/wrestler/${
+          tournament.play_off_participants[-1].items![0].wrestlerId
+         }`}
+        >
+         {tournament.play_off_participants[-1].itemName}
+        </Link>
+       </InfoElement>
+      </Label>
+     )}
      <Label size="small">
       Промоушен(ы):{" "}
       {show.promotion!.map((p) => (
@@ -117,4 +129,4 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
  );
 };
 
-export default ShowOverview;
+export default TournamentOverview;
