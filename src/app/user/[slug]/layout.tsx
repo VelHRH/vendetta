@@ -19,7 +19,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  const { data: profile } = await supabase
   .from("users")
   .select()
-  .eq("username", params.slug)
+  .eq("username", params.slug.replace(/%20/g, " "))
   .single();
  const {
   data: { user },

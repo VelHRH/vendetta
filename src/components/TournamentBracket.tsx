@@ -48,7 +48,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      {index % 2 === 0
       ? whichIndexes(participants, index).map((ind, index2) => (
          <div key={ind} className="h-[3.5rem] flex gap-1 flex-col min-w-[70px]">
-          <div className="w-full p-1 bg-slate-600  h-1/2 rounded-t-md text-slate-50">
+          <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50">
            {orderedMatches[ind] ? orderedMatches[ind][0].itemName : ""}
           </div>
           <div
