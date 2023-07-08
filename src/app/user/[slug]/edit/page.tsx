@@ -14,7 +14,7 @@ const EditProfile = async ({ params }: { params: { slug: string } }) => {
   .select()
   .eq("id", user?.id)
   .single();
- if (!user || params.slug !== profile?.username) {
+ if (!user || params.slug.replace(/%20/g, " ") !== profile?.username) {
   notFound();
  }
  return (
