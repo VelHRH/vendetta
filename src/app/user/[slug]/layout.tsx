@@ -53,8 +53,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
       Rated matches:{" "}
       {
        comments?.filter(
-        (comment) =>
-         comment.type === "matches" && comment.author?.username === params.slug
+        (comment) => comment.type === "matches" && comment.author === profile.id
        ).length
       }
      </Label>
@@ -63,8 +62,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
       {
        comments?.filter(
         (comment) =>
-         comment.type === "wrestlers" &&
-         comment.author?.username === params.slug
+         comment.type === "wrestlers" && comment.author === profile.id
        ).length
       }
      </Label>
@@ -72,8 +70,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
       Rated shows:{" "}
       {
        comments?.filter(
-        (comment) =>
-         comment.type === "shows" && comment.author?.username === params.slug
+        (comment) => comment.type === "shows" && comment.author === profile.id
        ).length
       }
      </Label>

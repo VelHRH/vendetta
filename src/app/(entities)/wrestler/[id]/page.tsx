@@ -29,7 +29,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
   .single();
 
  const loggedUserComment = user
-  ? wrestler.comments_wrestlers.find((com) => com.author!.id === user.id)
+  ? wrestler.comments_wrestlers.find((com) => com.author === user.id)
   : undefined;
 
  const now = new Date();
@@ -169,7 +169,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
         .map((comment) => (
          <Comment
           key={comment.id}
-          authorId={comment.author!.id || ""}
+          authorId={comment.author || ""}
           rating={comment.rating}
           date={comment.created_at?.toString() || ""}
           text={comment.text}

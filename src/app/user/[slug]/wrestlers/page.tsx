@@ -2,6 +2,7 @@ import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { ratingColor } from "@/lib/utils";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
  const supabase = createClient();
@@ -10,20 +11,30 @@ const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
   .from("wrestlers")
   .select("*, comments_wrestlers(*)");
 
+ const { data: profile } = await supabase
+  .from("users")
+  .select()
+  .eq("username", params.slug.replace(/%20/g, " "))
+  .single();
+
+ if (!profile) {
+  notFound();
+ }
+
  return (
   <>
-   <Label className="font-bold mb-2">Rated wrestlers:</Label>
+   <Label className="font-bold mb-2 flex justify-center" size="medium">
+    Rated wrestlers:
+   </Label>
    {wrestlers!
     .sort(
      (a, b) =>
-      (b.comments_wrestlers.find((c) => c.author?.username === params.slug)
-       ?.rating || 0) -
-      (a.comments_wrestlers.find((c) => c.author?.username === params.slug)
-       ?.rating || 0)
+      (b.comments_wrestlers.find((c) => c.author === profile.id)?.rating || 0) -
+      (a.comments_wrestlers.find((c) => c.author === profile.id)?.rating || 0)
     )
     .map((wrestler) =>
      wrestler.comments_wrestlers
-      .filter((comment) => comment.author?.username === params.slug)
+      .filter((comment) => comment.author === profile.id)
       .map((c) => (
        <Link
         href={`/wrestler/${c.item_id}`}

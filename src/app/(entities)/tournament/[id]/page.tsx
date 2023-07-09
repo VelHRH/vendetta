@@ -31,7 +31,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
   .single();
 
  const loggedUserComment = user
-  ? tournament.comments_tournaments.find((com) => com.author!.id === user.id)
+  ? tournament.comments_tournaments.find((com) => com.author === user.id)
   : undefined;
 
  return (
@@ -58,11 +58,13 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        <InfoElement>
         <Link
          href={`/wrestler/${
-          tournament.play_off_participants[0].items![0].wrestlerId
+          tournament.play_off_participants.find(
+           (p) => p.itemName === tournament.winner
+          )?.items![0].wrestlerId
          }`}
          className="hover:underline underline-offset-4"
         >
-         {tournament.play_off_participants[0].itemName}
+         {tournament.winner}
         </Link>
        </InfoElement>
       </Label>
@@ -82,7 +84,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        : findFirstDuplicate(tournament.play_off_participants).index
      }
      items={tournament.play_off_participants}
-     matches={[]}
+     allTournamentMatches={[]}
     />
    </div>
 
@@ -117,7 +119,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
         .map((comment) => (
          <Comment
           key={comment.id}
-          authorId={comment.author!.id || ""}
+          authorId={comment.author || ""}
           rating={comment.rating}
           date={comment.created_at?.toString() || ""}
           text={comment.text}

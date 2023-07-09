@@ -75,7 +75,14 @@ const TournamentForm = ({
 
  const { mutate: createTournament, isLoading } = useMutation({
   mutationFn: async () => {
-   const play_off_participants = playOff.slice(0, parseFloat(number));
+   let play_off_participants = playOff.slice(0, parseFloat(number));
+   play_off_participants = play_off_participants.map((item) => {
+    item.items = item.items.filter(
+     (subItem, index) =>
+      index === 0 || Object.values(subItem).some((value) => value !== "")
+    );
+    return item;
+   });
    const payload: CreateTournamentPayload = {
     name,
     description,
@@ -183,6 +190,7 @@ const TournamentForm = ({
            array={wrestlers!.map((w) => w.name || "")}
            value={playOff[index].items[0].wrestlerName}
            setValue={(newValue) => {
+            if (newValue === "") return;
             setPlayOff((prevItems) => {
              const newItems = [...prevItems];
              newItems[index] = {

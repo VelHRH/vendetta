@@ -33,6 +33,15 @@ const Dropdown: FC<DropdownProps> = ({
 
    {isSelect && (
     <div className="bg-slate-200 dark:bg-slate-800 rounded-md mt-2 p-2 absolute w-full z-20 shadow-lg shadow-slate-950 max-h-60 overflow-auto">
+     <button
+      onClick={() => {
+       setValue("");
+       setIsSelect(false);
+      }}
+      className="rounded-md text-start w-full font-medium p-2 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-500"
+     >
+      {placeholder}
+     </button>
      {array?.map((item, id) => (
       <button
        key={id}

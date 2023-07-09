@@ -29,7 +29,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
   .single();
 
  const loggedUserComment = user
-  ? show.comments_shows.find((com) => com.author!.id === user.id)
+  ? show.comments_shows.find((com) => com.author === user.id)
   : undefined;
 
  return (
@@ -105,7 +105,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
         .map((comment) => (
          <Comment
           key={comment.id}
-          authorId={comment.author!.id || ""}
+          authorId={comment.author || ""}
           rating={comment.rating}
           date={comment.created_at?.toString() || ""}
           text={comment.text}

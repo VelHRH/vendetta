@@ -62,3 +62,12 @@ export function findFirstDuplicate(arr: Json[]) {
  }
  return { index: -1, value: "" };
 }
+
+export function excludeDuplicates(arr1: Json[][], arr2: Json[][]) {
+ const uniqueValues = new Set(arr1);
+ for (let i = arr2.length - 1; i >= 0; i--) {
+  if (uniqueValues.has(arr2[i])) {
+   arr2.splice(i, 1);
+  }
+ }
+}

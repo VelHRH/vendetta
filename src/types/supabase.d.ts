@@ -1,6 +1,4 @@
 type Json = {
- id?: string;
- username?: string;
  itemName?: string;
  items?: {
   wrestlerId?: string;
@@ -16,7 +14,7 @@ interface Database {
   Tables: {
    comments_shows: {
     Row: {
-     author: Json | null;
+     author: string;
      created_at: string;
      id: number;
      item_id: number | null;
@@ -24,7 +22,7 @@ interface Database {
      text: string;
     };
     Insert: {
-     author?: Json | null;
+     author: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -32,7 +30,7 @@ interface Database {
      text: string;
     };
     Update: {
-     author?: Json | null;
+     author?: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -50,7 +48,7 @@ interface Database {
    };
    comments_tournaments: {
     Row: {
-     author: Json | null;
+     author: string;
      created_at: string;
      id: number;
      item_id: number | null;
@@ -58,7 +56,7 @@ interface Database {
      text: string;
     };
     Insert: {
-     author?: Json | null;
+     author: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -66,7 +64,7 @@ interface Database {
      text: string;
     };
     Update: {
-     author?: Json | null;
+     author?: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -84,7 +82,7 @@ interface Database {
    };
    comments_wrestlers: {
     Row: {
-     author: Json | null;
+     author: string;
      created_at: string;
      id: number;
      item_id: number | null;
@@ -92,7 +90,7 @@ interface Database {
      text: string;
     };
     Insert: {
-     author?: Json | null;
+     author: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -100,7 +98,7 @@ interface Database {
      text: string;
     };
     Update: {
-     author?: Json | null;
+     author?: string;
      created_at?: string;
      id?: number;
      item_id?: number | null;
@@ -222,6 +220,7 @@ interface Database {
      play_off_participants: Json[];
      start: string | null;
      type: string;
+     winner: string | null;
     };
     Insert: {
      avgRating?: number;
@@ -234,6 +233,7 @@ interface Database {
      play_off_participants?: Json[];
      start?: string | null;
      type: string;
+     winner?: string | null;
     };
     Update: {
      avgRating?: number;
@@ -246,6 +246,7 @@ interface Database {
      play_off_participants?: Json[];
      start?: string | null;
      type?: string;
+     winner?: string | null;
     };
     Relationships: [];
    };

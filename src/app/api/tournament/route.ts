@@ -9,6 +9,27 @@ export async function POST(req: Request) {
 
   const supabase = createClient();
 
+  if (
+   (tournament.type === "Обычный" &&
+    tournament.play_off_participants.find((item) =>
+     item.items.some((subItem) =>
+      Object.values(subItem).some((value) => value === "")
+     )
+    )) ||
+   tournament.play_off_participants.find((item) => item.itemName === "")
+  ) {
+   throw "There are empty fields";
+  }
+
+  if (
+   tournament.play_off_participants.some(
+    (item, index, array) =>
+     array.findIndex((obj) => obj.itemName === item.itemName) !== index
+   )
+  ) {
+   throw "There are duplicate names";
+  }
+
   const { data, error } = await supabase
    .from("tournaments")
    .insert({
@@ -30,6 +51,6 @@ export async function POST(req: Request) {
    return new Response(err.message, { status: 422 });
   }
   if (typeof err === "string") return new Response(err, { status: 400 });
+  return new Response("Error while creating", { status: 500 });
  }
- return new Response("Error while creating", { status: 500 });
 }

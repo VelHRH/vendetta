@@ -14,7 +14,7 @@ export async function POST(req: Request) {
    .select()
    .eq("item_id", comment.itemId);
   if (getCommentsError) throw getCommentsError;
-  if (comments!.find((c) => c.author!.id === comment.authorId))
+  if (comments!.find((c) => c.author === comment.authorId))
    throw "The item is already rated by you";
 
   const { data: item } = await supabase
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const { error: commentError } = await supabase
    .from(`comments_${comment.type}`)
    .insert({
-    author: { id: comment.authorId, username: comment.author },
+    author: comment.authorId,
     text: comment.text,
     item_id: comment.itemId,
     rating: comment.rating,

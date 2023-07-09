@@ -1,18 +1,19 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { getBaseLog } from "@/lib/utils";
+import { excludeDuplicates, getBaseLog } from "@/lib/utils";
 
 interface TournamentBracketProps {
  participants: number;
  items: Json[];
- matches?: Database["public"]["Tables"]["matches"]["Row"][];
+ allTournamentMatches?: Json[][];
 }
 
 const TournamentBracket: FC<TournamentBracketProps> = ({
  participants,
  items,
- matches,
+ allTournamentMatches,
 }) => {
+ const cols = getBaseLog(2, participants) * 2 - 1;
  const [orderedMatches, setOrderedMatches] = useState<Json[][]>([]);
  useEffect(() => {
   if (orderedMatches.length < participants / 2) {
@@ -25,8 +26,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      ],
     ]);
    }
-  }
-  if (orderedMatches.length === participants / 2 && !matches) {
+  } else if (!allTournamentMatches) {
    setOrderedMatches([]);
    for (let i = 0; i < participants; i += 2) {
     setOrderedMatches((prev) => [
@@ -37,9 +37,24 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      ],
     ]);
    }
+  } else {
+   excludeDuplicates(orderedMatches, allTournamentMatches);
+   for (let i = 0; i < cols; i += 2) {
+    const stage = orderedMatches.slice(
+     whichIndexes(participants, i)[0],
+     whichIndexes(participants, i)[-1]
+    );
+    for (let j = 0; j < stage.length; j += 2) {
+     const pair = [...stage[j], ...stage[j + 1]];
+     const foundArray = allTournamentMatches.find((currentArray) =>
+      currentArray.every((element) => pair.includes(element))
+     );
+     setOrderedMatches((prev) => [...prev, foundArray!]);
+    }
+   }
   }
  }, [items]);
- const cols = getBaseLog(2, participants) * 2 - 1;
+
  console.log(orderedMatches);
  return (
   <div className={`flex p-5 w-full justify-center`}>

@@ -28,7 +28,7 @@ const Comment = async ({
   .eq("id", authorId)
   .single();
  const dateConvert = new Date(date);
- console.log(user?.username);
+
  return (
   <div className="w-full p-7 bg-slate-200 dark:bg-slate-800 flex flex-col rounded-sm text-lg">
    <div className="flex mb-5 pb-3 border-b-2 border-slate-500">
