@@ -13,7 +13,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: tournament } = await supabase
   .from("tournaments")
-  .select("*, comments_tournaments(*)")
+  .select("*, comments_tournaments(*), matches(*)")
   .eq("id", params.id)
   .single();
  if (!tournament) {
@@ -84,7 +84,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        : findFirstDuplicate(tournament.play_off_participants).index
      }
      items={tournament.play_off_participants}
-     allTournamentMatches={[]}
+     allTournamentMatches={tournament.matches.map((m) => m.participants)}
     />
    </div>
 

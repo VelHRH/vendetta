@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { excludeDuplicates, getBaseLog } from "@/lib/utils";
+import { getBaseLog, removeDuplicateArrays } from "@/lib/utils";
 
 interface TournamentBracketProps {
  participants: number;
@@ -16,46 +16,59 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  const cols = getBaseLog(2, participants) * 2 - 1;
  const [orderedMatches, setOrderedMatches] = useState<Json[][]>([]);
  useEffect(() => {
-  if (orderedMatches.length < participants / 2) {
+  let orderedArray = [...orderedMatches];
+  if (orderedArray.length < participants / 2) {
    for (let i = 0; i < participants; i += 2) {
-    setOrderedMatches((prev) => [
-     ...prev,
-     [
-      { itemName: items[i].itemName, items: items[i].items },
-      { itemName: items[i + 1].itemName, items: items[i + 1].items },
-     ],
+    orderedArray.push([
+     { itemName: items[i].itemName, items: items[i].items },
+     { itemName: items[i + 1].itemName, items: items[i + 1].items },
     ]);
    }
-  } else if (!allTournamentMatches) {
-   setOrderedMatches([]);
+  } else if (!allTournamentMatches || allTournamentMatches.length === 0) {
+   orderedArray = [];
    for (let i = 0; i < participants; i += 2) {
-    setOrderedMatches((prev) => [
-     ...prev,
-     [
-      { itemName: items[i].itemName, items: items[i].items },
-      { itemName: items[i + 1].itemName, items: items[i + 1].items },
-     ],
+    orderedArray.push([
+     { itemName: items[i].itemName, items: items[i].items },
+     { itemName: items[i + 1].itemName, items: items[i + 1].items },
     ]);
    }
-  } else {
-   excludeDuplicates(orderedMatches, allTournamentMatches);
-   for (let i = 0; i < cols; i += 2) {
-    const stage = orderedMatches.slice(
+  }
+  if (allTournamentMatches && allTournamentMatches.length !== 0) {
+   const uniqueMatches = removeDuplicateArrays(
+    orderedArray,
+    allTournamentMatches
+   );
+
+   for (let i = 0; i < cols - 2; i += 2) {
+    const stage = orderedArray.slice(
      whichIndexes(participants, i)[0],
      whichIndexes(participants, i)[-1]
     );
+
     for (let j = 0; j < stage.length; j += 2) {
      const pair = [...stage[j], ...stage[j + 1]];
-     const foundArray = allTournamentMatches.find((currentArray) =>
-      currentArray.every((element) => pair.includes(element))
+     const foundArray = uniqueMatches.find((currentArray) =>
+      currentArray.every((element) =>
+       pair.some((pairElement) => pairElement.itemName === element.itemName)
+      )
      );
-     setOrderedMatches((prev) => [...prev, foundArray!]);
+     let orderedFoundArray = [];
+
+     for (let n = 0; n < pair.length; n++) {
+      for (let m = 0; m < foundArray!.length; m++) {
+       if (pair[n].itemName === foundArray![m].itemName) {
+        orderedFoundArray.push(foundArray![m]);
+       }
+      }
+     }
+     orderedArray.push(orderedFoundArray);
+     uniqueMatches.splice(uniqueMatches.indexOf(foundArray!), 1);
     }
    }
   }
+  setOrderedMatches(orderedArray);
  }, [items]);
 
- console.log(orderedMatches);
  return (
   <div className={`flex p-5 w-full justify-center`}>
    {Array.from({ length: cols }, (_, index) => (

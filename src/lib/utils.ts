@@ -63,11 +63,43 @@ export function findFirstDuplicate(arr: Json[]) {
  return { index: -1, value: "" };
 }
 
-export function excludeDuplicates(arr1: Json[][], arr2: Json[][]) {
- const uniqueValues = new Set(arr1);
- for (let i = arr2.length - 1; i >= 0; i--) {
-  if (uniqueValues.has(arr2[i])) {
-   arr2.splice(i, 1);
+export function removeDuplicateArrays(arr1: Json[][], arr2: Json[][]) {
+ let uniqueArr2 = [];
+ for (let i = 0; i < arr2.length; i++) {
+  let ifUnique = true;
+  for (let j = 0; j < arr1.length; j++) {
+   if (areArraysEqual(arr1[j], arr2[i])) {
+    ifUnique = false;
+    break;
+   }
+  }
+  ifUnique && uniqueArr2.push(arr2[i]);
+ }
+ return uniqueArr2;
+}
+
+function areArraysEqual(arr1: Json[], arr2: Json[]) {
+ if (arr1.length !== arr2.length) {
+  return false;
+ }
+
+ for (let i = 0; i < arr1.length; i++) {
+  const obj1 = arr1[i];
+  let found = false;
+
+  for (let j = 0; j < arr2.length; j++) {
+   const obj2 = arr2[j];
+
+   if (obj1.itemName === obj2.itemName) {
+    found = true;
+    break;
+   }
+  }
+
+  if (!found) {
+   return false;
   }
  }
+
+ return true;
 }
