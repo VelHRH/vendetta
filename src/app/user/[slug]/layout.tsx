@@ -18,7 +18,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
 
  const { data: profile } = await supabase
   .from("users")
-  .select()
+  .select(
+   "*, comments_shows(*), comments_wrestlers(*), comments_tournaments(*)"
+  )
   .eq("username", params.slug.replace(/%20/g, " "))
   .single();
  const {
@@ -27,7 +29,6 @@ const Layout = async ({ children, params }: LayoutProps) => {
  if (!profile) {
   notFound();
  }
- const { data: comments } = await supabase.from("comments").select();
  return (
   <div className="flex gap-5 items-start">
    <div className="w-1/4 bg-slate-200 dark:bg-slate-800 rounded-md p-5 flex flex-col h-auto">
@@ -49,30 +50,13 @@ const Layout = async ({ children, params }: LayoutProps) => {
      )}
     </div>
     <div className="flex flex-col gap-2 items-start">
+     <Label size="small">Rated matches: {0}</Label>
      <Label size="small">
-      Rated matches:{" "}
-      {
-       comments?.filter(
-        (comment) => comment.type === "matches" && comment.author === profile.id
-       ).length
-      }
+      Rated wrestlers: {profile.comments_wrestlers.length}
      </Label>
+     <Label size="small">Rated shows: {profile.comments_shows.length}</Label>
      <Label size="small">
-      Rated wrestlers:{" "}
-      {
-       comments?.filter(
-        (comment) =>
-         comment.type === "wrestlers" && comment.author === profile.id
-       ).length
-      }
-     </Label>
-     <Label size="small">
-      Rated shows:{" "}
-      {
-       comments?.filter(
-        (comment) => comment.type === "shows" && comment.author === profile.id
-       ).length
-      }
+      Rated tournaments: {profile.comments_tournaments.length}
      </Label>
     </div>
     {user?.id === profile.id && (
@@ -84,7 +68,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
      </Link>
     )}
    </div>
-   <div className="flex-1 h-[1000px]">
+   <div className="flex-1">
     <div className="flex justify-center gap-2 mb-5">
      <SectionButton link={`/user/${params.slug}`} isMain>
       Matches
