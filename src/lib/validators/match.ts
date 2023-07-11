@@ -13,23 +13,10 @@ export const MatchValidator = z.object({
    ),
   })
  ),
- type: z.string(),
+ type: z.string().optional(),
  time: z.string().optional(),
  peculiarity: z.string().optional(),
- winner: z
-  .array(
-   z.object({
-    itemName: z.string(),
-    items: z.array(
-     z.object({
-      wrestlerName: z.string(),
-      wrestlerId: z.string(),
-      wrestlerImage: z.string(),
-     })
-    ),
-   })
-  )
-  .optional(),
+ winner: z.array(z.string()).optional(),
  show: z.number(),
  tournament: z.number().optional(),
 });

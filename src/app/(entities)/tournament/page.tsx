@@ -3,6 +3,7 @@ import TournamentElem from "@/components/Row/TournamentElem";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { normalizeRating } from "@/lib/utils";
+import { notFound } from "next/navigation";
 
 const AllTournaments = async ({
  searchParams,
@@ -13,7 +14,9 @@ const AllTournaments = async ({
  const { data: tournaments } = await supabase
   .from("tournaments")
   .select("*, comments_tournaments(*)");
-
+ if (!tournaments) {
+  notFound();
+ }
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Все турниры</Label>

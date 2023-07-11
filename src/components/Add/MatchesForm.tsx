@@ -25,7 +25,13 @@ const MatchForm = ({
  const [tournament, setTournament] = useState<string>(
   match?.tournament?.toString() || ""
  );
- const [participants, setParticipants] = useState<Json[]>([]);
+ const [participants, setParticipants] = useState<
+  {
+   itemName: string;
+   items: { wrestlerName: string; wrestlerId: string; wrestlerImage: string }[];
+  }[]
+ >([]);
+ const [winner, setWinner] = useState<string[]>([]);
  const [isError, setIsError] = useState<boolean>(false);
 
  const [wrestlers, setWrestlers] = useState<
@@ -60,12 +66,14 @@ const MatchForm = ({
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: [],
-    type,
+    participants,
+    type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
-    show: parseFloat(show),
+    show: shows!.find((s) => s.name === show)
+     ? shows!.find((s) => s.name === show)!.id
+     : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: [],
+    winner: winner.length === 0 ? undefined : winner,
    };
    const { data } = await axios.post("/api/match", payload);
    return data as string;
@@ -134,105 +142,130 @@ const MatchForm = ({
    </Label>
    <div className="grid grid-cols-3 gap-5 w-full">
     <Dropdown
-     array={[
-      "Одиночный матч",
-      "Командный с 2 человеками",
-      "Командный с 3 человеками",
-      "Командный с 4 человеками",
-      "Командный с 5 человеками",
-      "Командный с 6 человеками",
-      "Командный с 7 человеками",
-      "Командный с 8 человеками",
-      "Командный с 9 человеками",
-      "Командный с 10 человеками",
-     ]}
-     value={type}
-     setValue={setType}
-     placeholder="Тип матча"
-     className={`${isError && type.length === 0 && "border-red-500"}`}
+     array={shows!.map((s) => s.name || "")}
+     value={show}
+     setValue={setShow}
+     placeholder="Шоу"
+     className={`${isError && show.length === 0 && "border-red-500"}`}
     />
-    <Input
-     placeholder="Особенность"
-     value={peculiarity}
-     setValue={setPeculiarity}
+    <Input placeholder="Тип матча" value={type} setValue={setType} />
+    <Dropdown
+     array={tournaments!.map((t) => t.name || "")}
+     value={tournament}
+     setValue={setTournament}
+     placeholder="Турнир"
     />
    </div>
-   {type !== "" && (
-    <div className="w-full">
-     <Label size="medium" className="font-bold text-start mb-5">
-      Участники:
-     </Label>
-     <div className="flex gap-3 flex-col">
-      {participants.map((participant, index) => (
-       <div key={index} className="flex w-full items-start gap-10">
-        <Dropdown
-         array={wrestlers!.map((w) => w.name || "")}
-         placeholder={`Рестлер ${index + 1}`}
-         value={participant.items![0].wrestlerName!}
-         setValue={(newValue) => {
-          if (newValue === "") return;
-          setParticipants((prevItems) => {
-           const newItems = [...prevItems];
-           newItems[index] = {
-            ...newItems[index],
-            items: [
-             {
-              ...newItems[index].items![0],
-              wrestlerName: newValue,
-              wrestlerId: wrestlers!
-               .find((wr) => wr.name === newValue)!
-               .id.toString(),
-              wrestlerImage: wrestlers!.find((wr) => wr.name === newValue)!
-               .wrestler_img!,
-             },
-             ...newItems[index].items!.slice(1),
-            ],
-           };
-           return newItems;
-          });
-         }}
-        />
-        <Input
-         className="w-1/2"
-         placeholder={`Имя в матче ${index + 1}`}
-         value={participant.itemName!}
-         setValue={(newValue) => {
-          setParticipants((prevItems) => {
-           const newItems = [...prevItems];
-           newItems[index] = {
-            ...newItems[index],
-            itemName: newValue,
-           };
-           return newItems;
-          });
-         }}
-        />
+   <div className="w-full">
+    <Label size="medium" className="font-bold text-start mb-5">
+     Участники:
+    </Label>
+    <div className="flex gap-3 flex-col">
+     {participants.map((participant, index) => (
+      <div key={index} className="flex w-full items-start gap-10">
+       <div className="flex flex-col gap-2 flex-1">
+        {participant.items?.map((elem, index2) => (
+         <Dropdown
+          key={index2}
+          array={wrestlers!.map((w) => w.name || "")}
+          placeholder={`Рестлер ${index2 + 1}`}
+          value={elem.wrestlerName!}
+          setValue={(newValue) => {
+           if (newValue === "") return;
+           setParticipants((prevItems) => {
+            const updatedParticipants = [...prevItems];
+            updatedParticipants[index].items![index2].wrestlerName = newValue;
+            updatedParticipants[index].items![index2].wrestlerId = wrestlers!
+             .find((wr) => wr.name === newValue)!
+             .id.toString();
+            updatedParticipants[index].items![index2].wrestlerImage =
+             wrestlers!.find((wr) => wr.name === newValue)!.wrestler_img!;
+            return updatedParticipants;
+           });
+          }}
+         />
+        ))}
+        <Button
+         variant={"subtle"}
+         className="w-full"
+         onClick={() =>
+          setParticipants((prevParticipants) => {
+           const updatedParticipants = [...prevParticipants];
+           const lastParticipant = updatedParticipants[index];
+           const updatedItems = [
+            ...lastParticipant.items!,
+            { wrestlerName: "", wrestlerId: "", wrestlerImage: "" },
+           ];
+           lastParticipant.items = updatedItems;
+           return updatedParticipants;
+          })
+         }
+        >
+         + Добавить члена команды
+        </Button>
        </div>
-      ))}
-      <Button
-       variant={"subtle"}
-       className="w-full text-2xl"
-       onClick={() =>
-        setParticipants((prev) => [
-         ...prev,
-         {
-          itemName: "",
-          items: [{ wrestlerName: "", wrestlerId: "", wrestlerImage: "" }],
-         },
-        ])
-       }
-      >
-       +
-      </Button>
-     </div>
+       <Input
+        className="w-1/2"
+        placeholder={`Имя в матче`}
+        value={participant.itemName!}
+        setValue={(newValue) => {
+         setParticipants((prevItems) => {
+          const newItems = [...prevItems];
+          newItems[index] = {
+           ...newItems[index],
+           itemName: newValue,
+          };
+          return newItems;
+         });
+        }}
+       />
+      </div>
+     ))}
+     <Button
+      variant={"subtle"}
+      className="w-full"
+      onClick={() =>
+       setParticipants((prev) => [
+        ...prev,
+        {
+         itemName: "",
+         items: [{ wrestlerName: "", wrestlerId: "", wrestlerImage: "" }],
+        },
+       ])
+      }
+     >
+      + Добавить участника
+     </Button>
     </div>
-   )}
+   </div>
    <div className="w-full">
     <Label size="medium" className="font-bold text-start mb-5">
      Если матч уже прошел:
     </Label>
     <div className="grid grid-cols-3 gap-5 items-center">
      <Input placeholder="Время матча" value={time} setValue={setTime} />
+     {winner.map((win, index) => (
+      <Dropdown
+       key={index}
+       array={participants.map((p) => p.itemName!)}
+       value={win}
+       setValue={(newValue) => {
+        setWinner((prev) => {
+         const newArray = [...prev];
+         newArray[index] = newValue;
+         return newArray;
+        });
+       }}
+       placeholder={`Победитель ${index + 1}`}
+      />
+     ))}
+     <Button
+      variant={"subtle"}
+      className="w-full"
+      onClick={() => setWinner((prev) => [...prev, ""])}
+     >
+      + Добавить победителя
+     </Button>
     </div>
    </div>
    <Button
