@@ -6,12 +6,13 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import RatingBlock from "@/components/RatingBlock";
+import MatchShowElem from "@/components/MatchShowElem";
 
 const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: show } = await supabase
   .from("shows")
-  .select("*, comments_shows(*)")
+  .select("*, comments_shows(*), matches(*)")
   .eq("id", params.id)
   .single();
  if (!show) {
@@ -70,8 +71,18 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
     </div>
     <RatingBlock comments={show.comments_shows} avgRating={show.avgRating} />
    </div>
-   <div>
+   <div className="w-full flex flex-col mb-10 gap-2">
     <Label className="font-bold">Результаты матчей:</Label>
+    {show.matches
+     .sort((a, b) => a.order - b.order)
+     .map((match, index) => (
+      <MatchShowElem
+       key={match.id}
+       index={index}
+       matchId={match.id}
+       isFull={true}
+      />
+     ))}
    </div>
 
    {user && (

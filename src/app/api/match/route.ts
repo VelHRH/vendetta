@@ -18,6 +18,8 @@ export async function POST(req: Request) {
     show: match.show,
     tournament: match.tournament,
     winner: match.winner,
+    ending: match.ending,
+    order: match.order,
    })
    .select();
   if (error) throw error;
@@ -50,6 +52,8 @@ export async function PUT(req: Request) {
     show: match.show,
     tournament: match.tournament,
     winner: match.winner,
+    ending: match.ending,
+    order: match.order,
    })
    .eq("id", parseFloat(id || ""))
    .select();

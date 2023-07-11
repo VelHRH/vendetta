@@ -46,6 +46,46 @@ interface Database {
      }
     ];
    };
+   comments_matches: {
+    Row: {
+     author: string;
+     created_at: string;
+     id: number;
+     item_id: number | null;
+     rating: number;
+     text: string;
+    };
+    Insert: {
+     author: string;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating: number;
+     text: string;
+    };
+    Update: {
+     author?: string;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating?: number;
+     text?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "comments_matches_author_fkey";
+      columns: ["author"];
+      referencedRelation: "users";
+      referencedColumns: ["id"];
+     },
+     {
+      foreignKeyName: "comments_matches_item_id_fkey";
+      columns: ["item_id"];
+      referencedRelation: "matches";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
    comments_shows: {
     Row: {
      author: string;
@@ -168,40 +208,43 @@ interface Database {
    };
    matches: {
     Row: {
-     avgRating: number | null;
+     avgRating: number;
      created_at: string | null;
+     ending: string;
      id: number;
+     order: number | null;
      participants: Json[];
-     peculiarity: string | null;
      show: number;
      time: string | null;
      tournament: number | null;
-     type: string;
-     winner: Json[] | null;
+     type: string | null;
+     winner: string[];
     };
     Insert: {
-     avgRating?: number | null;
+     avgRating?: number;
      created_at?: string | null;
+     ending: string;
      id?: number;
+     order?: number | null;
      participants: Json[];
-     peculiarity?: string | null;
      show: number;
      time?: string | null;
      tournament?: number | null;
-     type?: string;
-     winner?: Json[] | null;
+     type?: string | null;
+     winner: string[];
     };
     Update: {
-     avgRating?: number | null;
+     avgRating?: number;
      created_at?: string | null;
+     ending?: string;
      id?: number;
+     order?: number | null;
      participants?: Json[];
-     peculiarity?: string | null;
      show?: number;
      time?: string | null;
      tournament?: number | null;
-     type?: string;
-     winner?: Json[] | null;
+     type?: string | null;
+     winner?: string[];
     };
     Relationships: [
      {

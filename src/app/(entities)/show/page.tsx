@@ -21,7 +21,7 @@ const AllShows = async ({
     path="/show"
     placeholder="Сортировать по..."
    />
-   <div className="flex justify-between items-center p-2 mt-5">
+   <div className="flex justify-between items-center py-2 mt-5">
     <p className="text-center w-1/2">Show</p>
     <p className="text-center flex-1">Uploaded</p>
     <p className="text-center w-32">Rating</p>

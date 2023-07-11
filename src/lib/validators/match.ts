@@ -16,9 +16,11 @@ export const MatchValidator = z.object({
  type: z.string().optional(),
  time: z.string().optional(),
  peculiarity: z.string().optional(),
- winner: z.array(z.string()).optional(),
+ winner: z.array(z.string().min(1)).min(1),
  show: z.number(),
+ ending: z.string(),
  tournament: z.number().optional(),
+ order: z.number(),
 });
 
 export type CreateMatchPayload = z.infer<typeof MatchValidator>;

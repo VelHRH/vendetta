@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { CreateMatchPayload } from "@/lib/validators/match";
 import Dropdown from "../ui/Dropdown";
 import supabase from "@/lib/supabase-browser";
+import InfoLabel from "../ui/InfoLabel";
 
 const MatchForm = ({
  match,
@@ -17,10 +18,8 @@ const MatchForm = ({
  match?: Database["public"]["Tables"]["matches"]["Row"];
 }) => {
  const [type, setType] = useState<string>(match?.type || "");
+ const [order, setOrder] = useState<string>(match?.order || "");
  const [time, setTime] = useState<string>(match?.time || "");
- const [peculiarity, setPeculiarity] = useState<string>(
-  match?.peculiarity || ""
- );
  const [show, setShow] = useState<string>(match?.show.toString() || "");
  const [tournament, setTournament] = useState<string>(
   match?.tournament?.toString() || ""
@@ -31,7 +30,8 @@ const MatchForm = ({
    items: { wrestlerName: string; wrestlerId: string; wrestlerImage: string }[];
   }[]
  >([]);
- const [winner, setWinner] = useState<string[]>([]);
+ const [ending, setEnding] = useState<string>("");
+ const [winner, setWinner] = useState<string[]>([""]);
  const [isError, setIsError] = useState<boolean>(false);
 
  const [wrestlers, setWrestlers] = useState<
@@ -67,13 +67,15 @@ const MatchForm = ({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
     participants,
+    ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
     show: shows!.find((s) => s.name === show)
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: winner.length === 0 ? undefined : winner,
+    winner: winner,
+    order: parseFloat(order),
    };
    const { data } = await axios.post("/api/match", payload);
    return data as string;
@@ -103,12 +105,16 @@ const MatchForm = ({
  const { mutate: updatematch, isLoading: isLoadingUpdate } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: [],
-    type,
+    participants,
+    ending: ending === "" ? "удержанием" : ending,
+    type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
-    show: parseFloat(show),
+    show: shows!.find((s) => s.name === show)
+     ? shows!.find((s) => s.name === show)!.id
+     : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: [],
+    winner: winner,
+    order: parseFloat(order),
    };
    const { data } = await axios.put(`/api/match?id=${match!.id}`, payload);
    return data as string;
@@ -134,7 +140,6 @@ const MatchForm = ({
    router.refresh();
   },
  });
- console.log(participants);
  return (
   <div className="flex flex-col items-center gap-10 w-full">
    <Label className="font-bold">
@@ -148,7 +153,17 @@ const MatchForm = ({
      placeholder="Шоу"
      className={`${isError && show.length === 0 && "border-red-500"}`}
     />
-    <Input placeholder="Тип матча" value={type} setValue={setType} />
+    <Input
+     placeholder="Последовательность на шоу"
+     value={order}
+     setValue={setOrder}
+     isError={isError && order.length === 0}
+    />
+    <Input
+     placeholder="Тип/особенность матча"
+     value={type}
+     setValue={setType}
+    />
     <Dropdown
      array={tournaments!.map((t) => t.name || "")}
      value={tournament}
@@ -238,16 +253,26 @@ const MatchForm = ({
      </Button>
     </div>
    </div>
-   <div className="w-full">
-    <Label size="medium" className="font-bold text-start mb-5">
+   <div className="w-full flex flex-col gap-3">
+    <Label size="medium" className="font-bold text-start">
      Если матч уже прошел:
     </Label>
+    <InfoLabel>
+     Несколько победителей погут быть в чем-то типа баттл-роялов. Если ничья -
+     указывать ничья.
+    </InfoLabel>
     <div className="grid grid-cols-3 gap-5 items-center">
-     <Input placeholder="Время матча" value={time} setValue={setTime} />
+     <Input placeholder="Время матча mm:ss" value={time} setValue={setTime} />
+     <Dropdown
+      array={["удержанием", "болевым", "после ДК", "после отсчета"]}
+      value={ending}
+      setValue={setEnding}
+      placeholder={`Вид завершения`}
+     />
      {winner.map((win, index) => (
       <Dropdown
        key={index}
-       array={participants.map((p) => p.itemName!)}
+       array={[...participants.map((p) => p.itemName!), "Ничья"]}
        value={win}
        setValue={(newValue) => {
         setWinner((prev) => {

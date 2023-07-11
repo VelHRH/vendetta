@@ -8,7 +8,7 @@ interface InfoLabelProps {
 const InfoLabel: FC<InfoLabelProps> = ({ children }) => {
  return (
   <p className="flex text-slate-500 items-center gap-2">
-   <Info size={40} /> <p>{children}</p>
+   <Info size={30} /> <p>{children}</p>
   </p>
  );
 };

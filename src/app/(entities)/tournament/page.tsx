@@ -25,7 +25,7 @@ const AllTournaments = async ({
     path="/tournament"
     placeholder="Сортировать по..."
    />
-   <div className="flex justify-between items-center p-2 mt-5">
+   <div className="flex justify-between items-center py-2 mt-5">
     <p className="text-center w-1/2">Турнир</p>
     <p className="text-center flex-1">Начало</p>
     <p className="text-center w-32">Рейтинг</p>

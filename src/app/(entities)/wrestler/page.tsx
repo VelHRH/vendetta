@@ -21,7 +21,7 @@ const Wrestlers = async ({
     path="/wrestler"
     placeholder="Фильтровать"
    />
-   <div className="flex justify-between items-center p-2 mt-5">
+   <div className="flex justify-between items-center py-2 mt-5">
     <p className="text-center w-1/2">Wrestler</p>
     <p className="text-center flex-1">Last show</p>
     <p className="text-center w-32">Rating</p>
