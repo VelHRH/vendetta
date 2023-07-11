@@ -212,7 +212,7 @@ interface Database {
      created_at: string | null;
      ending: string;
      id: number;
-     order: number | null;
+     order: number;
      participants: Json[];
      show: number;
      time: string | null;
@@ -225,7 +225,7 @@ interface Database {
      created_at?: string | null;
      ending: string;
      id?: number;
-     order?: number | null;
+     order: number;
      participants: Json[];
      show: number;
      time?: string | null;
@@ -238,7 +238,7 @@ interface Database {
      created_at?: string | null;
      ending?: string;
      id?: number;
-     order?: number | null;
+     order?: number;
      participants?: Json[];
      show?: number;
      time?: string | null;

@@ -18,7 +18,7 @@ const MatchForm = ({
  match?: Database["public"]["Tables"]["matches"]["Row"];
 }) => {
  const [type, setType] = useState<string>(match?.type || "");
- const [order, setOrder] = useState<string>(match?.order || "");
+ const [order, setOrder] = useState<string>(match?.order.toString() || "");
  const [time, setTime] = useState<string>(match?.time || "");
  const [show, setShow] = useState<string>(match?.show.toString() || "");
  const [tournament, setTournament] = useState<string>(
