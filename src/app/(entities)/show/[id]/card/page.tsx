@@ -3,7 +3,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Label from "@/components/ui/Label";
 import InfoElement from "@/components/InfoElement";
-import MatchShowElem from "@/components/MatchShowElem";
+import MatchShowElem from "@/components/Row/MatchShowElem";
 
 const ShowCard = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();

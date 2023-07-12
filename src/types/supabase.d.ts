@@ -7,6 +7,9 @@ type Json = {
  }[];
  bloc?: string;
  points?: number;
+ wrestlerId?: string;
+ wrestlerName?: string;
+ wrestlerImage?: string;
 };
 
 interface Database {
@@ -206,45 +209,73 @@ interface Database {
      }
     ];
    };
+   match_sides: {
+    Row: {
+     created_at: string;
+     id: number;
+     match_id: number;
+     name: string;
+     wrestlers: Json[];
+    };
+    Insert: {
+     created_at?: string;
+     id?: number;
+     match_id: number;
+     name: string;
+     wrestlers: Json[];
+    };
+    Update: {
+     created_at?: string;
+     id?: number;
+     match_id?: number;
+     name?: string;
+     wrestlers?: Json[];
+    };
+    Relationships: [
+     {
+      foreignKeyName: "match_sides_match_id_fkey";
+      columns: ["match_id"];
+      referencedRelation: "matches";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
    matches: {
     Row: {
      avgRating: number;
      created_at: string | null;
-     ending: string;
+     ending: string | null;
      id: number;
      order: number;
-     participants: Json[];
      show: number;
      time: string | null;
      tournament: number | null;
      type: string | null;
-     winner: string[];
+     winner: string[] | null;
     };
     Insert: {
      avgRating?: number;
      created_at?: string | null;
-     ending: string;
+     ending?: string | null;
      id?: number;
      order: number;
-     participants: Json[];
      show: number;
      time?: string | null;
      tournament?: number | null;
      type?: string | null;
-     winner: string[];
+     winner?: string[] | null;
     };
     Update: {
      avgRating?: number;
      created_at?: string | null;
-     ending?: string;
+     ending?: string | null;
      id?: number;
      order?: number;
-     participants?: Json[];
      show?: number;
      time?: string | null;
      tournament?: number | null;
      type?: string | null;
-     winner?: string[];
+     winner?: string[] | null;
     };
     Relationships: [
      {

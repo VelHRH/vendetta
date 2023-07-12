@@ -18,6 +18,7 @@ const MatchForm = ({
  match?: Database["public"]["Tables"]["matches"]["Row"];
 }) => {
  const [type, setType] = useState<string>(match?.type || "");
+ const [title, setTitle] = useState<string[]>(match?.titles || []);
  const [order, setOrder] = useState<string>(match?.order.toString() || "");
  const [time, setTime] = useState<string>(match?.time || "");
  const [show, setShow] = useState<string>(match?.show.toString() || "");
@@ -66,7 +67,11 @@ const MatchForm = ({
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants,
+    participants: participants.filter(
+     (p) =>
+      p.itemName.length > 0 &&
+      p.items.filter((pp) => pp.wrestlerName.length > 0).length > 0
+    ),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -74,7 +79,16 @@ const MatchForm = ({
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: winner,
+    winner:
+     winner.filter((w) => w.length > 0).length === 0
+      ? undefined
+      : winner.filter((w) => w.length > 0),
+    title:
+     titles!.filter((t) => title.includes(t.name)).length === 0
+      ? undefined
+      : titles!
+         .filter((t) => title.includes(t.name))
+         .map((t) => ({ id: t.id, name: t.name })),
     order: parseFloat(order),
    };
    const { data } = await axios.post("/api/match", payload);
@@ -105,7 +119,11 @@ const MatchForm = ({
  const { mutate: updatematch, isLoading: isLoadingUpdate } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants,
+    participants: participants.filter(
+     (p) =>
+      p.itemName.length > 0 &&
+      p.items.filter((pp) => pp.wrestlerName.length > 0).length > 0
+    ),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -113,7 +131,14 @@ const MatchForm = ({
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: winner,
+    winner:
+     winner.filter((w) => w.length > 0).length === 0
+      ? undefined
+      : winner.filter((w) => w.length > 0),
+    title:
+     titles!.filter((t) => title.includes(t.name)).length === 0
+      ? undefined
+      : titles!.filter((t) => title.includes(t.name)).map((t) => t.id),
     order: parseFloat(order),
    };
    const { data } = await axios.put(`/api/match?id=${match!.id}`, payload);
@@ -145,7 +170,7 @@ const MatchForm = ({
    <Label className="font-bold">
     {match ? "Редактирование матча..." : "Создание нового матча..."}
    </Label>
-   <div className="grid grid-cols-3 gap-5 w-full">
+   <div className="grid grid-cols-3 gap-5 w-full items-center">
     <Dropdown
      array={shows!.map((s) => s.name || "")}
      value={show}
@@ -170,6 +195,28 @@ const MatchForm = ({
      setValue={setTournament}
      placeholder="Турнир"
     />
+    {title.map((t, index) => (
+     <Dropdown
+      key={index}
+      array={titles?.map((p) => p.name!) || []}
+      value={t}
+      setValue={(newValue) => {
+       setTitle((prev) => {
+        const newArray = [...prev];
+        newArray[index] = newValue;
+        return newArray;
+       });
+      }}
+      placeholder={`Титул ${index + 1}`}
+     />
+    ))}
+    <Button
+     variant={"subtle"}
+     className="w-full"
+     onClick={() => setTitle((prev) => [...prev, ""])}
+    >
+     + Добавить титул
+    </Button>
    </div>
    <div className="w-full">
     <Label size="medium" className="font-bold text-start mb-5">
@@ -258,13 +305,19 @@ const MatchForm = ({
      Если матч уже прошел:
     </Label>
     <InfoLabel>
-     Несколько победителей погут быть в чем-то типа баттл-роялов. Если ничья -
+     Несколько победителей могут быть в чем-то типа баттл-роялов. Если ничья -
      указывать ничья.
     </InfoLabel>
-    <div className="grid grid-cols-3 gap-5 items-center">
+    <div className="grid grid-cols-3 gap-5 w-full items-center">
      <Input placeholder="Время матча mm:ss" value={time} setValue={setTime} />
      <Dropdown
-      array={["удержанием", "болевым", "после ДК", "после отсчета"]}
+      array={[
+       "удержанием",
+       "болевым",
+       "после ДК",
+       "после отсчета",
+       "по решению рефери",
+      ]}
       value={ending}
       setValue={setEnding}
       placeholder={`Вид завершения`}

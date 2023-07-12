@@ -71,31 +71,34 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">
        Total matches: <InfoElement>0</InfoElement>
       </Label>
+      {wrestler.career_start && (
+       <>
+        <Label size="small">
+         Start of in-ring career:{" "}
+         <InfoElement>{beginCareer.toLocaleDateString()}</InfoElement>
+        </Label>
+        <Label size="small">
+         Experience:{" "}
+         <InfoElement>
+          {Math.abs(experience.getUTCFullYear() - 1970)} years
+         </InfoElement>
+        </Label>
+       </>
+      )}
       <Label size="small">
-       Start of in-ring career:{" "}
-       <InfoElement>{beginCareer.toLocaleDateString()}</InfoElement>
-      </Label>
-
-      <Label size="small">
-       Experience:{" "}
-       <InfoElement>
-        {Math.abs(experience.getUTCFullYear() - 1970)} years
-       </InfoElement>
-      </Label>
-      <Label size="small">
-       Статус:
+       Статус:{" "}
        <InfoElement>
         {wrestler.isVendetta ? "подписан Vendetta" : "на правах фрилансера"}
        </InfoElement>
       </Label>
       <Label size="small" className="flex gap-2 items-center">
-       Trainers:
+       Trainers:{" "}
        {wrestler.trainer?.map((t) => (
         <InfoElement key={t}>{t}</InfoElement>
        ))}
       </Label>
       <Label size="small" className="flex gap-2 items-center">
-       Wrestling styles:
+       Wrestling styles:{" "}
        {wrestler.style?.map((s) => (
         <InfoElement key={s}>{s}</InfoElement>
        ))}
@@ -111,13 +114,19 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">
        Sex: <InfoElement>{wrestler.sex}</InfoElement>
       </Label>
-      <Label size="small">
-       Age:{" "}
-       <InfoElement>{Math.abs(age.getUTCFullYear() - 1970)} years</InfoElement>
-      </Label>
-      <Label size="small">
-       Birthday: <InfoElement>{wrestler.born}</InfoElement>
-      </Label>
+      {wrestler.born && (
+       <>
+        <Label size="small">
+         Age:{" "}
+         <InfoElement>
+          {Math.abs(age.getUTCFullYear() - 1970)} years
+         </InfoElement>
+        </Label>
+        <Label size="small">
+         Birthday: <InfoElement>{wrestler.born}</InfoElement>
+        </Label>
+       </>
+      )}
       <Label size="small">
        Birthplace:{" "}
        <InfoElement>

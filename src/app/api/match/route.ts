@@ -12,7 +12,6 @@ export async function POST(req: Request) {
   const { data, error } = await supabase
    .from("matches")
    .insert({
-    participants: match.participants,
     type: match.type,
     time: match.time,
     show: match.show,
@@ -21,14 +20,51 @@ export async function POST(req: Request) {
     ending: match.ending,
     order: match.order,
    })
-   .select();
-  if (error) throw error;
-  return new Response(data![0].id.toString());
+   .select()
+   .single();
+  if (error || !data) throw error.message;
+
+  for (let participant of match.participants) {
+   const { error: participantsError } = await supabase
+    .from("match_sides")
+    .insert({
+     match_id: data!.id,
+     name: participant.itemName,
+     wrestlers: participant.items,
+    });
+
+   if (participantsError) throw participantsError.message;
+  }
+
+  for (let participant of match.participants) {
+   const { error: participantsError } = await supabase
+    .from("match_sides")
+    .insert({
+     match_id: data!.id,
+     name: participant.itemName,
+     wrestlers: participant.items,
+    });
+
+   if (participantsError) throw participantsError.message;
+  }
+  if (match.title) {
+   for (let title of match.title) {
+    const { error: titleError } = await supabase.from("challanges").insert({
+     match_id: data!.id,
+     title_id: title.id,
+     title_name: title.name,
+    });
+    if (titleError) throw titleError.message;
+   }
+  }
+
+  return new Response(data!.id.toString());
  } catch (err) {
   console.log(err);
   if (err instanceof z.ZodError) {
    return new Response(err.message, { status: 422 });
   }
+  if (typeof err === "string") return new Response(err, { status: 400 });
   return new Response("Error while creating", { status: 500 });
  }
 }

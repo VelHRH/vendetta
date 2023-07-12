@@ -6,7 +6,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import RatingBlock from "@/components/RatingBlock";
-import MatchShowElem from "@/components/MatchShowElem";
+import MatchShowElem from "@/components/Row/MatchShowElem";
 
 const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -71,21 +71,23 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
     </div>
     <RatingBlock comments={show.comments_shows} avgRating={show.avgRating} />
    </div>
-   <div className="w-full flex flex-col mb-10 gap-2">
-    <Label className="font-bold">Результаты матчей:</Label>
-    {show.matches
-     .sort((a, b) => a.order - b.order)
-     .map((match, index) => (
-      <MatchShowElem
-       key={match.id}
-       index={index}
-       matchId={match.id}
-       isFull={true}
-      />
-     ))}
-   </div>
+   {show.upload_date && (
+    <div className="w-full flex flex-col pb-10 mb-10 gap-2 border-b-2 border-slate-500">
+     <Label className="font-bold">Результаты матчей:</Label>
+     {show.matches
+      .sort((a, b) => a.order - b.order)
+      .map((match, index) => (
+       <MatchShowElem
+        key={match.id}
+        index={index}
+        matchId={match.id}
+        isFull={true}
+       />
+      ))}
+    </div>
+   )}
 
-   {user && (
+   {user && show.upload_date && (
     <>
      <Label className="font-bold self-start">Ваш комментарий:</Label>
      {!loggedUserComment ? (

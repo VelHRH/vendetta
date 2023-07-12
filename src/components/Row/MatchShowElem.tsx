@@ -13,7 +13,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
  const supabase = createClient();
  const { data: match, error } = await supabase
   .from("matches")
-  .select("*, comments_matches(*)")
+  .select("*, comments_matches(*), match_sides(*)")
   .eq("id", matchId)
   .single();
  if (!match) {
@@ -37,18 +37,21 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
      )}
     </div>
    )}
-   <div className="flex gap-3 w-full text-2xl items-center h-12" key={match.id}>
+   <div
+    className="flex gap-3 w-full text-2xl items-center h-12 font-extralight"
+    key={match.id}
+   >
     <div className="flex-1 flex gap-3">
      {!isFull ? (
-      match.participants.map((p, index) => (
-       <div className="flex gap-3" key={p.itemName}>
+      match.match_sides.map((p, index) => (
+       <div className="flex gap-3" key={p.name}>
         <Link
-         href={`/wrestler/${p.items![0].wrestlerId}`}
+         href={`/wrestler/${p.wrestlers[0].wrestlerId}`}
          className={`hover:underline underline-offset-4 font-semibold`}
         >
-         {p.itemName}
+         {p.name}
         </Link>
-        {index !== match.participants.length - 1 && "vs. "}
+        {index !== match.match_sides.length - 1 && "vs. "}
        </div>
       ))
      ) : !match.winner[0].toLowerCase().includes("ничья") ? (
@@ -57,8 +60,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
         <div key={index}>
          <Link
           href={`/wrestler/${
-           match.participants.find((p) => p.itemName === w)?.items![0]
-            .wrestlerId
+           match.match_sides.find((p) => p.name === w)?.wrestlers[0].wrestlerId
           }`}
           className={`hover:underline underline-offset-4 font-semibold`}
          >
@@ -68,18 +70,18 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
         </div>
        ))}
        поб.
-       {match.participants
-        .filter((p) => !match.winner.includes(p.itemName!))
+       {match.match_sides
+        .filter((p) => !match.winner.includes(p.name))
         .map((p, index) => (
          <div key={index}>
           <Link
-           href={`/wrestler/${p.items![0].wrestlerId}`}
+           href={`/wrestler/${p.wrestlers![0].wrestlerId}`}
            className={`hover:underline underline-offset-4 font-semibold`}
           >
-           {p.itemName}
+           {p.name}
           </Link>
           {index !==
-           match.participants.filter((p) => !match.winner.includes(p.itemName!))
+           match.match_sides.filter((p) => !match.winner.includes(p.name))
             .length -
             1 && ","}
          </div>
@@ -88,15 +90,15 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
        <p>{`[${match.time}]`}</p>
       </>
      ) : (
-      match.participants.map((p, index) => (
-       <div className="flex gap-3" key={p.itemName}>
+      match.match_sides.map((p, index) => (
+       <div className="flex gap-3" key={p.name}>
         <Link
-         href={`/wrestler/${p.items![0].wrestlerId}`}
+         href={`/wrestler/${p.wrestlers[0].wrestlerId}`}
          className={`hover:underline underline-offset-4 font-semibold`}
         >
-         {p.itemName}
+         {p.name}
         </Link>
-        {index !== match.participants.length - 1
+        {index !== match.match_sides.length - 1
          ? "vs. "
          : `- ${match.winner[0]}`}
        </div>
