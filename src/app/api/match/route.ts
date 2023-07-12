@@ -29,24 +29,16 @@ export async function POST(req: Request) {
     .from("match_sides")
     .insert({
      match_id: data!.id,
-     name: participant.itemName,
+     name:
+      participant.itemName.length > 0
+       ? participant.itemName
+       : participant.items.map((i) => i.wrestlerName).join(", "),
      wrestlers: participant.items,
     });
 
    if (participantsError) throw participantsError.message;
   }
 
-  for (let participant of match.participants) {
-   const { error: participantsError } = await supabase
-    .from("match_sides")
-    .insert({
-     match_id: data!.id,
-     name: participant.itemName,
-     wrestlers: participant.items,
-    });
-
-   if (participantsError) throw participantsError.message;
-  }
   if (match.title) {
    for (let title of match.title) {
     const { error: titleError } = await supabase.from("challanges").insert({

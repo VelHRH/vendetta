@@ -4,7 +4,7 @@ export const MatchValidator = z.object({
  participants: z
   .array(
    z.object({
-    itemName: z.string().min(1),
+    itemName: z.string(),
     items: z
      .array(
       z.object({

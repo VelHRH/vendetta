@@ -12,13 +12,9 @@ import Dropdown from "../ui/Dropdown";
 import supabase from "@/lib/supabase-browser";
 import InfoLabel from "../ui/InfoLabel";
 
-const MatchForm = ({
- match,
-}: {
- match?: Database["public"]["Tables"]["matches"]["Row"];
-}) => {
+const MatchForm = ({ match }: { match?: any }) => {
  const [type, setType] = useState<string>(match?.type || "");
- const [title, setTitle] = useState<string[]>(match?.titles || []);
+ const [title, setTitle] = useState<string[]>(match?.challenges || []);
  const [order, setOrder] = useState<string>(match?.order.toString() || "");
  const [time, setTime] = useState<string>(match?.time || "");
  const [show, setShow] = useState<string>(match?.show.toString() || "");
@@ -30,7 +26,7 @@ const MatchForm = ({
    itemName: string;
    items: { wrestlerName: string; wrestlerId: string; wrestlerImage: string }[];
   }[]
- >([]);
+ >(match?.match_sides || []);
  const [ending, setEnding] = useState<string>("");
  const [winner, setWinner] = useState<string[]>([""]);
  const [isError, setIsError] = useState<boolean>(false);
@@ -67,11 +63,10 @@ const MatchForm = ({
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: participants.filter(
-     (p) =>
-      p.itemName.length > 0 &&
-      p.items.filter((pp) => pp.wrestlerName.length > 0).length > 0
-    ),
+    participants: participants.map((item) => ({
+     ...item,
+     items: item.items.filter((subItem) => subItem.wrestlerId !== ""),
+    })),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -138,7 +133,9 @@ const MatchForm = ({
     title:
      titles!.filter((t) => title.includes(t.name)).length === 0
       ? undefined
-      : titles!.filter((t) => title.includes(t.name)).map((t) => t.id),
+      : titles!
+         .filter((t) => title.includes(t.name))
+         .map((t) => ({ id: t.id, name: t.name })),
     order: parseFloat(order),
    };
    const { data } = await axios.put(`/api/match?id=${match!.id}`, payload);
@@ -170,6 +167,7 @@ const MatchForm = ({
    <Label className="font-bold">
     {match ? "Редактирование матча..." : "Создание нового матча..."}
    </Label>
+
    <div className="grid grid-cols-3 gap-5 w-full items-center">
     <Dropdown
      array={shows!.map((s) => s.name || "")}
@@ -222,7 +220,12 @@ const MatchForm = ({
     <Label size="medium" className="font-bold text-start mb-5">
      Участники:
     </Label>
-    <div className="flex gap-3 flex-col">
+    <InfoLabel>
+     Вы можете установить свое имя, если не хотите использовать имена рестлеров
+     по умолчанию, или оставить правые поля пустыми. Если вы записываете
+     команды, важно перечислять рестлеров слева и справа в одном порядке.
+    </InfoLabel>
+    <div className="flex gap-3 flex-col mt-3">
      {participants.map((participant, index) => (
       <div key={index} className="flex w-full items-start gap-10">
        <div className="flex flex-col gap-2 flex-1">
@@ -300,7 +303,7 @@ const MatchForm = ({
      </Button>
     </div>
    </div>
-   <div className="w-full flex flex-col gap-3">
+   <div className="w-full flex flex-col gap-5">
     <Label size="medium" className="font-bold text-start">
      Если матч уже прошел:
     </Label>
@@ -325,7 +328,14 @@ const MatchForm = ({
      {winner.map((win, index) => (
       <Dropdown
        key={index}
-       array={[...participants.map((p) => p.itemName!), "Ничья"]}
+       array={[
+        ...participants.map((p) =>
+         p.itemName.length > 0
+          ? p.itemName
+          : p.items.map((i) => i.wrestlerName).join(", ")
+        ),
+        "Ничья",
+       ]}
        value={win}
        setValue={(newValue) => {
         setWinner((prev) => {

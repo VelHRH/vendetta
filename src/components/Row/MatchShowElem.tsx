@@ -54,9 +54,9 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
         {index !== match.match_sides.length - 1 && "vs. "}
        </div>
       ))
-     ) : !match.winner[0].toLowerCase().includes("ничья") ? (
+     ) : !match.winner![0].toLowerCase().includes("ничья") ? (
       <>
-       {match.winner.map((w, index) => (
+       {match.winner!.map((w, index) => (
         <div key={index}>
          <Link
           href={`/wrestler/${
@@ -66,12 +66,12 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
          >
           {w}
          </Link>
-         {index !== match.winner.length - 1 && ","}
+         {index !== match.winner!.length - 1 && ","}
         </div>
        ))}
        поб.
        {match.match_sides
-        .filter((p) => !match.winner.includes(p.name))
+        .filter((p) => !match.winner!.includes(p.name))
         .map((p, index) => (
          <div key={index}>
           <Link
@@ -81,7 +81,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
            {p.name}
           </Link>
           {index !==
-           match.match_sides.filter((p) => !match.winner.includes(p.name))
+           match.match_sides.filter((p) => !match.winner!.includes(p.name))
             .length -
             1 && ","}
          </div>
@@ -100,7 +100,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
         </Link>
         {index !== match.match_sides.length - 1
          ? "vs. "
-         : `- ${match.winner[0]}`}
+         : `- ${match.winner![0]}`}
        </div>
       ))
      )}
