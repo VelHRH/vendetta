@@ -332,7 +332,10 @@ const MatchForm = ({ match }: { match?: any }) => {
         ...participants.map((p) =>
          p.itemName.length > 0
           ? p.itemName
-          : p.items.map((i) => i.wrestlerName).join(", ")
+          : p.items
+             .filter((subItem) => subItem.wrestlerId !== "")
+             .map((i) => i.wrestlerName)
+             .join(", ")
         ),
         "Ничья",
        ]}

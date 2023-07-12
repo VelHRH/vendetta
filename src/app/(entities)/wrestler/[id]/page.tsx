@@ -33,17 +33,22 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
   : undefined;
 
  const now = new Date();
- const beginCareer = new Date(wrestler.career_start!.toString());
- const birthday = new Date(wrestler.born!.toString());
+ if (wrestler.career_start) {
+  const beginCareer = new Date(wrestler.career_start.toString());
+  const experience = new Date(
+   new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
+    beginCareer.getTime()
+  );
+ }
 
- const experience = new Date(
-  new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
-   beginCareer.getTime()
- );
- const age = new Date(
-  new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
-   birthday.getTime()
- );
+ if (wrestler.born) {
+  const birthday = new Date(wrestler.born.toString());
+
+  const age = new Date(
+   new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
+    birthday.getTime()
+  );
+ }
  return (
   <>
    <div className="w-full flex gap-5">
