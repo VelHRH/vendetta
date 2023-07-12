@@ -32,7 +32,7 @@ export async function POST(req: Request) {
      name:
       participant.itemName.length > 0
        ? participant.itemName
-       : participant.items.map((i) => i.wrestlerName).join(", "),
+       : participant.items.map((i) => i.wrestlerName).join(" & "),
      wrestlers: participant.items,
     });
 

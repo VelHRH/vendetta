@@ -223,7 +223,8 @@ const MatchForm = ({ match }: { match?: any }) => {
     <InfoLabel>
      Вы можете установить свое имя, если не хотите использовать имена рестлеров
      по умолчанию, или оставить правые поля пустыми. Если вы записываете
-     команды, важно перечислять рестлеров слева и справа в одном порядке.
+     команды, важно перечислять рестлеров слева и справа в одном порядке, а
+     также разделять их &.
     </InfoLabel>
     <div className="flex gap-3 flex-col mt-3">
      {participants.map((participant, index) => (
@@ -335,7 +336,7 @@ const MatchForm = ({ match }: { match?: any }) => {
           : p.items
              .filter((subItem) => subItem.wrestlerId !== "")
              .map((i) => i.wrestlerName)
-             .join(", ")
+             .join(" & ")
         ),
         "Ничья",
        ]}
