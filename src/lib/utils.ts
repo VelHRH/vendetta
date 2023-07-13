@@ -103,3 +103,48 @@ function areArraysEqual(arr1: Json[], arr2: Json[]) {
 
  return true;
 }
+
+export function parseSide(
+ side: {
+  wrestlerName: string;
+  wrestlerCurName: string;
+  wrestlerId: string;
+  wrestlerImage: string;
+  teamName?: string;
+  teamId?: string;
+ }[]
+): string {
+ const teamNames: any[] = [];
+ const individualNames: any[] = [];
+
+ side.forEach((participant) => {
+  if (participant.teamName) {
+   const teamIndex = teamNames.findIndex(
+    (team) => team.name === participant.teamName
+   );
+   if (teamIndex === -1) {
+    teamNames.push({
+     name: participant.teamName,
+     members: [participant.wrestlerCurName],
+    });
+   } else {
+    teamNames[teamIndex].members.push(participant.wrestlerCurName);
+   }
+  } else {
+   individualNames.push(participant.wrestlerCurName);
+  }
+ });
+
+ let formattedString = "";
+
+ teamNames.forEach((team, index) => {
+  formattedString += `${team.name} (${team.members.join(" & ")})`;
+  if (index !== teamNames.length - 1 || individualNames.length > 0) {
+   formattedString += " & ";
+  }
+ });
+
+ formattedString += individualNames.join(" & ");
+
+ return formattedString;
+}

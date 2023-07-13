@@ -16,7 +16,6 @@ export async function POST(req: Request) {
     time: match.time,
     show: match.show,
     tournament: match.tournament,
-    winner: match.winner,
     ending: match.ending,
     order: match.order,
    })
@@ -29,11 +28,8 @@ export async function POST(req: Request) {
     .from("match_sides")
     .insert({
      match_id: data!.id,
-     name:
-      participant.itemName.length > 0
-       ? participant.itemName
-       : participant.items.map((i) => i.wrestlerName).join(" & "),
-     wrestlers: participant.items,
+     name: "",
+     wrestlers: [],
     });
 
    if (participantsError) throw participantsError.message;
@@ -79,7 +75,6 @@ export async function PUT(req: Request) {
     time: match.time,
     show: match.show,
     tournament: match.tournament,
-    winner: match.winner,
     ending: match.ending,
     order: match.order,
    })

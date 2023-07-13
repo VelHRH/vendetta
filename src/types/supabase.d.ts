@@ -21,18 +21,21 @@ interface Database {
      id: number;
      match_id: number;
      title_id: number;
+     title_name: string;
     };
     Insert: {
      created_at?: string;
      id?: number;
      match_id: number;
      title_id: number;
+     title_name: string;
     };
     Update: {
      created_at?: string;
      id?: number;
      match_id?: number;
      title_id?: number;
+     title_name?: string;
     };
     Relationships: [
      {
@@ -209,6 +212,34 @@ interface Database {
      }
     ];
    };
+   match_side_units: {
+    Row: {
+     created_at: string | null;
+     id: number;
+     match_side_id: number;
+     unit: Json;
+    };
+    Insert: {
+     created_at?: string | null;
+     id?: number;
+     match_side_id: number;
+     unit: Json;
+    };
+    Update: {
+     created_at?: string | null;
+     id?: number;
+     match_side_id?: number;
+     unit?: Json;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "match_side_units_match_side_id_fkey";
+      columns: ["match_side_id"];
+      referencedRelation: "match_sides";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
    match_sides: {
     Row: {
      created_at: string;
@@ -374,6 +405,36 @@ interface Database {
     };
     Relationships: [];
    };
+   teams: {
+    Row: {
+     avgRating: number;
+     created_at: string | null;
+     creation_date: string;
+     disband_date: string | null;
+     id: number;
+     name: string;
+     wrestlers: string[];
+    };
+    Insert: {
+     avgRating?: number;
+     created_at?: string | null;
+     creation_date: string;
+     disband_date?: string | null;
+     id?: number;
+     name: string;
+     wrestlers: string[];
+    };
+    Update: {
+     avgRating?: number;
+     created_at?: string | null;
+     creation_date?: string;
+     disband_date?: string | null;
+     id?: number;
+     name?: string;
+     wrestlers?: string[];
+    };
+    Relationships: [];
+   };
    titles: {
     Row: {
      avgRating: number;
@@ -479,6 +540,34 @@ interface Database {
       foreignKeyName: "users_id_fkey";
       columns: ["id"];
       referencedRelation: "users";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
+   winners: {
+    Row: {
+     created_at: string | null;
+     id: number;
+     match_id: number;
+     winner: Json | null;
+    };
+    Insert: {
+     created_at?: string | null;
+     id?: number;
+     match_id: number;
+     winner?: Json | null;
+    };
+    Update: {
+     created_at?: string | null;
+     id?: number;
+     match_id?: number;
+     winner?: Json | null;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "winners_match_id_fkey";
+      columns: ["match_id"];
+      referencedRelation: "matches";
       referencedColumns: ["id"];
      }
     ];

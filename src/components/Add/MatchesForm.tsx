@@ -11,6 +11,7 @@ import { CreateMatchPayload } from "@/lib/validators/match";
 import Dropdown from "../ui/Dropdown";
 import supabase from "@/lib/supabase-browser";
 import InfoLabel from "../ui/InfoLabel";
+import { parseSide } from "@/lib/utils";
 
 const MatchForm = ({ match }: { match?: any }) => {
  const [type, setType] = useState<string>(match?.type || "");
@@ -32,9 +33,18 @@ const MatchForm = ({ match }: { match?: any }) => {
   }[][]
  >(match?.match_sides || []);
  const [ending, setEnding] = useState<string>("");
- const [winner, setWinner] = useState<string[]>([""]);
+ const [winner, setWinner] = useState<
+  {
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
+ >([]);
  const [teamNames, setTeamNames] = useState<
-  { name: string; wrestlers: string[] }[]
+  { name: string; id: string; wrestlers: string[] }[]
  >([]);
 
  const [isError, setIsError] = useState<boolean>(false);
@@ -73,12 +83,29 @@ const MatchForm = ({ match }: { match?: any }) => {
   fetchData();
  }, []);
 
+ useEffect(() => {
+  const updatedParticipants = participants.map((innerArray) =>
+   innerArray.map((participant) => {
+    const team = teamNames.find((team) =>
+     team.wrestlers.includes(participant.wrestlerCurName)
+    );
+    return {
+     ...participant,
+     teamName: team?.name || participant.teamName,
+     teamId: team?.id || participant.teamId,
+    };
+   })
+  );
+
+  setParticipants(updatedParticipants);
+ }, [teamNames]);
+
  const handleAddTeammate = (index: number) => {
   const firstParticipant = participants[index][0];
   const updatedFirstParticipant = {
    ...firstParticipant,
-   teamName: "",
-   teamId: "",
+   teamName: firstParticipant.teamName || "",
+   teamId: firstParticipant.teamName || "",
   };
 
   const updatedParticipants = [...participants];
@@ -102,7 +129,15 @@ const MatchForm = ({ match }: { match?: any }) => {
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: [],
+    participants: participants.map((side) =>
+     side.map((participant) => {
+      if (participant.teamId === "") {
+       const { teamId, teamName, ...rest } = participant;
+       return rest;
+      }
+      return participant;
+     })
+    ),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -110,10 +145,15 @@ const MatchForm = ({ match }: { match?: any }) => {
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner:
-     winner.filter((w) => w.length > 0).length === 0
-      ? undefined
-      : winner.filter((w) => w.length > 0),
+    winner: winner.map((side) =>
+     side.map((participant) => {
+      if (participant.teamId === "") {
+       const { teamId, teamName, ...rest } = participant;
+       return rest;
+      }
+      return participant;
+     })
+    ),
     title:
      titles!.filter((t) => title.includes(t.name)).length === 0
       ? undefined
@@ -150,7 +190,15 @@ const MatchForm = ({ match }: { match?: any }) => {
  const { mutate: updatematch, isLoading: isLoadingUpdate } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: [],
+    participants: participants.map((side) =>
+     side.map((participant) => {
+      if (participant.teamId === "") {
+       const { teamId, teamName, ...rest } = participant;
+       return rest;
+      }
+      return participant;
+     })
+    ),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -158,10 +206,15 @@ const MatchForm = ({ match }: { match?: any }) => {
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner:
-     winner.filter((w) => w.length > 0).length === 0
-      ? undefined
-      : winner.filter((w) => w.length > 0),
+    winner: winner.map((side) =>
+     side.map((participant) => {
+      if (participant.teamId === "") {
+       const { teamId, teamName, ...rest } = participant;
+       return rest;
+      }
+      return participant;
+     })
+    ),
     title:
      titles!.filter((t) => title.includes(t.name)).length === 0
       ? undefined
@@ -261,28 +314,47 @@ const MatchForm = ({ match }: { match?: any }) => {
     <div className="flex gap-3 flex-col mt-3">
      {participants.map((participant, index) => (
       <div key={index} className="flex w-full items-start gap-10">
-       <div className="flex flex-col gap-2 flex-1">
+       <div className="flex flex-col gap-2 w-full">
         {participant.map((elem, index2) => (
-         <Dropdown
-          key={index2}
-          array={wrestlers!.map((w) => w.name || "")}
-          placeholder={`Рестлер ${index2 + 1}`}
-          value={elem.wrestlerName}
-          setValue={(newValue) => {
-           if (newValue === "") return;
-           setParticipants((prevItems) => {
-            const updatedParticipants = [...prevItems];
-            updatedParticipants[index][index2].wrestlerName = newValue;
-            updatedParticipants[index][index2].wrestlerId = wrestlers!
-             .find((wr) => wr.name === newValue)!
-             .id.toString();
-            updatedParticipants[index][index2].wrestlerImage = wrestlers!.find(
-             (wr) => wr.name === newValue
-            )!.wrestler_img!;
-            return updatedParticipants;
-           });
-          }}
-         />
+         <div key={index2} className="flex gap-3 w-full items-center">
+          <div className="flex-1">
+           <Dropdown
+            array={wrestlers!.map((w) => w.name || "")}
+            placeholder={`Рестлер ${index2 + 1}`}
+            value={elem.wrestlerName}
+            setValue={(newValue) => {
+             if (newValue === "") return;
+             setParticipants((prevItems) => {
+              const updatedParticipants = [...prevItems];
+              updatedParticipants[index][index2].wrestlerName = newValue;
+              updatedParticipants[index][index2].wrestlerId = wrestlers
+               .find((wr) => wr.name === newValue)!
+               .id.toString();
+              updatedParticipants[index][index2].wrestlerImage = wrestlers.find(
+               (wr) => wr.name === newValue
+              )!.wrestler_img!;
+              return updatedParticipants;
+             });
+            }}
+           />
+          </div>
+          <Input
+           key={index2}
+           className="w-1/2"
+           placeholder={`Имя в матче`}
+           value={elem.wrestlerCurName}
+           setValue={(newValue) => {
+            setParticipants((prevItems) => {
+             const newItems = [...prevItems];
+             newItems[index][index2] = {
+              ...newItems[index][index2],
+              wrestlerCurName: newValue,
+             };
+             return newItems;
+            });
+           }}
+          />
+         </div>
         ))}
         <Button
          variant={"subtle"}
@@ -291,26 +363,6 @@ const MatchForm = ({ match }: { match?: any }) => {
         >
          + Добавить члена команды
         </Button>
-       </div>
-       <div className="flex flex-col gap-2 w-1/2">
-        {participant.map((elem, index2) => (
-         <Input
-          key={index2}
-          className="w-full"
-          placeholder={`Имя в матче`}
-          value={elem.wrestlerCurName}
-          setValue={(newValue) => {
-           setParticipants((prevItems) => {
-            const newItems = [...prevItems];
-            newItems[index][index2] = {
-             ...newItems[index][index2],
-             wrestlerCurName: newValue,
-            };
-            return newItems;
-           });
-          }}
-         />
-        ))}
        </div>
       </div>
      ))}
@@ -342,15 +394,19 @@ const MatchForm = ({ match }: { match?: any }) => {
      <Label size="medium" className="font-bold text-start">
       Название команд:
      </Label>
+     <InfoLabel>
+      Нужно если в матче участвуют официальные команды/группировки.
+     </InfoLabel>
      {teamNames.map((tN, index) => (
       <div key={index} className="flex flex-col gap-3">
        <Dropdown
-        array={teams.map((s) => s.name || "")}
+        array={[...teams.map((s) => s.name || "")]}
         value={tN.name}
         setValue={(newVal) =>
          setTeamNames((prev) => {
           const p = [...prev];
           p[index].name = newVal;
+
           return p;
          })
         }
@@ -361,7 +417,12 @@ const MatchForm = ({ match }: { match?: any }) => {
          <Dropdown
           key={index2}
           array={participants.flatMap((innerArray) =>
-           innerArray.map((participant) => participant.wrestlerName)
+           innerArray
+            .map((participant) => participant.wrestlerCurName)
+            .filter(
+             (wrestler) =>
+              !teamNames.some((team) => team.wrestlers.includes(wrestler))
+            )
           )}
           value={w}
           setValue={(newVal) =>
@@ -398,6 +459,7 @@ const MatchForm = ({ match }: { match?: any }) => {
         ...prev,
         {
          name: "",
+         id: "",
          wrestlers: ["", ""],
         },
        ])
@@ -432,12 +494,16 @@ const MatchForm = ({ match }: { match?: any }) => {
      {winner.map((win, index) => (
       <Dropdown
        key={index}
-       array={[...participants.map((p) => p[0].wrestlerCurName), "Ничья"]}
-       value={win}
+       array={[...participants.map((side) => parseSide(side)), "Ничья"]}
+       value={win !== undefined ? parseSide(win) : "Ничья"}
        setValue={(newValue) => {
+        if (newValue === "Ничья") setWinner([]);
         setWinner((prev) => {
          const newArray = [...prev];
-         newArray[index] = newValue;
+         newArray[index] =
+          participants[
+           [...participants.map((side) => parseSide(side))].indexOf(newValue)
+          ];
          return newArray;
         });
        }}
@@ -447,7 +513,7 @@ const MatchForm = ({ match }: { match?: any }) => {
      <Button
       variant={"subtle"}
       className="w-full"
-      onClick={() => setWinner((prev) => [...prev, ""])}
+      onClick={() => setWinner((prev) => [...prev, []])}
      >
       + Добавить победителя
      </Button>
