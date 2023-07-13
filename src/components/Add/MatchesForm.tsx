@@ -23,25 +23,36 @@ const MatchForm = ({ match }: { match?: any }) => {
  );
  const [participants, setParticipants] = useState<
   {
-   itemName: string;
-   items: { wrestlerName: string; wrestlerId: string; wrestlerImage: string }[];
-  }[]
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
  >(match?.match_sides || []);
  const [ending, setEnding] = useState<string>("");
  const [winner, setWinner] = useState<string[]>([""]);
+ const [teamNames, setTeamNames] = useState<
+  { name: string; wrestlers: string[] }[]
+ >([]);
+
  const [isError, setIsError] = useState<boolean>(false);
 
  const [wrestlers, setWrestlers] = useState<
-  Database["public"]["Tables"]["wrestlers"]["Row"][] | null
+  Database["public"]["Tables"]["wrestlers"]["Row"][]
  >([]);
  const [tournaments, setTournaments] = useState<
-  Database["public"]["Tables"]["tournaments"]["Row"][] | null
+  Database["public"]["Tables"]["tournaments"]["Row"][]
+ >([]);
+ const [teams, setTeams] = useState<
+  Database["public"]["Tables"]["teams"]["Row"][]
  >([]);
  const [shows, setShows] = useState<
-  Database["public"]["Tables"]["shows"]["Row"][] | null
+  Database["public"]["Tables"]["shows"]["Row"][]
  >([]);
  const [titles, setTitles] = useState<
-  Database["public"]["Tables"]["titles"]["Row"][] | null
+  Database["public"]["Tables"]["titles"]["Row"][]
  >([]);
 
  const router = useRouter();
@@ -49,24 +60,49 @@ const MatchForm = ({ match }: { match?: any }) => {
  useEffect(() => {
   const fetchData = async () => {
    const { data: wrestlers } = await supabase.from("wrestlers").select();
-   setWrestlers(wrestlers);
+   setWrestlers(wrestlers || []);
    const { data: tournaments } = await supabase.from("tournaments").select();
-   setTournaments(tournaments);
+   setTournaments(tournaments || []);
    const { data: shows } = await supabase.from("shows").select();
-   setShows(shows);
+   setShows(shows || []);
    const { data: titles } = await supabase.from("titles").select();
-   setTitles(titles);
+   setTitles(titles || []);
+   const { data: teams } = await supabase.from("teams").select();
+   setTeams(teams || []);
   };
   fetchData();
  }, []);
 
+ const handleAddTeammate = (index: number) => {
+  const firstParticipant = participants[index][0];
+  const updatedFirstParticipant = {
+   ...firstParticipant,
+   teamName: "",
+   teamId: "",
+  };
+
+  const updatedParticipants = [...participants];
+  updatedParticipants[index] = [
+   updatedFirstParticipant,
+   ...participants[index].slice(1),
+  ];
+  updatedParticipants[index].push({
+   wrestlerName: "",
+   wrestlerId: "",
+   wrestlerImage: "",
+   wrestlerCurName: "",
+   teamName: "",
+   teamId: "",
+  });
+  setParticipants(updatedParticipants);
+ };
+
+ console.log(participants);
+
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: participants.map((item) => ({
-     ...item,
-     items: item.items.filter((subItem) => subItem.wrestlerId !== ""),
-    })),
+    participants: [],
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -114,11 +150,7 @@ const MatchForm = ({ match }: { match?: any }) => {
  const { mutate: updatematch, isLoading: isLoadingUpdate } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
-    participants: participants.filter(
-     (p) =>
-      p.itemName.length > 0 &&
-      p.items.filter((pp) => pp.wrestlerName.length > 0).length > 0
-    ),
+    participants: [],
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
@@ -170,7 +202,7 @@ const MatchForm = ({ match }: { match?: any }) => {
 
    <div className="grid grid-cols-3 gap-5 w-full items-center">
     <Dropdown
-     array={shows!.map((s) => s.name || "")}
+     array={shows.map((s) => s.name || "")}
      value={show}
      setValue={setShow}
      placeholder="Шоу"
@@ -188,7 +220,7 @@ const MatchForm = ({ match }: { match?: any }) => {
      setValue={setType}
     />
     <Dropdown
-     array={tournaments!.map((t) => t.name || "")}
+     array={tournaments.map((t) => t.name || "")}
      value={tournament}
      setValue={setTournament}
      placeholder="Турнир"
@@ -230,22 +262,23 @@ const MatchForm = ({ match }: { match?: any }) => {
      {participants.map((participant, index) => (
       <div key={index} className="flex w-full items-start gap-10">
        <div className="flex flex-col gap-2 flex-1">
-        {participant.items?.map((elem, index2) => (
+        {participant.map((elem, index2) => (
          <Dropdown
           key={index2}
           array={wrestlers!.map((w) => w.name || "")}
           placeholder={`Рестлер ${index2 + 1}`}
-          value={elem.wrestlerName!}
+          value={elem.wrestlerName}
           setValue={(newValue) => {
            if (newValue === "") return;
            setParticipants((prevItems) => {
             const updatedParticipants = [...prevItems];
-            updatedParticipants[index].items![index2].wrestlerName = newValue;
-            updatedParticipants[index].items![index2].wrestlerId = wrestlers!
+            updatedParticipants[index][index2].wrestlerName = newValue;
+            updatedParticipants[index][index2].wrestlerId = wrestlers!
              .find((wr) => wr.name === newValue)!
              .id.toString();
-            updatedParticipants[index].items![index2].wrestlerImage =
-             wrestlers!.find((wr) => wr.name === newValue)!.wrestler_img!;
+            updatedParticipants[index][index2].wrestlerImage = wrestlers!.find(
+             (wr) => wr.name === newValue
+            )!.wrestler_img!;
             return updatedParticipants;
            });
           }}
@@ -254,37 +287,31 @@ const MatchForm = ({ match }: { match?: any }) => {
         <Button
          variant={"subtle"}
          className="w-full"
-         onClick={() =>
-          setParticipants((prevParticipants) => {
-           const updatedParticipants = [...prevParticipants];
-           const lastParticipant = updatedParticipants[index];
-           const updatedItems = [
-            ...lastParticipant.items!,
-            { wrestlerName: "", wrestlerId: "", wrestlerImage: "" },
-           ];
-           lastParticipant.items = updatedItems;
-           return updatedParticipants;
-          })
-         }
+         onClick={() => handleAddTeammate(index)}
         >
          + Добавить члена команды
         </Button>
        </div>
-       <Input
-        className="w-1/2"
-        placeholder={`Имя в матче`}
-        value={participant.itemName!}
-        setValue={(newValue) => {
-         setParticipants((prevItems) => {
-          const newItems = [...prevItems];
-          newItems[index] = {
-           ...newItems[index],
-           itemName: newValue,
-          };
-          return newItems;
-         });
-        }}
-       />
+       <div className="flex flex-col gap-2 w-1/2">
+        {participant.map((elem, index2) => (
+         <Input
+          key={index2}
+          className="w-full"
+          placeholder={`Имя в матче`}
+          value={elem.wrestlerCurName}
+          setValue={(newValue) => {
+           setParticipants((prevItems) => {
+            const newItems = [...prevItems];
+            newItems[index][index2] = {
+             ...newItems[index][index2],
+             wrestlerCurName: newValue,
+            };
+            return newItems;
+           });
+          }}
+         />
+        ))}
+       </div>
       </div>
      ))}
      <Button
@@ -293,10 +320,14 @@ const MatchForm = ({ match }: { match?: any }) => {
       onClick={() =>
        setParticipants((prev) => [
         ...prev,
-        {
-         itemName: "",
-         items: [{ wrestlerName: "", wrestlerId: "", wrestlerImage: "" }],
-        },
+        [
+         {
+          wrestlerName: "",
+          wrestlerId: "",
+          wrestlerImage: "",
+          wrestlerCurName: "",
+         },
+        ],
        ])
       }
      >
@@ -304,6 +335,78 @@ const MatchForm = ({ match }: { match?: any }) => {
      </Button>
     </div>
    </div>
+   {participants.some((innerArray) =>
+    innerArray.some((obj) => obj.teamId !== undefined)
+   ) && (
+    <div className="w-full flex flex-col gap-7">
+     <Label size="medium" className="font-bold text-start">
+      Название команд:
+     </Label>
+     {teamNames.map((tN, index) => (
+      <div key={index} className="flex flex-col gap-3">
+       <Dropdown
+        array={teams.map((s) => s.name || "")}
+        value={tN.name}
+        setValue={(newVal) =>
+         setTeamNames((prev) => {
+          const p = [...prev];
+          p[index].name = newVal;
+          return p;
+         })
+        }
+        placeholder="Выберите команду"
+       />
+       <div className="grid grid-cols-3 gap-5 w-full items-center">
+        {tN.wrestlers.map((w, index2) => (
+         <Dropdown
+          key={index2}
+          array={participants.flatMap((innerArray) =>
+           innerArray.map((participant) => participant.wrestlerName)
+          )}
+          value={w}
+          setValue={(newVal) =>
+           setTeamNames((prev) => {
+            const p = [...prev];
+            p[index].wrestlers[index2] = newVal;
+            return p;
+           })
+          }
+          placeholder="Рестлер"
+         />
+        ))}
+        <Button
+         variant={"subtle"}
+         className="w-full"
+         onClick={() =>
+          setTeamNames((prev) => {
+           const p = [...prev];
+           p[index].wrestlers.push("");
+           return p;
+          })
+         }
+        >
+         + Добавить рестлера
+        </Button>
+       </div>
+      </div>
+     ))}
+     <Button
+      variant={"subtle"}
+      className="w-full"
+      onClick={() =>
+       setTeamNames((prev) => [
+        ...prev,
+        {
+         name: "",
+         wrestlers: ["", ""],
+        },
+       ])
+      }
+     >
+      + Добавить название
+     </Button>
+    </div>
+   )}
    <div className="w-full flex flex-col gap-5">
     <Label size="medium" className="font-bold text-start">
      Если матч уже прошел:
@@ -329,17 +432,7 @@ const MatchForm = ({ match }: { match?: any }) => {
      {winner.map((win, index) => (
       <Dropdown
        key={index}
-       array={[
-        ...participants.map((p) =>
-         p.itemName.length > 0
-          ? p.itemName
-          : p.items
-             .filter((subItem) => subItem.wrestlerId !== "")
-             .map((i) => i.wrestlerName)
-             .join(" & ")
-        ),
-        "Ничья",
-       ]}
+       array={[...participants.map((p) => p[0].wrestlerCurName), "Ничья"]}
        value={win}
        setValue={(newValue) => {
         setWinner((prev) => {

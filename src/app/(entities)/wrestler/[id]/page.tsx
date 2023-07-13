@@ -40,7 +40,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
    beginCareer.getTime()
  );
 
- const birthday = new Date(wrestler.career_start?.toString() || "");
+ const birthday = new Date(wrestler.born?.toString() || "");
 
  const age = new Date(
   new Date(now.getFullYear() + 4, now.getMonth(), now.getDate()).getTime() -
