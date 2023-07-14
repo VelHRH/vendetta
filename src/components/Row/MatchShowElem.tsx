@@ -98,7 +98,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
           }),
          }),
         }}
-        className="dark:bg-slate-800 h-12 bg-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center"
+        className="dark:bg-slate-800 h-12 bg-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center font-semibold"
        >
         {normalizeRating({
          ratings: match.comments_matches.length,
@@ -108,7 +108,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
       ) : (
        <Link
         href={`/match/${matchId}`}
-        className={`dark:bg-slate-800 bg-slate-200 h-12 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center`}
+        className={`dark:bg-slate-800 bg-slate-200 h-12 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center font-semibold`}
        >
         --
        </Link>
@@ -116,7 +116,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
       {match.comments_matches.find((c) => c.author === user?.id) && (
        <Link
         href={`/match/${match.id}`}
-        className={`dark:bg-slate-800 bg-slate-200 h-12 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center`}
+        className={`dark:bg-slate-800 bg-slate-200 h-12 hover:bg-slate-300 dark:hover:bg-slate-700 duration-300 w-32 rounded-md justify-center flex items-center font-semibold`}
        >
         {match.comments_matches.find((c) => c.author === user?.id)!.rating}
        </Link>

@@ -81,7 +81,7 @@ export async function PUT(req: Request) {
    .update({
     avgRating:
      (item.avgRating * comments!.length - comment.rating + body.rating) /
-     comments!.length,
+      comments!.length || 0,
    })
    .eq("id", comment.item_id);
   if (updateItemError) throw "Update item error";
@@ -133,7 +133,7 @@ export async function PATCH(req: Request) {
    .update({
     avgRating:
      (item.avgRating * comments!.length - comment.rating) /
-     (comments!.length - 1),
+      (comments!.length - 1) || 0,
    })
    .eq("id", comment.item_id);
   if (updateItemError) throw "Update item error";
@@ -146,6 +146,6 @@ export async function PATCH(req: Request) {
   return new Response("Success");
  } catch (err) {
   console.log(err);
-  return new Response("Error while creating", { status: 500 });
+  return new Response("Error while deleating", { status: 500 });
  }
 }
