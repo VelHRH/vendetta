@@ -1,7 +1,8 @@
 import createClient from "@/lib/supabase-server";
-import { normalizeRating, ratingColor } from "@/lib/utils";
+import { normalizeRating, parseSide, ratingColor } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import MatchSide from "./MatchSide";
 
 interface MatchElemProps {
  matchId: number;
@@ -13,7 +14,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
  const supabase = createClient();
  const { data: match } = await supabase
   .from("matches")
-  .select("*, comments_matches(*), match_sides(*)")
+  .select("*, comments_matches(*), match_sides(*), winners(*)")
   .eq("id", matchId)
   .single();
  if (!match) {
@@ -46,122 +47,42 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
     <div className="flex-1 flex flex-wrap">
      {!isFull ? (
       match.match_sides.map((p, index) => (
-       <div className="flex" key={p.name}>
-        {p.name.split(/&/).map((wrestler, index2) => (
-         <div key={index2} className="flex">
-          <Link
-           href={`/wrestler/${p.wrestlers[index2].wrestlerId}`}
-           className={`hover:underline underline-offset-4 font-semibold`}
-          >
-           {wrestler.trim()}
-          </Link>
-          {index2 !== p.name.split(/&/).length - 1 ? (
-           index2 === p.name.split(/&/).length - 2 ? (
-            <p className="mx-2">&</p>
-           ) : (
-            <p className="mr-2">,</p>
-           )
-          ) : null}
-         </div>
-        ))}
-        {index !== match.match_sides.length - 1 && <p className="mx-4">vs.</p>}
-       </div>
-      ))
-     ) : !match.winner![0].toLowerCase().includes("ничья") ? (
-      <>
-       {match.winner!.map((w, index) => (
-        <div className="flex" key={index}>
-         {w.split(/&/).map((wrestler, index2) => (
-          <>
-           <Link
-            key={index2}
-            href={`/wrestler/${
-             match.match_sides.find((p) => p.name === w)?.wrestlers[index2]
-              .wrestlerId
-            }`}
-            className={`hover:underline underline-offset-4 font-semibold`}
-           >
-            {wrestler.trim()}
-           </Link>
-           {index2 !== w.split(/&/).length - 1 ? (
-            index2 === w.split(/&/).length - 2 ? (
-             <p className="mx-2">&</p>
-            ) : (
-             <p className="mr-2">,</p>
-            )
-           ) : null}
-          </>
-         ))}
-         {index !== match.winner!.length - 1 && " и "}
-        </div>
-       ))}
-       <p className="mx-4">поб.</p>
-       {match.match_sides
-        .filter((p) => !match.winner!.includes(p.name))
-        .map((p, index) => (
-         <div key={index} className="flex">
-          {p.name.split(/&/).map((wrestler, index2) => (
-           <>
-            <Link
-             key={index2}
-             href={`/wrestler/${p.wrestlers[index2].wrestlerId}`}
-             className={`hover:underline underline-offset-4 font-semibold`}
-            >
-             {wrestler.trim()}
-            </Link>
-            {index2 !== p.name.split(/&/).length - 1 ? (
-             index2 === p.name.split(/&/).length - 2 ? (
-              <p className="mx-2">&</p>
-             ) : (
-              <p className="mr-2">,</p>
-             )
-            ) : null}
-           </>
-          ))}
-          {index !==
-           match.match_sides.filter((p) => !match.winner!.includes(p.name))
-            .length -
-            1 && " и "}
-         </div>
-        ))}
-       <p className="mx-4">-</p>
-       <p className="mr-4">{match.ending}</p>
-       <p>{`[${match.time}]`}</p>
-      </>
-     ) : (
-      match.match_sides.map((p, index) => (
        <>
-        <div className="flex" key={p.name}>
-         {p.name.split(/&/).map((wrestler, index2) => (
-          <>
-           <Link
-            key={index2}
-            href={`/wrestler/${p.wrestlers[index2].wrestlerId}`}
-            className={`hover:underline underline-offset-4 font-semibold`}
-           >
-            {wrestler.trim()}
-           </Link>
-           {index2 !== p.name.split(/&/).length - 1 ? (
-            index2 === p.name.split(/&/).length - 2 ? (
-             <p className="mx-2">&</p>
-            ) : (
-             <p className="mr-2">,</p>
-            )
-           ) : null}
-          </>
-         ))}
-
-         {index !== match.match_sides.length - 1 && <p className="mx-4">vs.</p>}
-        </div>
-        {match.match_sides.length - 1 === index && <p className="mx-4">-</p>}
-        {match.match_sides.length - 1 === index && (
-         <p className="mr-4">
-          {match.winner![0].toLowerCase()} {match.ending}
-         </p>
-        )}
-        {match.match_sides.length - 1 === index && <p>{`[${match.time}]`}</p>}
+        <MatchSide key={p.id} wrestlers={p.wrestlers} />
+        {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
        </>
       ))
+     ) : match.winners.length === 0 ? (
+      match.match_sides.map((p, index) => (
+       <>
+        <MatchSide key={p.id} wrestlers={p.wrestlers} />
+        {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
+       </>
+      ))
+     ) : (
+      <>
+       {match.winners.map((p, index) => (
+        <>
+         <MatchSide key={p.id} wrestlers={p.winner} />
+         {index !== match.match_sides.length - 1 && (
+          <p className="mx-3">поб.</p>
+         )}
+        </>
+       ))}
+       {match.match_sides.map(
+        (p, index) =>
+         !match.winners.some(
+          (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
+         ) && (
+          <>
+           <MatchSide key={p.id} wrestlers={p.wrestlers} />
+           {index !== match.match_sides.length - 1 && (
+            <p className="mx-3">поб.</p>
+           )}
+          </>
+         )
+       )}
+      </>
      )}
     </div>
     {isFull && (

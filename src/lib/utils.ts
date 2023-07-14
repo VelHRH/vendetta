@@ -63,7 +63,7 @@ export function findFirstDuplicate(arr: Json[]) {
  return { index: -1, value: "" };
 }
 
-export function removeDuplicateArrays(arr1: Json[][], arr2: Json[][]) {
+export function removeDuplicateArrays(arr1: Json[][][], arr2: Json[][][]) {
  let uniqueArr2 = [];
  for (let i = 0; i < arr2.length; i++) {
   let ifUnique = true;
@@ -78,7 +78,7 @@ export function removeDuplicateArrays(arr1: Json[][], arr2: Json[][]) {
  return uniqueArr2;
 }
 
-function areArraysEqual(arr1: Json[], arr2: Json[]) {
+function areArraysEqual(arr1: Json[][], arr2: Json[][]) {
  if (arr1.length !== arr2.length) {
   return false;
  }
@@ -90,7 +90,7 @@ function areArraysEqual(arr1: Json[], arr2: Json[]) {
   for (let j = 0; j < arr2.length; j++) {
    const obj2 = arr2[j];
 
-   if (obj1.itemName === obj2.itemName) {
+   if (obj1 === obj2) {
     found = true;
     break;
    }
@@ -104,16 +104,7 @@ function areArraysEqual(arr1: Json[], arr2: Json[]) {
  return true;
 }
 
-export function parseSide(
- side: {
-  wrestlerName: string;
-  wrestlerCurName: string;
-  wrestlerId: string;
-  wrestlerImage: string;
-  teamName?: string;
-  teamId?: string;
- }[]
-): string {
+export function parseSide(side: Json[]): string {
  const teamNames: any[] = [];
  const individualNames: any[] = [];
 

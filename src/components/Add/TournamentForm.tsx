@@ -14,11 +14,7 @@ import TournamentBracket from "../TournamentBracket";
 import { CreateTournamentPayload } from "@/lib/validators/tournament";
 import { findFirstDuplicate } from "@/lib/utils";
 
-const TournamentForm = ({
- tournament,
-}: {
- tournament?: Database["public"]["Tables"]["tournaments"]["Row"];
-}) => {
+const TournamentForm = ({ tournament }: { tournament?: any }) => {
  const [name, setName] = useState<string>(tournament?.name || "");
  const [description, setDescription] = useState<string>(
   tournament?.description || ""
@@ -56,12 +52,7 @@ const TournamentForm = ({
  const [wrestlers, setWrestlers] = useState<
   Database["public"]["Tables"]["wrestlers"]["Row"][] | null
  >([]);
- const [number, setNumber] = useState<string>(
-  findFirstDuplicate(playOff).index === -1 ||
-   findFirstDuplicate(playOff).value === ""
-   ? ""
-   : findFirstDuplicate(playOff).index.toString()
- );
+ const [number, setNumber] = useState<string>("");
 
  useEffect(() => {
   const fetchData = async () => {
@@ -230,10 +221,7 @@ const TournamentForm = ({
          </div>
         ))}
 
-        <TournamentBracket
-         participants={parseFloat(number)}
-         items={playOff.slice(0, parseFloat(number))}
-        />
+        <TournamentBracket participants={parseFloat(number)} items={[]} />
        </>
       )}
      </div>

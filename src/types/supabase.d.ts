@@ -1,15 +1,13 @@
 type Json = {
  itemName?: string;
- items?: {
-  wrestlerId?: string;
-  wrestlerName?: string;
-  wrestlerImage?: string;
- }[];
  bloc?: string;
  points?: number;
  wrestlerId?: string;
  wrestlerName?: string;
  wrestlerImage?: string;
+ wrestlerCurName: string;
+ teamId?: string;
+ teamName?: string;
 };
 
 interface Database {
@@ -212,54 +210,23 @@ interface Database {
      }
     ];
    };
-   match_side_units: {
-    Row: {
-     created_at: string | null;
-     id: number;
-     match_side_id: number;
-     unit: Json;
-    };
-    Insert: {
-     created_at?: string | null;
-     id?: number;
-     match_side_id: number;
-     unit: Json;
-    };
-    Update: {
-     created_at?: string | null;
-     id?: number;
-     match_side_id?: number;
-     unit?: Json;
-    };
-    Relationships: [
-     {
-      foreignKeyName: "match_side_units_match_side_id_fkey";
-      columns: ["match_side_id"];
-      referencedRelation: "match_sides";
-      referencedColumns: ["id"];
-     }
-    ];
-   };
    match_sides: {
     Row: {
      created_at: string;
      id: number;
      match_id: number;
-     name: string;
      wrestlers: Json[];
     };
     Insert: {
      created_at?: string;
      id?: number;
      match_id: number;
-     name: string;
      wrestlers: Json[];
     };
     Update: {
      created_at?: string;
      id?: number;
      match_id?: number;
-     name?: string;
      wrestlers?: Json[];
     };
     Relationships: [
@@ -282,7 +249,6 @@ interface Database {
      time: string | null;
      tournament: number | null;
      type: string | null;
-     winner: string[] | null;
     };
     Insert: {
      avgRating?: number;
@@ -294,7 +260,6 @@ interface Database {
      time?: string | null;
      tournament?: number | null;
      type?: string | null;
-     winner?: string[] | null;
     };
     Update: {
      avgRating?: number;
@@ -306,7 +271,6 @@ interface Database {
      time?: string | null;
      tournament?: number | null;
      type?: string | null;
-     winner?: string[] | null;
     };
     Relationships: [
      {
@@ -318,6 +282,34 @@ interface Database {
      {
       foreignKeyName: "matches_tournament_fkey";
       columns: ["tournament"];
+      referencedRelation: "tournaments";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
+   play_off_participants: {
+    Row: {
+     created_at: string | null;
+     id: number;
+     participant: Json[];
+     tournament_id: number;
+    };
+    Insert: {
+     created_at?: string | null;
+     id?: number;
+     participant: Json[];
+     tournament_id: number;
+    };
+    Update: {
+     created_at?: string | null;
+     id?: number;
+     participant?: Json[];
+     tournament_id?: number;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "play_off_participants_tournament_id_fkey";
+      columns: ["tournament_id"];
       referencedRelation: "tournaments";
       referencedColumns: ["id"];
      }
@@ -477,7 +469,6 @@ interface Database {
      end: string | null;
      id: number;
      name: string;
-     play_off_participants: Json[];
      start: string | null;
      type: string;
      winner: string | null;
@@ -490,7 +481,6 @@ interface Database {
      end?: string | null;
      id?: number;
      name: string;
-     play_off_participants?: Json[];
      start?: string | null;
      type: string;
      winner?: string | null;
@@ -503,7 +493,6 @@ interface Database {
      end?: string | null;
      id?: number;
      name?: string;
-     play_off_participants?: Json[];
      start?: string | null;
      type?: string;
      winner?: string | null;
@@ -549,19 +538,19 @@ interface Database {
      created_at: string | null;
      id: number;
      match_id: number;
-     winner: Json | null;
+     winner: Json[];
     };
     Insert: {
      created_at?: string | null;
      id?: number;
      match_id: number;
-     winner?: Json | null;
+     winner: Json[];
     };
     Update: {
      created_at?: string | null;
      id?: number;
      match_id?: number;
-     winner?: Json | null;
+     winner?: Json[];
     };
     Relationships: [
      {

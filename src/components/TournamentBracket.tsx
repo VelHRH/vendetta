@@ -1,11 +1,11 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { getBaseLog, removeDuplicateArrays } from "@/lib/utils";
+import { getBaseLog, parseSide, removeDuplicateArrays } from "@/lib/utils";
 
 interface TournamentBracketProps {
  participants: number;
- items: Json[];
- allTournamentMatches?: Json[][];
+ items: Json[][];
+ allTournamentMatches?: Json[][][];
 }
 
 const TournamentBracket: FC<TournamentBracketProps> = ({
@@ -14,23 +14,17 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  allTournamentMatches,
 }) => {
  const cols = getBaseLog(2, participants) * 2 - 1;
- const [orderedMatches, setOrderedMatches] = useState<Json[][]>([]);
+ const [orderedMatches, setOrderedMatches] = useState<Json[][][]>([]);
  useEffect(() => {
   let orderedArray = [...orderedMatches];
   if (orderedArray.length < participants / 2) {
    for (let i = 0; i < participants; i += 2) {
-    orderedArray.push([
-     { itemName: items[i].itemName, items: items[i].items },
-     { itemName: items[i + 1].itemName, items: items[i + 1].items },
-    ]);
+    orderedArray.push([[...items[i]], [...items[i + 1]]]);
    }
   } else if (!allTournamentMatches || allTournamentMatches.length === 0) {
    orderedArray = [];
    for (let i = 0; i < participants; i += 2) {
-    orderedArray.push([
-     { itemName: items[i].itemName, items: items[i].items },
-     { itemName: items[i + 1].itemName, items: items[i + 1].items },
-    ]);
+    orderedArray.push([[...items[i]], [...items[i + 1]]]);
    }
   }
   if (allTournamentMatches && allTournamentMatches.length !== 0) {
@@ -49,14 +43,14 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      const pair = [...stage[j], ...stage[j + 1]];
      const foundArray = uniqueMatches.find((currentArray) =>
       currentArray.every((element) =>
-       pair.some((pairElement) => pairElement.itemName === element.itemName)
+       pair.some((pairElement) => pairElement === element)
       )
      );
      let orderedFoundArray = [];
 
      for (let n = 0; n < pair.length; n++) {
       for (let m = 0; m < foundArray!.length; m++) {
-       if (pair[n].itemName === foundArray![m].itemName) {
+       if (pair[n] === foundArray![m]) {
         orderedFoundArray.push(foundArray![m]);
        }
       }
@@ -77,13 +71,13 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
       ? whichIndexes(participants, index).map((ind, index2) => (
          <div key={ind} className="h-[3.5rem] flex gap-1 flex-col min-w-[70px]">
           <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50">
-           {orderedMatches[ind] ? orderedMatches[ind][0].itemName : ""}
+           {orderedMatches[ind] ? parseSide(orderedMatches[ind][0]) : ""}
           </div>
           <div
            key={index}
            className="w-full p-1 bg-slate-600  h-1/2 rounded-b-md text-slate-50"
           >
-           {orderedMatches[ind] ? orderedMatches[ind][1].itemName : ""}
+           {orderedMatches[ind] ? parseSide(orderedMatches[ind][1]) : ""}
           </div>
          </div>
         ))

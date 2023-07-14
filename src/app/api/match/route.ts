@@ -28,11 +28,20 @@ export async function POST(req: Request) {
     .from("match_sides")
     .insert({
      match_id: data!.id,
-     name: "",
-     wrestlers: [],
+     wrestlers: participant,
     });
 
    if (participantsError) throw participantsError.message;
+  }
+
+  if (match.winner.length !== 0) {
+   for (let winner of match.winner) {
+    const { error: winnerError } = await supabase.from("winners").insert({
+     match_id: data!.id,
+     winner: winner,
+    });
+    if (winnerError) throw winnerError.message;
+   }
   }
 
   if (match.title) {

@@ -124,8 +124,6 @@ const MatchForm = ({ match }: { match?: any }) => {
   setParticipants(updatedParticipants);
  };
 
- console.log(participants);
-
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {

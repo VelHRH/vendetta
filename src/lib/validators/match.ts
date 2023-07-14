@@ -5,8 +5,11 @@ export const MatchValidator = z.object({
   z.array(
    z.object({
     wrestlerName: z.string(),
+    wrestlerCurName: z.string(),
     wrestlerId: z.string().min(1),
     wrestlerImage: z.string(),
+    teamName: z.string().optional(),
+    teamId: z.string().optional(),
    })
   )
  ),
@@ -17,8 +20,11 @@ export const MatchValidator = z.object({
   z.array(
    z.object({
     wrestlerName: z.string(),
+    wrestlerCurName: z.string(),
     wrestlerId: z.string().min(1),
     wrestlerImage: z.string(),
+    teamName: z.string().optional(),
+    teamId: z.string().optional(),
    })
   )
  ),

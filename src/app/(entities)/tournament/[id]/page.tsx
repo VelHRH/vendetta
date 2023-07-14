@@ -13,7 +13,9 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: tournament } = await supabase
   .from("tournaments")
-  .select("*, comments_tournaments(*), matches(*, match_sides(*))")
+  .select(
+   "*, comments_tournaments(*), matches(*, match_sides(*)), play_off_participants(*)"
+  )
   .eq("id", params.id)
   .single();
  if (!tournament) {
@@ -57,11 +59,11 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        Победитель:{" "}
        <InfoElement>
         <Link
-         href={`/wrestler/${
-          tournament.play_off_participants.find(
-           (p) => p.itemName === tournament.winner
-          )?.items![0].wrestlerId
-         }`}
+         href={`/wrestler/${tournament.play_off_participants.map((a) =>
+          a.participant.map((p) =>
+           p.wrestlerCurName === tournament.winner ? p.wrestlerId : null
+          )
+         )}`}
          className="hover:underline underline-offset-4"
         >
          {tournament.winner}
@@ -78,14 +80,10 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
    <div>
     <Label className="font-bold mb-5">Подробности турнира:</Label>
     <TournamentBracket
-     participants={
-      findFirstDuplicate(tournament.play_off_participants).index === -1
-       ? tournament.play_off_participants.length
-       : findFirstDuplicate(tournament.play_off_participants).index
-     }
-     items={tournament.play_off_participants}
+     participants={8}
+     items={tournament.play_off_participants.map((p) => p.participant)}
      allTournamentMatches={tournament.matches.map((m) =>
-      m.match_sides.map((m) => ({ itemName: m.name, items: m.wrestlers }))
+      m.match_sides.map((m) => m.wrestlers)
      )}
     />
    </div>
