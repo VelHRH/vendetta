@@ -48,7 +48,12 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
       </div>
      )}
      <Label size="small">
-      Дата загрузки: <InfoElement>{show.upload_date}</InfoElement>
+      Дата загрузки:{" "}
+      <InfoElement>
+       {show?.upload_date
+        ? new Date(show.upload_date).toLocaleDateString()
+        : "Еще не состоялся"}
+      </InfoElement>
      </Label>
      <Label size="small">
       Тип шоу: <InfoElement>{show.type}</InfoElement>

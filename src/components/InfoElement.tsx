@@ -6,7 +6,7 @@ interface InfoElementProps {
 
 const InfoElement: FC<InfoElementProps> = ({ children }) => {
  return (
-  <div className="p-1 text-base rounded-md bg-slate-200 dark:bg-slate-800">
+  <div className="p-1 text-base rounded-md bg-slate-200 dark:bg-slate-800 flex">
    {children}
   </div>
  );
