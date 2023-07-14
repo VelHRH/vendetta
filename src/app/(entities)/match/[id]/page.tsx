@@ -99,7 +99,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
     />
    </div>
 
-   <div className="w-full flex flex-col pb-10 gap-2 border-b-2 border-slate-500">
+   <div className="w-full flex flex-col pb-10 mb-10 gap-2 border-b-2 border-slate-500">
     <Label className="font-bold">Галлерея:</Label>
     <div className="w-full grid grid-cols-8 gap-3 mt-5">
      {match.match_sides
@@ -130,7 +130,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
      <Label className="font-bold self-start">Ваш комментарий:</Label>
      {!loggedUserComment ? (
       <CommentForm
-       type="shows"
+       type="matches"
        itemId={parseFloat(params.id)}
        authorId={profile!.id}
        author={profile!.username || ""}
@@ -142,7 +142,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
        date={loggedUserComment.created_at!.toString()}
        text={loggedUserComment.text}
        id={loggedUserComment.id}
-       type="shows"
+       type="matches"
       />
      )}
     </>
