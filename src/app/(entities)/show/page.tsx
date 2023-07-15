@@ -102,7 +102,7 @@ const AllShows = async ({
     .map((show, index) => (
      <ListElem
       key={index}
-      link={`/match/${show.id}`}
+      link={`/show/${show.id}`}
       avgRating={show.avgRating}
       main={`${index + 1}. ${show.name}`}
       secondary={
