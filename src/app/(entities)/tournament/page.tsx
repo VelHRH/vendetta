@@ -60,7 +60,7 @@ const AllTournaments = async ({
     .map((tournament, index) => (
      <ListElem
       key={index}
-      id={tournament.id}
+      link={`/tournament/${tournament.id}`}
       avgRating={tournament.avgRating}
       main={`${index + 1}. ${tournament.name}`}
       secondary={

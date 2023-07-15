@@ -7,7 +7,7 @@ interface ListElemProps {
  yourComments?: number;
  main: string;
  secondary: string;
- id: number;
+ link: string;
  avgRating: number;
 }
 
@@ -15,13 +15,13 @@ const ListElem: FC<ListElemProps> = ({
  main,
  secondary,
  avgRating,
- id,
+ link,
  comments,
  yourComments,
 }) => {
  return (
   <Link
-   href={`/show/${id}`}
+   href={link}
    className="w-full mb-4 flex justify-between items-center gap-3 text-xl h-12 group"
   >
    <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full">

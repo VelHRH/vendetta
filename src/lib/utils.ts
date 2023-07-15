@@ -107,24 +107,25 @@ function areArraysEqual(arr1: Json[][], arr2: Json[][]) {
 export function parseSide(side: Json[]): string {
  const teamNames: any[] = [];
  const individualNames: any[] = [];
-
- side.forEach((participant) => {
-  if (participant.teamName) {
-   const teamIndex = teamNames.findIndex(
-    (team) => team.name === participant.teamName
-   );
-   if (teamIndex === -1) {
-    teamNames.push({
-     name: participant.teamName,
-     members: [participant.wrestlerCurName],
-    });
+ side
+  .sort((a, b) => a.wrestlerCurName.localeCompare(b.wrestlerCurName))
+  .forEach((participant) => {
+   if (participant.teamName) {
+    const teamIndex = teamNames.findIndex(
+     (team) => team.name === participant.teamName
+    );
+    if (teamIndex === -1) {
+     teamNames.push({
+      name: participant.teamName,
+      members: [participant.wrestlerCurName],
+     });
+    } else {
+     teamNames[teamIndex].members.push(participant.wrestlerCurName);
+    }
    } else {
-    teamNames[teamIndex].members.push(participant.wrestlerCurName);
+    individualNames.push(participant.wrestlerCurName);
    }
-  } else {
-   individualNames.push(participant.wrestlerCurName);
-  }
- });
+  });
 
  let formattedString = "";
 
@@ -138,4 +139,12 @@ export function parseSide(side: Json[]): string {
  formattedString += individualNames.join(" & ");
 
  return formattedString;
+}
+
+export function sortSides(sides: any[]) {
+ return sides.sort((a, b) => {
+  const firstObjA = a.wrestlers[0].wrestlerCurName;
+  const firstObjB = b.wrestlers[0].wrestlerCurName;
+  return firstObjA.localeCompare(firstObjB);
+ });
 }
