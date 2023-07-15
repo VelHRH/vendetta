@@ -64,23 +64,14 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
        {match.winners.map((p, index) => (
         <>
          <MatchSide key={p.id} wrestlers={p.winner} />
-         {index !== match.match_sides.length - 1 && (
-          <p className="mx-3">поб.</p>
-         )}
+         {index === match.winners.length - 1 && <p className="mx-3">поб.</p>}
         </>
        ))}
        {match.match_sides.map(
         (p, index) =>
          !match.winners.some(
           (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
-         ) && (
-          <>
-           <MatchSide key={p.id} wrestlers={p.wrestlers} />
-           {index !== match.match_sides.length - 1 && (
-            <p className="mx-3">поб.</p>
-           )}
-          </>
-         )
+         ) && <MatchSide key={p.id} wrestlers={p.wrestlers} />
        )}
       </>
      )}

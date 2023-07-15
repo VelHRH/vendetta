@@ -1,4 +1,5 @@
 import FilterDropdown from "@/components/FilterDropdown";
+import ListElem from "@/components/Row/ListElem";
 import TournamentElem from "@/components/Row/TournamentElem";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
@@ -17,6 +18,16 @@ const AllTournaments = async ({
  if (!tournaments) {
   notFound();
  }
+
+ const {
+  data: { user },
+ } = await supabase.auth.getUser();
+
+ const { data: profile } = await supabase
+  .from("users")
+  .select("*, comments_tournaments(*)")
+  .eq("id", user?.id)
+  .single();
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Все турниры</Label>
@@ -25,10 +36,12 @@ const AllTournaments = async ({
     path="/tournament"
     placeholder="Сортировать по..."
    />
-   <div className="flex justify-between items-center py-2 mt-5">
+   <div className="flex justify-between items-center py-2 mt-5 gap-3">
     <p className="text-center w-1/2">Турнир</p>
     <p className="text-center flex-1">Начало</p>
     <p className="text-center w-32">Рейтинг</p>
+    <p className="text-center w-32">Ваш рейтинг</p>
+    <p className="text-center w-32">Количество рейтингов</p>
    </div>
    {tournaments!
     .sort((a, b) =>
@@ -45,11 +58,23 @@ const AllTournaments = async ({
         new Date(a.start || new Date()).getTime()
     )
     .map((tournament, index) => (
-     <TournamentElem
+     <ListElem
       key={index}
-      place={index + 1}
-      tournament={tournament}
+      id={tournament.id}
+      avgRating={tournament.avgRating}
+      main={`${index + 1}. ${tournament.name}`}
+      secondary={
+       tournament.start
+        ? new Date(tournament.start.toString() || "").toLocaleDateString()
+        : "Еще не вышло"
+      }
       comments={tournament.comments_tournaments}
+      yourComments={
+       !profile
+        ? undefined
+        : profile?.comments_tournaments.find((c) => c.item_id === tournament.id)
+           ?.rating || -1
+      }
      />
     ))}
   </div>

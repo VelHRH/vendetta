@@ -13,6 +13,16 @@ const Wrestlers = async ({
  const { data: wrestlers } = await supabase
   .from("wrestlers")
   .select("*, comments_wrestlers(*)");
+
+ const {
+  data: { user },
+ } = await supabase.auth.getUser();
+
+ const { data: profile } = await supabase
+  .from("users")
+  .select("*, comments_wrestlers(*)")
+  .eq("id", user?.id)
+  .single();
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">All wrestlers</Label>
@@ -21,10 +31,12 @@ const Wrestlers = async ({
     path="/wrestler"
     placeholder="Фильтровать"
    />
-   <div className="flex justify-between items-center py-2 mt-5">
-    <p className="text-center w-1/2">Wrestler</p>
-    <p className="text-center flex-1">Last show</p>
-    <p className="text-center w-32">Rating</p>
+   <div className="flex justify-between items-center py-2 mt-5 gap-3">
+    <p className="text-center w-1/2">Рестлер</p>
+    <p className="text-center flex-1">Последнее шоу</p>
+    <p className="text-center w-32">Рейтинг</p>
+    <p className="text-center w-32">Ваш рейтинг</p>
+    <p className="text-center w-32">Количество рейтингов</p>
    </div>
    {wrestlers!
     .filter((a) =>
@@ -51,6 +63,12 @@ const Wrestlers = async ({
       place={index + 1}
       wrestler={wrestler}
       comments={wrestler.comments_wrestlers}
+      yourComments={
+       !profile
+        ? undefined
+        : profile?.comments_wrestlers.find((c) => c.item_id === wrestler.id)
+           ?.rating || -1
+      }
      />
     ))}
   </div>

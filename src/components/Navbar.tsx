@@ -27,6 +27,12 @@ const Navbar = async () => {
     </Link>
     <div className="flex gap-5 items-center">
      <Link
+      href="/match"
+      className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
+     >
+      Matchguide
+     </Link>
+     <Link
       href="/show"
       className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
      >
