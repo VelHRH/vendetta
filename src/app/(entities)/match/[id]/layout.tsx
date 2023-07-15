@@ -8,6 +8,7 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 import MatchSide from "@/components/Row/MatchSide";
+import { sortSides } from "@/lib/utils";
 
 interface LayoutProps {
  children: ReactNode;
@@ -31,7 +32,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
   <div className="flex flex-col gap-5 items-center">
    <div className="flex gap-2">
     <Label className="font-bold">
-     {match.match_sides.map((p, index) => (
+     {sortSides(match.match_sides).map((p, index) => (
       <>
        <MatchSide key={p.id} wrestlers={p.wrestlers} />
        {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}

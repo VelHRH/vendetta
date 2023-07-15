@@ -9,6 +9,7 @@ import RatingBlock from "@/components/RatingBlock";
 import MatchShowElem from "@/components/Row/MatchShowElem";
 import Link from "next/link";
 import MatchSide from "@/components/Row/MatchSide";
+import { sortSides } from "@/lib/utils";
 
 const MatchOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -69,7 +70,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
          {index === match.winners.length - 1 && <p className="mx-3">поб.</p>}
         </>
        ))}
-       {match.match_sides.map(
+       {sortSides(match.match_sides).map(
         (p, index) =>
          !match.winners.some(
           (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
@@ -91,16 +92,16 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
    </div>
 
    <div className="w-full flex flex-col pb-10 mb-10 gap-2 border-b-2 border-slate-500">
-    <Label className="font-bold">Галлерея:</Label>
+    <Label className="font-bold">Галерея:</Label>
     <div className="w-full grid grid-cols-8 gap-3 mt-5">
-     {match.match_sides
+     {sortSides(match.match_sides)
       .map((side) => side.wrestlers.flat())
       .flat()
       .map((wrestler, index) => (
        <Link
         href={`/wrestler/${wrestler.wrestlerId}`}
         key={wrestler.wrestlerId}
-        className={`rounded-md aspect-square cursor-pointer relative flex flex-col justify-center`}
+        className={`aspect-square cursor-pointer relative flex flex-col justify-center`}
        >
         <div className="text-center font-bold text-xl">
          {wrestler.wrestlerCurName}
@@ -109,7 +110,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
          src={wrestler.wrestlerImage!}
          alt={wrestler.wrestlerCurName}
          fill
-         className="object-cover hover:opacity-0 duration-300"
+         className="object-cover hover:opacity-0 duration-300 rounded-md"
         />
        </Link>
       ))}

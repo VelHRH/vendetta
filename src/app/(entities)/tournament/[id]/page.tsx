@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
 import TournamentBracket from "@/components/TournamentBracket";
-import { findFirstDuplicate } from "@/lib/utils";
+import { findFirstDuplicate, sortSides } from "@/lib/utils";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -83,7 +83,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
      participants={8}
      items={tournament.play_off_participants.map((p) => p.participant)}
      allTournamentMatches={tournament.matches.map((m) =>
-      m.match_sides.map((m) => m.wrestlers)
+      sortSides(m.match_sides).map((m) => m.wrestlers)
      )}
     />
    </div>

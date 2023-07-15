@@ -1,5 +1,10 @@
 import createClient from "@/lib/supabase-server";
-import { normalizeRating, parseSide, ratingColor } from "@/lib/utils";
+import {
+ normalizeRating,
+ parseSide,
+ ratingColor,
+ sortSides,
+} from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import MatchSide from "./MatchSide";
@@ -46,14 +51,14 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
    >
     <div className="flex-1 flex flex-wrap">
      {!isFull ? (
-      match.match_sides.map((p, index) => (
+      sortSides(match.match_sides).map((p, index) => (
        <>
         <MatchSide key={p.id} wrestlers={p.wrestlers} />
         {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
        </>
       ))
      ) : match.winners.length === 0 ? (
-      match.match_sides.map((p, index) => (
+      sortSides(match.match_sides).map((p, index) => (
        <>
         <MatchSide key={p.id} wrestlers={p.wrestlers} />
         {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
@@ -67,7 +72,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
          {index === match.winners.length - 1 && <p className="mx-3">поб.</p>}
         </>
        ))}
-       {match.match_sides.map(
+       {sortSides(match.match_sides).map(
         (p, index) =>
          !match.winners.some(
           (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
