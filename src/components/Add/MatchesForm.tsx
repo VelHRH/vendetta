@@ -86,6 +86,10 @@ const MatchForm = ({ match }: { match?: any }) => {
  useEffect(() => {
   const updatedParticipants = participants.map((innerArray) =>
    innerArray.map((participant) => {
+    if (participant.wrestlerCurName === "")
+     return {
+      ...participant,
+     };
     const team = teamNames.find((team) =>
      team.wrestlers.includes(participant.wrestlerCurName)
     );

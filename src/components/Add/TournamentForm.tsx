@@ -12,52 +12,74 @@ import Dropdown from "../ui/Dropdown";
 import InfoLabel from "../ui/InfoLabel";
 import TournamentBracket from "../TournamentBracket";
 import { CreateTournamentPayload } from "@/lib/validators/tournament";
-import { findFirstDuplicate } from "@/lib/utils";
+import { parseSide } from "@/lib/utils";
 
 const TournamentForm = ({ tournament }: { tournament?: any }) => {
  const [name, setName] = useState<string>(tournament?.name || "");
  const [description, setDescription] = useState<string>(
   tournament?.description || ""
  );
+
  const [dateStart, setDateStart] = useState<string>(tournament?.start || "");
  const [dateEnd, setDateEnd] = useState<string>(tournament?.end || "");
  const [type, setType] = useState<string>(tournament?.type || "");
  const [playOff, setPlayOff] = useState<
   {
-   itemName: string;
-   items: {
-    wrestlerId: string;
-    wrestlerName: string;
-    wrestlerImage: string;
-   }[];
-  }[]
- >(
-  tournament?.play_off_participants.length! > 0
-   ? tournament?.play_off_participants!
-   : Array(32).fill({
-      itemName: "",
-      items:
-       type === "Обычный"
-        ? [{ wrestlerId: "", wrestlerName: "", wrestlerImage: "" }]
-        : Array(3).fill({
-           wrestlerId: "",
-           wrestlerName: "",
-           wrestlerImage: "",
-          }),
-     })
- );
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
+ >(() => {
+  if (
+   tournament &&
+   tournament.play_off_participants &&
+   tournament.play_off_participants.length === 32
+  ) {
+   return tournament.play_off_participants;
+  } else {
+   return Array.from({ length: 32 }, () => [
+    {
+     wrestlerId: "",
+     wrestlerName: "",
+     wrestlerImage: "",
+     wrestlerCurName: "",
+    },
+   ]);
+  }
+ });
+ console.log(playOff);
+ const [winner, setWinner] = useState<
+  {
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
+ >([]);
  const [blocks, setBlocks] = useState<string[] | undefined>(undefined);
  const [isError, setIsError] = useState<boolean>(false);
-
+ const [teamNames, setTeamNames] = useState<
+  { name: string; id: string; wrestlers: string[] }[]
+ >([]);
  const [wrestlers, setWrestlers] = useState<
-  Database["public"]["Tables"]["wrestlers"]["Row"][] | null
+  Database["public"]["Tables"]["wrestlers"]["Row"][]
+ >([]);
+ const [teams, setTeams] = useState<
+  Database["public"]["Tables"]["teams"]["Row"][]
  >([]);
  const [number, setNumber] = useState<string>("");
 
  useEffect(() => {
   const fetchData = async () => {
-   const { data } = await supabase.from("wrestlers").select();
-   setWrestlers(data);
+   const { data: wrestlers } = await supabase.from("wrestlers").select();
+   setWrestlers(wrestlers || []);
+   const { data: teams } = await supabase.from("teams").select();
+   setTeams(teams || []);
   };
   fetchData();
  }, []);
@@ -66,22 +88,27 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
 
  const { mutate: createTournament, isLoading } = useMutation({
   mutationFn: async () => {
-   let play_off_participants = playOff.slice(0, parseFloat(number));
-   play_off_participants = play_off_participants.map((item) => {
-    item.items = item.items.filter(
-     (subItem, index) =>
-      index === 0 || Object.values(subItem).some((value) => value !== "")
-    );
-    return item;
-   });
    const payload: CreateTournamentPayload = {
     name,
     description,
     start: dateStart,
     end: dateEnd,
-    play_off_participants,
+    play_off_participants: [
+     ...playOff
+      .map((side) =>
+       side.map((participant) => {
+        if (participant.teamId === "") {
+         const { teamId, teamName, ...rest } = participant;
+         return rest;
+        }
+        return participant;
+       })
+      )
+      .slice(0, parseFloat(number)),
+    ],
     block_participants: blocks,
     type,
+    winner,
    };
    const { data } = await axios.post("/api/tournament", payload);
    return data as string;
@@ -115,6 +142,51 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
    router.refresh();
   },
  });
+
+ useEffect(() => {
+  const updatedParticipants = playOff.map((innerArray) =>
+   innerArray.map((participant) => {
+    if (participant.wrestlerCurName === "")
+     return {
+      ...participant,
+     };
+    const team = teamNames.find((team) =>
+     team.wrestlers.includes(participant.wrestlerCurName)
+    );
+    return {
+     ...participant,
+     teamName: team?.name || participant.teamName,
+     teamId: team?.id || participant.teamId,
+    };
+   })
+  );
+
+  setPlayOff(updatedParticipants);
+ }, [teamNames]);
+
+ const handleAddTeammate = (index: number) => {
+  const firstParticipant = playOff[index][0];
+  const updatedFirstParticipant = {
+   ...firstParticipant,
+   teamName: firstParticipant.teamName || "",
+   teamId: firstParticipant.teamName || "",
+  };
+
+  const updatedParticipants = [...playOff];
+  updatedParticipants[index] = [
+   updatedFirstParticipant,
+   ...playOff[index].slice(1),
+  ];
+  updatedParticipants[index].push({
+   wrestlerName: "",
+   wrestlerId: "",
+   wrestlerImage: "",
+   wrestlerCurName: "",
+   teamName: "",
+   teamId: "",
+  });
+  setPlayOff(updatedParticipants);
+ };
 
  return (
   <div className="flex flex-col items-center gap-10 w-full">
@@ -173,57 +245,188 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
       />
       {number && (
        <>
-        {Array.from({ length: parseFloat(number) }, (_, index) => (
+        {playOff.slice(0, parseFloat(number)).map((participant, index) => (
          <div key={index} className="flex w-full items-start gap-10">
-          <Dropdown
-           className="flex-1"
-           placeholder={`Выберите рестлера ${index + 1}`}
-           array={wrestlers!.map((w) => w.name || "")}
-           value={playOff[index].items[0].wrestlerName}
-           setValue={(newValue) => {
-            if (newValue === "") return;
-            setPlayOff((prevItems) => {
-             const newItems = [...prevItems];
-             newItems[index] = {
-              ...newItems[index],
-              items: [
-               {
-                ...newItems[index].items[0],
-                wrestlerName: newValue,
-                wrestlerId: wrestlers!
-                 .find((wr) => wr.name === newValue)!
-                 .id.toString(),
-                wrestlerImage: wrestlers!.find((wr) => wr.name === newValue)!
-                 .wrestler_img!,
-               },
-               ...newItems[index].items.slice(1),
-              ],
-             };
-             return newItems;
-            });
-           }}
-          />
-          <Input
-           className="w-1/2"
-           placeholder={`Имя рестлера ${index + 1}`}
-           value={playOff[index].itemName}
-           setValue={(newValue) => {
-            setPlayOff((prevItems) => {
-             const newItems = [...prevItems];
-             newItems[index] = {
-              ...newItems[index],
-              itemName: newValue,
-             };
-             return newItems;
-            });
-           }}
-          />
+          <div className="flex flex-col gap-2 w-full">
+           {participant.map((elem, index2) => (
+            <div key={index2} className="flex gap-3 w-full items-center">
+             <div className="flex-1">
+              <Dropdown
+               array={wrestlers.map((w) => w.name || "")}
+               placeholder={`Рестлер ${index2 + 1}`}
+               value={elem.wrestlerName}
+               setValue={(newValue) => {
+                if (newValue === "") return;
+                setPlayOff((prevItems) => {
+                 const updatedParticipants = [...prevItems];
+                 updatedParticipants[index][index2].wrestlerName = newValue;
+                 updatedParticipants[index][index2].wrestlerId = wrestlers
+                  .find((wr) => wr.name === newValue)!
+                  .id.toString();
+                 updatedParticipants[index][index2].wrestlerImage =
+                  wrestlers.find((wr) => wr.name === newValue)!.wrestler_img!;
+                 return updatedParticipants;
+                });
+               }}
+              />
+             </div>
+             <Input
+              key={index2}
+              className="w-1/2"
+              placeholder={`Имя в матче`}
+              value={elem.wrestlerCurName}
+              setValue={(newValue) => {
+               setPlayOff((prevItems) => {
+                const newItems = [...prevItems];
+                newItems[index][index2] = {
+                 ...newItems[index][index2],
+                 wrestlerCurName: newValue,
+                };
+                return newItems;
+               });
+              }}
+             />
+            </div>
+           ))}
+           <Button
+            variant={"subtle"}
+            className="w-full"
+            onClick={() => handleAddTeammate(index)}
+           >
+            + Добавить члена команды
+           </Button>
+          </div>
          </div>
         ))}
 
-        <TournamentBracket participants={parseFloat(number)} items={[]} />
+        {playOff.some((innerArray) =>
+         innerArray.some((obj) => obj.teamId !== undefined)
+        ) && (
+         <div className="w-full flex flex-col gap-7">
+          <Label size="medium" className="font-bold text-start">
+           Название команд:
+          </Label>
+          <InfoLabel>
+           Нужно если в турнире участвуют официальные команды/группировки.
+          </InfoLabel>
+          {teamNames.map((tN, index) => (
+           <div key={index} className="flex flex-col gap-3">
+            <Dropdown
+             array={[...teams.map((s) => s.name || ""), "Nfr{b"]}
+             value={tN.name}
+             setValue={(newVal) =>
+              setTeamNames((prev) => {
+               const p = [...prev];
+               p[index].name = newVal;
+
+               return p;
+              })
+             }
+             placeholder="Выберите команду"
+            />
+            <div className="grid grid-cols-3 gap-5 w-full items-center">
+             {tN.wrestlers.map((w, index2) => (
+              <Dropdown
+               key={index2}
+               array={playOff.flatMap((innerArray) =>
+                innerArray
+                 .map((participant) => participant.wrestlerCurName)
+                 .filter(
+                  (wrestler) =>
+                   !teamNames.some((team) => team.wrestlers.includes(wrestler))
+                 )
+               )}
+               value={w}
+               setValue={(newVal) =>
+                setTeamNames((prev) => {
+                 const p = [...prev];
+                 p[index].wrestlers[index2] = newVal;
+                 return p;
+                })
+               }
+               placeholder="Рестлер"
+              />
+             ))}
+             <Button
+              variant={"subtle"}
+              className="w-full"
+              onClick={() =>
+               setTeamNames((prev) => {
+                const p = [...prev];
+                p[index].wrestlers.push("");
+                return p;
+               })
+              }
+             >
+              + Добавить рестлера
+             </Button>
+            </div>
+           </div>
+          ))}
+          <Button
+           variant={"subtle"}
+           className="w-full"
+           onClick={() =>
+            setTeamNames((prev) => [
+             ...prev,
+             {
+              name: "",
+              id: "",
+              wrestlers: ["", ""],
+             },
+            ])
+           }
+          >
+           + Добавить название
+          </Button>
+         </div>
+        )}
+
+        <TournamentBracket
+         participants={parseFloat(number)}
+         items={playOff.slice(0, parseFloat(number))}
+        />
        </>
       )}
+     </div>
+    </div>
+   )}
+   {type !== "" && (
+    <div className="w-full flex flex-col gap-5">
+     <Label size="medium" className="font-bold text-start">
+      Если турнир уже прошел:
+     </Label>
+
+     <div className="grid grid-cols-3 gap-5 w-full items-center">
+      {winner.map((win, index) => (
+       <Dropdown
+        key={index}
+        array={[
+         ...playOff.map((side) => parseSide(side)).slice(0, parseFloat(number)),
+         "Ничья",
+        ]}
+        value={win !== undefined ? parseSide(win) : "Ничья"}
+        setValue={(newValue) => {
+         if (newValue === "Ничья") setWinner([]);
+         setWinner((prev) => {
+          const newArray = [...prev];
+          newArray[index] =
+           playOff[
+            [...playOff.map((side) => parseSide(side))].indexOf(newValue)
+           ];
+          return newArray;
+         });
+        }}
+        placeholder={`Победитель ${index + 1}`}
+       />
+      ))}
+      <Button
+       variant={"subtle"}
+       className="w-full"
+       onClick={() => setWinner((prev) => [...prev, []])}
+      >
+       + Добавить победителя
+      </Button>
      </div>
     </div>
    )}

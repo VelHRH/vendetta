@@ -10,30 +10,19 @@ export async function POST(req: Request) {
   const supabase = createClient();
 
   if (
-   (tournament.type === "Обычный" &&
-    tournament.play_off_participants.find((item) =>
-     item.items.some((subItem) =>
-      Object.values(subItem).some((value) => value === "")
-     )
-    )) ||
-   tournament.play_off_participants.find((item) => item.itemName === "")
-  ) {
-   throw "There are empty fields";
-  }
-
-  if (
-   tournament.play_off_participants.some(
-    (item, index, array) =>
-     array.findIndex((obj) => obj.itemName === item.itemName) !== index
+   tournament.type === "Обычный" &&
+   tournament.play_off_participants.find((item) =>
+    item.some((subItem) => Object.values(subItem).some((value) => value === ""))
    )
   ) {
-   throw "There are duplicate names";
+   throw "There are empty fields";
   }
 
   const { data, error } = await supabase
    .from("tournaments")
    .insert({
     name: tournament.name,
+    winner: tournament.winner,
     description: tournament.description,
     start: tournament.start === "" ? null : tournament.start,
     end: tournament.end === "" ? null : tournament.end,

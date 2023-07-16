@@ -63,45 +63,42 @@ export function findFirstDuplicate(arr: Json[]) {
  return { index: -1, value: "" };
 }
 
-export function removeDuplicateArrays(arr1: Json[][][], arr2: Json[][][]) {
- let uniqueArr2 = [];
- for (let i = 0; i < arr2.length; i++) {
-  let ifUnique = true;
-  for (let j = 0; j < arr1.length; j++) {
-   if (areArraysEqual(arr1[j], arr2[i])) {
-    ifUnique = false;
-    break;
-   }
-  }
-  ifUnique && uniqueArr2.push(arr2[i]);
- }
- return uniqueArr2;
-}
+function arraysAreEqual(arr1: Json[][], arr2: Json[][]) {
+ if (arr1.length !== arr2.length) return false;
 
-function areArraysEqual(arr1: Json[][], arr2: Json[][]) {
- if (arr1.length !== arr2.length) {
-  return false;
- }
+ arr1 = arr1.map((subArray) =>
+  [...subArray].sort((a: any, b: any) => a.wrestlerId - b.wrestlerId)
+ );
+ arr2 = arr2.map((subArray) =>
+  [...subArray].sort((a: any, b: any) => a.wrestlerId - b.wrestlerId)
+ );
 
- for (let i = 0; i < arr1.length; i++) {
-  const obj1 = arr1[i];
-  let found = false;
-
-  for (let j = 0; j < arr2.length; j++) {
-   const obj2 = arr2[j];
-
-   if (obj1 === obj2) {
-    found = true;
-    break;
-   }
-  }
-
-  if (!found) {
+ for (const item of arr1) {
+  if (
+   !arr2.some((subArray) => {
+    const sortedSubArray = [...subArray].sort(
+     (a: any, b: any) => a.wrestlerId - b.wrestlerId
+    );
+    return JSON.stringify(sortedSubArray) === JSON.stringify(item);
+   })
+  ) {
    return false;
   }
  }
 
  return true;
+}
+
+export function removeDuplicateArrays(array1: Json[][][], array2: Json[][][]) {
+ const result = [];
+
+ for (const subArray2 of array2) {
+  if (!array1.some((subArray1) => arraysAreEqual(subArray1, subArray2))) {
+   result.push(subArray2);
+  }
+ }
+
+ return result;
 }
 
 export function parseSide(side: Json[]): string {

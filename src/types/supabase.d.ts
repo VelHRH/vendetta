@@ -287,34 +287,6 @@ interface Database {
      }
     ];
    };
-   play_off_participants: {
-    Row: {
-     created_at: string | null;
-     id: number;
-     participant: Json[];
-     tournament_id: number;
-    };
-    Insert: {
-     created_at?: string | null;
-     id?: number;
-     participant: Json[];
-     tournament_id: number;
-    };
-    Update: {
-     created_at?: string | null;
-     id?: number;
-     participant?: Json[];
-     tournament_id?: number;
-    };
-    Relationships: [
-     {
-      foreignKeyName: "play_off_participants_tournament_id_fkey";
-      columns: ["tournament_id"];
-      referencedRelation: "tournaments";
-      referencedColumns: ["id"];
-     }
-    ];
-   };
    reigns: {
     Row: {
      created_at: string;
@@ -463,39 +435,42 @@ interface Database {
    tournaments: {
     Row: {
      avgRating: number;
-     block_participants: Json[] | null;
+     block_participants: Json[][] | null;
      created_at: string;
      description: string | null;
      end: string | null;
      id: number;
      name: string;
+     play_off_participants: Json[][];
      start: string | null;
      type: string;
-     winner: string | null;
+     winner: Json[][] | null;
     };
     Insert: {
      avgRating?: number;
-     block_participants?: Json[] | null;
+     block_participants?: Json[][] | null;
      created_at?: string;
      description?: string | null;
      end?: string | null;
      id?: number;
      name: string;
+     play_off_participants: Json[][];
      start?: string | null;
      type: string;
-     winner?: string | null;
+     winner?: Json[][] | null;
     };
     Update: {
      avgRating?: number;
-     block_participants?: Json[] | null;
+     block_participants?: Json[][] | null;
      created_at?: string;
      description?: string | null;
      end?: string | null;
      id?: number;
      name?: string;
+     play_off_participants?: Json[][];
      start?: string | null;
      type?: string;
-     winner?: string | null;
+     winner?: Json[][] | null;
     };
     Relationships: [];
    };

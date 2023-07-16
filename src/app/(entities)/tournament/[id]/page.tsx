@@ -5,17 +5,15 @@ import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
-import Link from "next/link";
 import TournamentBracket from "@/components/TournamentBracket";
 import { findFirstDuplicate, sortSides } from "@/lib/utils";
+import MatchSide from "@/components/Row/MatchSide";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: tournament } = await supabase
   .from("tournaments")
-  .select(
-   "*, comments_tournaments(*), matches(*, match_sides(*)), play_off_participants(*)"
-  )
+  .select("*, comments_tournaments(*), matches(*, match_sides(*))")
   .eq("id", params.id)
   .single();
  if (!tournament) {
@@ -58,16 +56,12 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
       <Label size="small">
        Победитель:{" "}
        <InfoElement>
-        <Link
-         href={`/wrestler/${tournament.play_off_participants.map((a) =>
-          a.participant.map((p) =>
-           p.wrestlerCurName === tournament.winner ? p.wrestlerId : null
-          )
-         )}`}
-         className="hover:underline underline-offset-4"
-        >
-         {tournament.winner}
-        </Link>
+        {tournament.winner?.map((w, i) => (
+         <>
+          <MatchSide key={i} wrestlers={w} />
+          {i !== tournament.winner!.length - 1 && <p className="mr-3">,</p>}
+         </>
+        ))}
        </InfoElement>
       </Label>
      )}
@@ -81,7 +75,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
     <Label className="font-bold mb-5">Подробности турнира:</Label>
     <TournamentBracket
      participants={8}
-     items={tournament.play_off_participants.map((p) => p.participant)}
+     items={tournament.play_off_participants}
      allTournamentMatches={tournament.matches.map((m) =>
       sortSides(m.match_sides).map((m) => m.wrestlers)
      )}
