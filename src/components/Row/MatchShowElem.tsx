@@ -1,13 +1,9 @@
 import createClient from "@/lib/supabase-server";
-import {
- normalizeRating,
- parseSide,
- ratingColor,
- sortSides,
-} from "@/lib/utils";
+import { normalizeRating, ratingColor } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import MatchSide from "./MatchSide";
+import MatchNoResult from "./MatchNoResult";
+import MatchResult from "./MatchResult";
 
 interface MatchElemProps {
  matchId: number;
@@ -51,34 +47,11 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
    >
     <div className="flex-1 flex flex-wrap">
      {!isFull ? (
-      sortSides(match.match_sides).map((p, index) => (
-       <>
-        <MatchSide key={p.id} wrestlers={p.wrestlers} />
-        {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
-       </>
-      ))
+      <MatchNoResult match_sides={match.match_sides} />
      ) : match.winners.length === 0 ? (
-      sortSides(match.match_sides).map((p, index) => (
-       <>
-        <MatchSide key={p.id} wrestlers={p.wrestlers} />
-        {index !== match.match_sides.length - 1 && <p className="mx-3">vs.</p>}
-       </>
-      ))
+      <MatchNoResult match_sides={match.match_sides} />
      ) : (
-      <>
-       {match.winners.map((p, index) => (
-        <>
-         <MatchSide key={p.id} wrestlers={p.winner} />
-         {index === match.winners.length - 1 && <p className="mx-3">поб.</p>}
-        </>
-       ))}
-       {sortSides(match.match_sides).map(
-        (p, index) =>
-         !match.winners.some(
-          (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
-         ) && <MatchSide key={p.id} wrestlers={p.wrestlers} />
-       )}
-      </>
+      <MatchResult winners={match.winners} match_sides={match.match_sides} />
      )}
     </div>
     {isFull && (

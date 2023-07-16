@@ -1,6 +1,12 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { getBaseLog, parseSide, removeDuplicateArrays } from "@/lib/utils";
+import {
+ areArraysEqual,
+ doubleArraysAreEqual,
+ getBaseLog,
+ parseSide,
+ removeDuplicateArrays,
+} from "@/lib/utils";
 
 interface TournamentBracketProps {
  participants: number;
@@ -33,30 +39,31 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
     allTournamentMatches
    );
 
-   for (let i = 0; i < cols - 2; i += 2) {
+   for (let i = 0; i < cols; i += 2) {
     const stage = orderedArray.slice(
      whichIndexes(participants, i)[0],
      whichIndexes(participants, i)[-1]
     );
-
+    if (stage.length < 2) continue;
     for (let j = 0; j < stage.length; j += 2) {
      const pair = [...stage[j], ...stage[j + 1]];
-     const foundArray = uniqueMatches.find((currentArray) =>
-      currentArray.every((element) =>
-       pair.some((pairElement) => pairElement === element)
+     const foundArray = uniqueMatches.find((innerArray) =>
+      innerArray.every((subArray) =>
+       pair.some((pairInnerArray) => areArraysEqual(subArray, pairInnerArray))
       )
      );
-     let orderedFoundArray = [];
-
-     for (let n = 0; n < pair.length; n++) {
-      for (let m = 0; m < foundArray!.length; m++) {
-       if (pair[n] === foundArray![m]) {
-        orderedFoundArray.push(foundArray![m]);
-       }
-      }
-     }
+     if (!foundArray) continue;
+     const orderedFoundArray = [...foundArray].sort((a, b) => {
+      const indexA = pair.findIndex((innerArray) =>
+       areArraysEqual(innerArray, a)
+      );
+      const indexB = pair.findIndex((innerArray) =>
+       areArraysEqual(innerArray, b)
+      );
+      return indexA - indexB;
+     });
      orderedArray.push(orderedFoundArray);
-     uniqueMatches.splice(uniqueMatches.indexOf(foundArray!), 1);
+     uniqueMatches.splice(uniqueMatches.indexOf(foundArray), 1);
     }
    }
   }
@@ -70,15 +77,21 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      {index % 2 === 0
       ? whichIndexes(participants, index).map((ind, index2) => (
          <div key={ind} className="h-[3.5rem] flex gap-1 flex-col min-w-[70px]">
-          <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50">
-           {orderedMatches[ind] ? parseSide(orderedMatches[ind][0]) : ""}
-          </div>
-          <div
-           key={index}
-           className="w-full p-1 bg-slate-600  h-1/2 rounded-b-md text-slate-50"
-          >
-           {orderedMatches[ind] ? parseSide(orderedMatches[ind][1]) : ""}
-          </div>
+          {orderedMatches[ind] ? (
+           orderedMatches[ind].map((elem, i) => (
+            <div
+             key={i}
+             className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"
+            >
+             {parseSide(orderedMatches[ind][i])}
+            </div>
+           ))
+          ) : (
+           <>
+            <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"></div>
+            <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"></div>
+           </>
+          )}
          </div>
         ))
       : Array.from(

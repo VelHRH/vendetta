@@ -10,6 +10,8 @@ import MatchShowElem from "@/components/Row/MatchShowElem";
 import Link from "next/link";
 import MatchSide from "@/components/Row/MatchSide";
 import { sortSides } from "@/lib/utils";
+import WrestlerLinkImage from "@/components/WrestlerLinkImage";
+import MatchResult from "@/components/Row/MatchResult";
 
 const MatchOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -51,7 +53,15 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
    <div className="w-full flex gap-5 pb-10 border-b-2 border-slate-500">
     <div className="flex-1 flex flex-col gap-5">
      <Label size="small">
-      Шоу: <InfoElement>{show?.name}</InfoElement>
+      Шоу:{" "}
+      <InfoElement>
+       <Link
+        href={`/show/${show?.id}`}
+        className="hover:underline underline-offset-4"
+       >
+        {show?.name}
+       </Link>
+      </InfoElement>
      </Label>
      <Label size="small">
       Дата:{" "}
@@ -64,18 +74,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="small">
       Результат:{" "}
       <InfoElement>
-       {match.winners.map((p, index) => (
-        <>
-         <MatchSide key={p.id} wrestlers={p.winner} />
-         {index === match.winners.length - 1 && <p className="mx-3">поб.</p>}
-        </>
-       ))}
-       {sortSides(match.match_sides).map(
-        (p, index) =>
-         !match.winners.some(
-          (obj) => JSON.stringify(obj.winner) === JSON.stringify(p.wrestlers)
-         ) && <MatchSide key={p.id} wrestlers={p.wrestlers} />
-       )}
+       <MatchResult winners={match.winners} match_sides={match.match_sides} />
       </InfoElement>
      </Label>
      <Label size="small">
@@ -98,21 +97,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
       .map((side) => side.wrestlers.flat())
       .flat()
       .map((wrestler, index) => (
-       <Link
-        href={`/wrestler/${wrestler.wrestlerId}`}
-        key={wrestler.wrestlerId}
-        className={`aspect-square cursor-pointer relative flex flex-col justify-center`}
-       >
-        <div className="text-center font-bold text-xl">
-         {wrestler.wrestlerCurName}
-        </div>
-        <Image
-         src={wrestler.wrestlerImage!}
-         alt={wrestler.wrestlerCurName}
-         fill
-         className="object-cover hover:opacity-0 duration-300 rounded-md"
-        />
-       </Link>
+       <WrestlerLinkImage key={index} wrestler={wrestler} />
       ))}
     </div>
    </div>

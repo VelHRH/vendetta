@@ -19,8 +19,8 @@ const MatchForm = ({ match }: { match?: any }) => {
  const [order, setOrder] = useState<string>(match?.order.toString() || "");
  const [time, setTime] = useState<string>(match?.time || "");
  const [show, setShow] = useState<string>(match?.show.toString() || "");
- const [tournament, setTournament] = useState<string>(
-  match?.tournament?.toString() || ""
+ const [tournament, setTournament] = useState<{ id?: number; name: string }>(
+  match?.tournament?.toString() || { id: undefined, name: "" }
  );
  const [participants, setParticipants] = useState<
   {
@@ -127,7 +127,7 @@ const MatchForm = ({ match }: { match?: any }) => {
   });
   setParticipants(updatedParticipants);
  };
-
+ console.log(winner);
  const { mutate: creatematch, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
@@ -146,16 +146,18 @@ const MatchForm = ({ match }: { match?: any }) => {
     show: shows!.find((s) => s.name === show)
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
-    tournament: tournament === "" ? undefined : parseFloat(tournament),
-    winner: winner.map((side) =>
-     side.map((participant) => {
-      if (participant.teamId === "") {
-       const { teamId, teamName, ...rest } = participant;
-       return rest;
-      }
-      return participant;
-     })
-    ),
+    tournament: tournament.id,
+    winner: winner.includes(undefined!)
+     ? undefined
+     : winner.map((side) =>
+        side?.map((participant) => {
+         if (participant.teamId === "") {
+          const { teamId, teamName, ...rest } = participant;
+          return rest;
+         }
+         return participant;
+        })
+       ),
     title:
      titles!.filter((t) => title.includes(t.name)).length === 0
       ? undefined
@@ -207,7 +209,7 @@ const MatchForm = ({ match }: { match?: any }) => {
     show: shows!.find((s) => s.name === show)
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
-    tournament: tournament === "" ? undefined : parseFloat(tournament),
+    tournament: tournament.id,
     winner: winner.map((side) =>
      side.map((participant) => {
       if (participant.teamId === "") {
@@ -276,8 +278,13 @@ const MatchForm = ({ match }: { match?: any }) => {
     />
     <Dropdown
      array={tournaments.map((t) => t.name || "")}
-     value={tournament}
-     setValue={setTournament}
+     value={tournament.name}
+     setValue={(newVal) =>
+      setTournament({
+       name: newVal,
+       id: tournaments.find((t) => t.name === newVal)?.id,
+      })
+     }
      placeholder="Турнир"
     />
     {title.map((t, index) => (

@@ -5,6 +5,7 @@ import { MatchValidator } from "@/lib/validators/match";
 export async function POST(req: Request) {
  try {
   const body = await req.json();
+  console.log(body);
   const match = MatchValidator.parse(body);
 
   const supabase = createClient();
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
    if (participantsError) throw participantsError.message;
   }
 
-  if (match.winner.length !== 0) {
+  if (match.winner && match.winner.length !== 0) {
    for (let winner of match.winner) {
     const { error: winnerError } = await supabase.from("winners").insert({
      match_id: data!.id,

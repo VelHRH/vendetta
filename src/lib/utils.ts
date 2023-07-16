@@ -63,7 +63,7 @@ export function findFirstDuplicate(arr: Json[]) {
  return { index: -1, value: "" };
 }
 
-function arraysAreEqual(arr1: Json[][], arr2: Json[][]) {
+export function doubleArraysAreEqual(arr1: Json[][], arr2: Json[][]) {
  if (arr1.length !== arr2.length) return false;
 
  arr1 = arr1.map((subArray) =>
@@ -89,11 +89,22 @@ function arraysAreEqual(arr1: Json[][], arr2: Json[][]) {
  return true;
 }
 
+export function areArraysEqual(array1: Json[], array2: Json[]) {
+ if (array1.length !== array2.length) {
+  return false;
+ }
+
+ const ids1 = array1.map((item) => item.wrestlerId);
+ const ids2 = array2.map((item) => item.wrestlerId);
+
+ return ids1.sort().toString() === ids2.sort().toString();
+}
+
 export function removeDuplicateArrays(array1: Json[][][], array2: Json[][][]) {
  const result = [];
 
  for (const subArray2 of array2) {
-  if (!array1.some((subArray1) => arraysAreEqual(subArray1, subArray2))) {
+  if (!array1.some((subArray1) => doubleArraysAreEqual(subArray1, subArray2))) {
    result.push(subArray2);
   }
  }

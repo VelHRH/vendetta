@@ -8,6 +8,7 @@ import RatingBlock from "@/components/RatingBlock";
 import TournamentBracket from "@/components/TournamentBracket";
 import { findFirstDuplicate, sortSides } from "@/lib/utils";
 import MatchSide from "@/components/Row/MatchSide";
+import WrestlerLinkImage from "@/components/WrestlerLinkImage";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -52,18 +53,28 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        Дата окончания: <InfoElement>{tournament.end}</InfoElement>
       </Label>
      )}
-     {tournament.end && (
-      <Label size="small">
-       Победитель:{" "}
-       <InfoElement>
-        {tournament.winner?.map((w, i) => (
-         <>
-          <MatchSide key={i} wrestlers={w} />
-          {i !== tournament.winner!.length - 1 && <p className="mr-3">,</p>}
-         </>
-        ))}
-       </InfoElement>
-      </Label>
+     {tournament.winner && (
+      <>
+       <Label size="small">
+        Победитель:{" "}
+        <InfoElement>
+         {sortSides(tournament.winner).map((w, i) => (
+          <>
+           <MatchSide key={i} wrestlers={w} />
+           {i !== tournament.winner!.length - 1 && <p className="mr-3">,</p>}
+          </>
+         ))}
+        </InfoElement>
+       </Label>
+       <div className="w-full grid grid-cols-8 gap-3 mt-5">
+        {sortSides(tournament.winner)
+         .map((side) => side.wrestlers.flat())
+         .flat()
+         .map((wrestler, index) => (
+          <WrestlerLinkImage key={index} wrestler={wrestler} />
+         ))}
+       </div>
+      </>
      )}
     </div>
     <RatingBlock
