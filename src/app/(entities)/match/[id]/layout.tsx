@@ -7,8 +7,6 @@ import { buttonVariants } from "@/components/ui/Button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import createClient from "@/lib/supabase-server";
-import MatchSide from "@/components/Row/MatchSide";
-import { sortSides } from "@/lib/utils";
 import MatchNoResult from "@/components/Row/MatchNoResult";
 
 interface LayoutProps {
@@ -39,7 +37,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
      (user.id === "41608919-15c0-4bbd-b91e-b3407a0c3520" ||
       user.id === "4caeee0b-5b66-4ba0-9fad-2c1ba9284238") && (
       <Link
-       href={`/show/edit?id=${match.id}`}
+       href={`/match/edit?id=${match.id}`}
        className={buttonVariants({ variant: "subtle" })}
       >
        <Pencil />

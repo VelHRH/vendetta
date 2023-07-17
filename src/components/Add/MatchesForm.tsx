@@ -14,41 +14,6 @@ import InfoLabel from "../ui/InfoLabel";
 import { parseSide } from "@/lib/utils";
 
 const MatchForm = ({ match }: { match?: any }) => {
- const [type, setType] = useState<string>(match?.type || "");
- const [title, setTitle] = useState<string[]>(match?.challenges || []);
- const [order, setOrder] = useState<string>(match?.order.toString() || "");
- const [time, setTime] = useState<string>(match?.time || "");
- const [show, setShow] = useState<string>(match?.show.toString() || "");
- const [tournament, setTournament] = useState<{ id?: number; name: string }>(
-  match?.tournament?.toString() || { id: undefined, name: "" }
- );
- const [participants, setParticipants] = useState<
-  {
-   wrestlerName: string;
-   wrestlerCurName: string;
-   wrestlerId: string;
-   wrestlerImage: string;
-   teamName?: string;
-   teamId?: string;
-  }[][]
- >(match?.match_sides || []);
- const [ending, setEnding] = useState<string>("");
- const [winner, setWinner] = useState<
-  {
-   wrestlerName: string;
-   wrestlerCurName: string;
-   wrestlerId: string;
-   wrestlerImage: string;
-   teamName?: string;
-   teamId?: string;
-  }[][]
- >([]);
- const [teamNames, setTeamNames] = useState<
-  { name: string; id: string; wrestlers: string[] }[]
- >([]);
-
- const [isError, setIsError] = useState<boolean>(false);
-
  const [wrestlers, setWrestlers] = useState<
   Database["public"]["Tables"]["wrestlers"]["Row"][]
  >([]);
@@ -66,7 +31,44 @@ const MatchForm = ({ match }: { match?: any }) => {
  >([]);
 
  const router = useRouter();
- console.log(participants);
+
+ const [type, setType] = useState<string>(match?.type || "");
+ const [title, setTitle] = useState<string[]>(
+  match?.challanges.map((ch: any) => ch.title_name) || []
+ );
+ const [order, setOrder] = useState<string>(match?.order.toString() || "");
+ const [time, setTime] = useState<string>(match?.time || "");
+ const [show, setShow] = useState<string>(match?.show || "");
+ const [tournament, setTournament] = useState<{ id?: number; name: string }>(
+  match?.tournament?.toString() || { id: undefined, name: "" }
+ );
+ const [participants, setParticipants] = useState<
+  {
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
+ >(match?.match_sides.map((s: any) => s.wrestlers) || []);
+ const [ending, setEnding] = useState<string>(match?.ending || "");
+ const [winner, setWinner] = useState<
+  {
+   wrestlerName: string;
+   wrestlerCurName: string;
+   wrestlerId: string;
+   wrestlerImage: string;
+   teamName?: string;
+   teamId?: string;
+  }[][]
+ >(match?.winners.map((s: any) => s.winner) || []);
+ const [teamNames, setTeamNames] = useState<
+  { name: string; id: string; wrestlers: string[] }[]
+ >([]);
+
+ const [isError, setIsError] = useState<boolean>(false);
+
  useEffect(() => {
   const fetchData = async () => {
    const { data: wrestlers } = await supabase.from("wrestlers").select();
@@ -204,13 +206,18 @@ const MatchForm = ({ match }: { match?: any }) => {
   mutationFn: async () => {
    const payload: CreateMatchPayload = {
     participants: participants.map((side) =>
-     side.map((participant) => {
-      if (participant.teamId === "") {
-       const { teamId, teamName, ...rest } = participant;
-       return rest;
-      }
-      return participant;
-     })
+     side
+      .filter(
+       (participant) =>
+        participant.wrestlerId !== "" && participant.wrestlerCurName !== ""
+      )
+      .map((participant) => {
+       if (participant.teamId === "") {
+        const { teamId, teamName, ...rest } = participant;
+        return rest;
+       }
+       return participant;
+      })
     ),
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
@@ -219,15 +226,22 @@ const MatchForm = ({ match }: { match?: any }) => {
      ? shows!.find((s) => s.name === show)!.id
      : parseFloat(show),
     tournament: tournament.id,
-    winner: winner.map((side) =>
-     side.map((participant) => {
-      if (participant.teamId === "") {
-       const { teamId, teamName, ...rest } = participant;
-       return rest;
-      }
-      return participant;
-     })
-    ),
+    winner: winner.includes(undefined!)
+     ? undefined
+     : winner.map((side) =>
+        side
+         .filter(
+          (participant) =>
+           participant.wrestlerId !== "" && participant.wrestlerCurName !== ""
+         )
+         .map((participant) => {
+          if (participant.teamId === "") {
+           const { teamId, teamName, ...rest } = participant;
+           return rest;
+          }
+          return participant;
+         })
+       ),
     title:
      titles!.filter((t) => title.includes(t.name)).length === 0
       ? undefined
@@ -329,7 +343,7 @@ const MatchForm = ({ match }: { match?: any }) => {
       {participants.map((participant, index1) => (
        <div key={`side_${index1}`} className="flex w-full items-start gap-10">
         <div className="flex flex-col gap-2 w-full">
-         {participant.map((elem, index2) => (
+         {participant.map((_, index2) => (
           <div
            key={`participant_${index2}`}
            className="flex gap-3 w-full items-center"

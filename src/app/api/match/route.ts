@@ -5,7 +5,6 @@ import { MatchValidator } from "@/lib/validators/match";
 export async function POST(req: Request) {
  try {
   const body = await req.json();
-  console.log(body);
   const match = MatchValidator.parse(body);
 
   const supabase = createClient();
@@ -80,7 +79,6 @@ export async function PUT(req: Request) {
   const { data, error } = await supabase
    .from("matches")
    .update({
-    participants: match.participants,
     type: match.type,
     time: match.time,
     show: match.show,
@@ -88,10 +86,48 @@ export async function PUT(req: Request) {
     ending: match.ending,
     order: match.order,
    })
-   .eq("id", parseFloat(id || ""))
-   .select();
-  if (error) throw error;
-  return new Response(data![0].id.toString());
+   .eq("id", id)
+   .select()
+   .single();
+  if (error || !data) throw error.message;
+
+  await supabase.from("match_sides").delete().eq("match_id", data!.id);
+  await supabase.from("winners").delete().eq("match_id", data!.id);
+  await supabase.from("challanges").delete().eq("match_id", data!.id);
+
+  for (let participant of match.participants) {
+   const { error: participantsError } = await supabase
+    .from("match_sides")
+    .insert({
+     match_id: data!.id,
+     wrestlers: participant,
+    });
+
+   if (participantsError) throw participantsError.message;
+  }
+
+  if (match.winner && match.winner.length !== 0) {
+   for (let winner of match.winner) {
+    const { error: winnerError } = await supabase.from("winners").insert({
+     match_id: data!.id,
+     winner: winner,
+    });
+    if (winnerError) throw winnerError.message;
+   }
+  }
+
+  if (match.title) {
+   for (let title of match.title) {
+    const { error: titleError } = await supabase.from("challanges").insert({
+     match_id: data!.id,
+     title_id: title.id,
+     title_name: title.name,
+    });
+    if (titleError) throw titleError.message;
+   }
+  }
+
+  return new Response(data!.id.toString());
  } catch (err) {
   console.log(err);
   if (err instanceof z.ZodError) {
