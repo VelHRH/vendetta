@@ -31,7 +31,21 @@ export const TournamentValidator = z.object({
    })
   )
  ),
- block_participants: z.array(z.string()).optional(),
+ block_participants: z
+  .array(
+   z.array(
+    z.object({
+     wrestlerName: z.string(),
+     block: z.string(),
+     wrestlerCurName: z.string(),
+     wrestlerId: z.string().min(1),
+     wrestlerImage: z.string(),
+     teamName: z.string().optional(),
+     teamId: z.string().optional(),
+    })
+   )
+  )
+  .optional(),
  type: z.string(),
 });
 

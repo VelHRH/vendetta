@@ -1,6 +1,6 @@
 type Json = {
  itemName?: string;
- bloc?: string;
+ blockName?: string;
  points?: number;
  wrestlerId?: string;
  wrestlerName?: string;

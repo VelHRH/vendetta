@@ -7,11 +7,10 @@ interface MatchSideProps {
 }
 
 const getIntermediate = (str: string, item: string, index: number) => {
+ const nextItem = str.split(/[\(&\)]/)[index + 1]?.trim();
  return str.substring(
   str.indexOf(item.trim()) + item.trim().length,
-  str.indexOf(str.split(/[\(&\)]/)[index + 1]?.trim()) === -1
-   ? str.length
-   : str.indexOf(str.split(/[\(&\)]/)[index + 1]?.trim())
+  nextItem && str.indexOf(nextItem) !== -1 ? str.indexOf(nextItem) : str.length
  );
 };
 
@@ -39,8 +38,7 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
         <p className="ml-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "," ||
-         getIntermediate(parseSide(wrestlers), item, index).trim() === "," ? (
+       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
         <p className="mr-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
@@ -64,8 +62,7 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
         <p className="ml-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "," ||
-         getIntermediate(parseSide(wrestlers), item, index).trim() === "," ? (
+       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
         <p className="mr-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
@@ -82,8 +79,7 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
         <p className="ml-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "," ||
-         getIntermediate(parseSide(wrestlers), item, index).trim() === "," ? (
+       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
         <p className="mr-2">
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>

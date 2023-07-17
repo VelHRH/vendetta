@@ -5,6 +5,7 @@ import { TournamentValidator } from "@/lib/validators/tournament";
 export async function POST(req: Request) {
  try {
   const body = await req.json();
+  console.log(body);
   const tournament = TournamentValidator.parse(body);
 
   const supabase = createClient();
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
   ) {
    throw "There are empty fields";
   }
-
+  console.log(tournament.block_participants);
   const { data, error } = await supabase
    .from("tournaments")
    .insert({
@@ -28,8 +29,7 @@ export async function POST(req: Request) {
     end: tournament.end === "" ? null : tournament.end,
     play_off_participants: tournament.play_off_participants,
     type: tournament.type,
-    block_participants:
-     tournament.block_participants === undefined ? null : null,
+    block_participants: tournament.block_participants,
    })
    .select();
   if (error) throw error.message;
