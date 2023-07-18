@@ -44,7 +44,7 @@ export function normalizeRating({
  ratings: number;
 }) {
  if (ratings === 0) return 0;
- return (avgRating * ratings + 6) / (ratings + 1);
+ return (avgRating * ratings + 7) / (ratings + 1);
 }
 
 export function getBaseLog(x: number, y: number) {

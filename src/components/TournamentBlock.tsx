@@ -30,6 +30,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
   for (let match of allTournamentMatches) {
    let isContinue = true;
    for (let passedBlockMatch of passedBlockMatches) {
+    // TODO: Improve double array method
     if (
      doubleArraysAreEqual(
       passedBlockMatch,
