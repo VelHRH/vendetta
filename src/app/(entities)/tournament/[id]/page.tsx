@@ -6,15 +6,21 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import TournamentBracket from "@/components/TournamentBracket";
-import { findFirstDuplicate, sortSides } from "@/lib/utils";
+import {
+ areArraysEqual,
+ calculateScores,
+ findFirstDuplicate,
+ sortSides,
+} from "@/lib/utils";
 import MatchSide from "@/components/Row/MatchSide";
 import WrestlerLinkImage from "@/components/WrestlerLinkImage";
+import TournamentBlock from "@/components/TournamentBlock";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: tournament } = await supabase
   .from("tournaments")
-  .select("*, comments_tournaments(*), matches(*, match_sides(*))")
+  .select("*, comments_tournaments(*), matches(*, match_sides(*), winners(*))")
   .eq("id", params.id)
   .single();
  if (!tournament) {
@@ -82,15 +88,68 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
      avgRating={tournament.avgRating}
     />
    </div>
-   <div>
+   <div className="flex gap-5 flex-col items-center w-full">
     <Label className="font-bold mb-5">Подробности турнира:</Label>
-    <TournamentBracket
-     participants={8}
-     items={tournament.play_off_participants}
-     allTournamentMatches={tournament.matches.map((m) =>
-      sortSides(m.match_sides).map((m) => m.wrestlers)
-     )}
-    />
+    {tournament.type === "Обычный" ? (
+     <TournamentBracket
+      participants={tournament.play_off_participants.length}
+      items={tournament.play_off_participants}
+      allTournamentMatches={tournament.matches.map((m) =>
+       sortSides(m.match_sides).map((m) => m.wrestlers)
+      )}
+     />
+    ) : (
+     <>
+      <div className="flex flex-wrap justify-around gap-10 w-full mb-5">
+       {Array.from({ length: tournament.blocks_number! }, (_, index) => (
+        <TournamentBlock
+         key={index}
+         name={
+          thisBlockParticipants(
+           tournament.block_participants,
+           tournament.blocks_number!,
+           index
+          )[0][0].block!
+         }
+         wrestlers={thisBlockParticipants(
+          tournament.block_participants,
+          tournament.blocks_number!,
+          index
+         )}
+         points={calculateScores(
+          thisBlockParticipants(
+           tournament.block_participants,
+           tournament.blocks_number!,
+           index
+          ),
+          tournament.matches
+           .sort(
+            (a, b) =>
+             new Date(a.created_at!).getTime() -
+             new Date(b.created_at!).getTime()
+           )
+           .map((m) => m.match_sides),
+          tournament.matches.map((m) => m.winners)
+         )}
+        />
+       ))}
+      </div>
+      {tournament.play_off_participants.length > 0 && (
+       <div className="flex flex-col gap-3 items-center">
+        <Label className="font-bold" size="medium">
+         Стадия плей-офф:
+        </Label>
+        <TournamentBracket
+         participants={tournament.play_off_participants.length}
+         items={tournament.play_off_participants}
+         allTournamentMatches={tournament.matches.map((m) =>
+          sortSides(m.match_sides).map((m) => m.wrestlers)
+         )}
+        />
+       </div>
+      )}
+     </>
+    )}
    </div>
 
    {user && (
@@ -137,3 +196,14 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
 };
 
 export default TournamentOverview;
+
+const thisBlockParticipants = (
+ participants: any,
+ number: number,
+ index: number
+) => {
+ return participants.slice(
+  (index * participants.length) / number,
+  ((index + 1) * participants.length) / number
+ );
+};

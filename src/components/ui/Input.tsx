@@ -7,6 +7,7 @@ interface InputProps extends React.HTMLAttributes<HTMLDivElement> {
  placeholder: string;
  type?: string;
  isError?: boolean;
+ disabled?: boolean;
 }
 
 const Input: FC<InputProps> = ({
@@ -16,6 +17,7 @@ const Input: FC<InputProps> = ({
  type,
  isError,
  className,
+ disabled,
 }) => {
  return (
   <fieldset
@@ -28,9 +30,12 @@ const Input: FC<InputProps> = ({
   >
    <input
     placeholder={placeholder}
-    className={`w-full h-full font-medium text-lg outline-none peer focus:placeholder-transparent bg-transparent`}
+    className={`w-full h-full font-medium text-lg outline-none peer focus:placeholder-transparent bg-transparent ${
+     disabled && "text-slate-900/20 dark:text-slate-50/20"
+    }`}
     onChange={(e) => setValue(e.target.value)}
     value={value}
+    disabled={disabled}
     type={type || "text"}
    />
    <legend

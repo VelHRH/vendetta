@@ -47,6 +47,7 @@ export const TournamentValidator = z.object({
   )
   .optional(),
  type: z.string(),
+ blocks_number: z.number().optional(),
 });
 
 export type CreateTournamentPayload = z.infer<typeof TournamentValidator>;

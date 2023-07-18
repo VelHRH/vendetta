@@ -7,6 +7,7 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
  value: string;
  setValue: (value: string) => void;
  placeholder: string;
+ disabled?: boolean;
 }
 
 const Dropdown: FC<DropdownProps> = ({
@@ -15,20 +16,23 @@ const Dropdown: FC<DropdownProps> = ({
  setValue,
  placeholder,
  className,
+ disabled,
 }) => {
  const [isSelect, setIsSelect] = useState<boolean>(false);
  return (
   <div className={`w-full text-lg relative ${className}`}>
    <button
-    onClick={() => setIsSelect(!isSelect)}
+    onClick={() => !disabled && setIsSelect(!isSelect)}
     className={`flex items-center justify-between border-[3px] p-3 bg-slate-100 dark:bg-slate-900 w-full border-slate-500 rounded-md ${
      value === "" || isSelect
       ? "text-slate-400 font-medium"
-      : "text-slate-900 dark:text-slate-50 font-semibold"
+      : !disabled
+      ? "text-slate-900 dark:text-slate-50 font-semibold"
+      : "text-slate-900/20 dark:text-slate-50/20 font-semibold"
     }`}
    >
     {value === "" || isSelect ? placeholder : value}
-    {isSelect ? <ChevronUp /> : <ChevronDown />}
+    {!disabled && (isSelect ? <ChevronUp /> : <ChevronDown />)}
    </button>
 
    {isSelect && (

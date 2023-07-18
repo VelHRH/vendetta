@@ -7,6 +7,7 @@ import {
  parseSide,
  removeDuplicateArrays,
 } from "@/lib/utils";
+import MatchSide from "./Row/MatchSide";
 
 interface TournamentBracketProps {
  participants: number;
@@ -19,6 +20,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  items,
  allTournamentMatches,
 }) => {
+ console.log(items);
  const cols = getBaseLog(2, participants) * 2 - 1;
  const [orderedMatches, setOrderedMatches] = useState<Json[][][]>([]);
  useEffect(() => {
@@ -81,15 +83,15 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
            orderedMatches[ind].map((elem, i) => (
             <div
              key={i}
-             className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"
+             className="w-full p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md"
             >
-             {parseSide(orderedMatches[ind][i])}
+             <MatchSide wrestlers={orderedMatches[ind][i]} />
             </div>
            ))
           ) : (
            <>
-            <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"></div>
-            <div className="w-full p-1 bg-slate-600 h-1/2 rounded-t-md text-slate-50"></div>
+            <div className="w-full p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md"></div>
+            <div className="w-full p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md"></div>
            </>
           )}
          </div>

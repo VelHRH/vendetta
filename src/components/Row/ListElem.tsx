@@ -22,12 +22,12 @@ const ListElem: FC<ListElemProps> = ({
  return (
   <Link
    href={link}
-   className="w-full mb-4 flex justify-between items-center gap-3 text-xl h-12 group"
+   className="w-full mb-4 flex justify-between gap-3 text-xl items-stretch group"
   >
-   <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full">
+   <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center">
     {main}
    </div>
-   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full flex items-center">
+   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 flex items-center text-center">
     {secondary}
    </div>
 
@@ -41,7 +41,7 @@ const ListElem: FC<ListElemProps> = ({
        }),
       }),
      }}
-     className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center"
+     className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"
     >
      {normalizeRating({
       ratings: comments.length,
@@ -49,7 +49,7 @@ const ListElem: FC<ListElemProps> = ({
      }).toFixed(2)}
     </div>
    ) : (
-    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center">
+    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center">
      --
     </div>
    )}
@@ -61,17 +61,17 @@ const ListElem: FC<ListElemProps> = ({
         rating: yourComments,
        }),
       }}
-      className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center"
+      className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"
      >
       {yourComments}
      </div>
     ) : (
-     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center">
+     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center">
       --
      </div>
     )
    ) : null}
-   <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center">
+   <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center">
     {comments.length}
    </div>
   </Link>

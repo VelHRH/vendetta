@@ -3,14 +3,12 @@ import MatchSide from "./Row/MatchSide";
 
 interface TournamentBlockProps {
  wrestlers: Json[][];
- peopleInBlock: number;
  name: string;
  points?: number[];
 }
 
 const TournamentBlock: FC<TournamentBlockProps> = ({
  wrestlers,
- peopleInBlock,
  name,
  points,
 }) => {
@@ -21,6 +19,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
    </p>
    {wrestlers
     .map((w, i) => w.map((it) => ({ ...it, points: points ? points[i] : 0 })))
+    .sort((a, b) => b[0].points - a[0].points)
     .map((wr, index) => (
      <div
       key={index}

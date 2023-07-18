@@ -436,6 +436,7 @@ interface Database {
     Row: {
      avgRating: number;
      block_participants: Json[][] | null;
+     blocks_number: number | null;
      created_at: string;
      description: string | null;
      end: string | null;
@@ -449,6 +450,7 @@ interface Database {
     Insert: {
      avgRating?: number;
      block_participants?: Json[][] | null;
+     blocks_number?: number | null;
      created_at?: string;
      description?: string | null;
      end?: string | null;
@@ -462,6 +464,7 @@ interface Database {
     Update: {
      avgRating?: number;
      block_participants?: Json[][] | null;
+     blocks_number?: number | null;
      created_at?: string;
      description?: string | null;
      end?: string | null;

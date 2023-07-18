@@ -24,6 +24,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
  const {
   data: { user },
  } = await supabase.auth.getUser();
+
  return (
   <>
    {index === 0 && (

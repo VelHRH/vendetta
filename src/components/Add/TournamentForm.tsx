@@ -62,14 +62,15 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
    teamId?: string;
   }[][]
  >(
-  Array.from({ length: 100 }, () => [
-   {
-    wrestlerId: "",
-    wrestlerName: "",
-    wrestlerImage: "",
-    wrestlerCurName: "",
-   },
-  ])
+  tournament?.block_participants ||
+   Array.from({ length: 100 }, () => [
+    {
+     wrestlerId: "",
+     wrestlerName: "",
+     wrestlerImage: "",
+     wrestlerCurName: "",
+    },
+   ])
  );
  const [winner, setWinner] = useState<
   {
@@ -113,19 +114,22 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
     description,
     start: dateStart,
     end: dateEnd,
-    play_off_participants: [
-     ...playOff
-      .map((side) =>
-       side.map((participant) => {
-        if (participant.teamId === "") {
-         const { teamId, teamName, ...rest } = participant;
-         return rest;
-        }
-        return participant;
-       })
-      )
-      .slice(0, parseFloat(number)),
-    ],
+    play_off_participants:
+     type === "Обычный"
+      ? [
+         ...playOff
+          .map((side) =>
+           side.map((participant) => {
+            if (participant.teamId === "") {
+             const { teamId, teamName, ...rest } = participant;
+             return rest;
+            }
+            return participant;
+           })
+          )
+          .slice(0, parseFloat(number)),
+        ]
+      : [],
     block_participants:
      type !== "Round-robin"
       ? undefined
@@ -144,12 +148,13 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
           .map((w, i) =>
            w.map((it) => ({
             ...it,
-            block: blockNames[Math.ceil(i / parseFloat(peopleInBlock))],
+            block: blockNames[Math.floor(i / parseFloat(peopleInBlock))],
            }))
           ),
         ],
     type,
-    winner,
+    winner: winner.length === 0 ? undefined : winner,
+    blocks_number: blockNumber == "" ? undefined : parseFloat(blockNumber),
    };
    const { data } = await axios.post("/api/tournament", payload);
    return data as string;
@@ -175,6 +180,65 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
    toast({
     title: "There was an error",
     description: "Could not create the tournament",
+    variant: "destructive",
+   });
+  },
+  onSuccess: (data) => {
+   router.push(`/tournament/${data}`);
+   router.refresh();
+  },
+ });
+
+ const { mutate: updateTournament, isLoading: isLoadingUpdate } = useMutation({
+  mutationFn: async () => {
+   const payload: CreateTournamentPayload = {
+    name,
+    description,
+    start: dateStart,
+    end: dateEnd,
+    type,
+    play_off_participants: [
+     ...playOff
+      .map((side) =>
+       side.map((participant) => {
+        if (participant.teamId === "") {
+         const { teamId, teamName, ...rest } = participant;
+         return rest;
+        }
+        return participant;
+       })
+      )
+      .slice(0, parseFloat(number)),
+    ],
+    winner: winner.length === 0 ? undefined : winner,
+   };
+   const { data } = await axios.put(
+    `/api/tournament?id=${tournament.id}`,
+    payload
+   );
+   return data as string;
+  },
+  onError: (err) => {
+   if (err instanceof AxiosError) {
+    if (err.response?.status === 422) {
+     return toast({
+      title: "Input error",
+      description: "Not all fields are filled out correctly",
+      variant: "destructive",
+     });
+    }
+
+    if (err.response?.status === 400) {
+     return toast({
+      title: "There was an error",
+      description: err.response.data,
+      variant: "destructive",
+     });
+    }
+   }
+   toast({
+    title: "There was an error",
+    description: "Could not update the tournament",
     variant: "destructive",
    });
   },
@@ -296,6 +360,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
      value={name}
      setValue={setName}
      isError={isError && name.length === 0}
+     disabled={tournament ? true : false}
     />
     <Input
      placeholder="Описание турнира"
@@ -308,6 +373,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
      array={["Round-robin", "Обычный"]}
      value={type}
      setValue={setType}
+     disabled={tournament ? true : false}
     />
     <Input
      placeholder="Начало турнира"
@@ -341,9 +407,10 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
          value={number}
          setValue={setNumber}
          array={["2", "4", "8", "16", "32"]}
+         disabled={winner.length !== 0}
         />
        )}
-       {type === "Round-robin" && (
+       {type === "Round-robin" && !tournament && (
         <div className="flex w-full justify-around">
          <Input
           placeholder="Количество блоков"
@@ -372,6 +439,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
             <Input
              placeholder="Название блока"
              value={blockNames[index]}
+             disabled={winner.length !== 0}
              setValue={(newVal) =>
               setBlockNames((prev) => {
                const uBlockNames = [...prev];
@@ -388,9 +456,10 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                <div key={index3} className="flex gap-3 w-full items-center">
                 <div className="flex-1">
                  <Dropdown
-                  placeholder={`Рестлер ${index3 + 1}`}
+                  placeholder={`Рестлер ${index2 + 1}`}
                   array={wrestlers.map((w) => w.name || "")}
                   value={elem.wrestlerName}
+                  disabled={winner.length !== 0}
                   setValue={(newValue) => {
                    if (newValue === "") return;
                    setBlockParticipants((prevItems) => {
@@ -398,6 +467,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                     updatedParticipants[
                      index * parseFloat(peopleInBlock) + index2
                     ][index3].wrestlerName = newValue;
+                    updatedParticipants[
+                     index * parseFloat(peopleInBlock) + index2
+                    ][index3].wrestlerCurName = newValue;
                     updatedParticipants[
                      index * parseFloat(peopleInBlock) + index2
                     ][index3].wrestlerId = wrestlers
@@ -415,8 +487,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                 </div>
                 <Input
                  className="w-1/2"
-                 placeholder={`Имя в матче`}
+                 placeholder={`Имя в турнире`}
                  value={elem.wrestlerCurName}
+                 disabled={winner.length !== 0}
                  setValue={(newValue) => {
                   setBlockParticipants((prevItems) => {
                    const newItems = [...prevItems];
@@ -464,8 +537,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
             {teamNames.map((tN, index) => (
              <div key={index} className="flex flex-col gap-3">
               <Dropdown
-               array={[...teams.map((s) => s.name || ""), "Nfr{b"]}
+               array={teams.map((s) => s.name || "")}
                value={tN.name}
+               disabled={winner.length !== 0}
                setValue={(newVal) =>
                 setTeamNames((prev) => {
                  const p = [...prev];
@@ -480,6 +554,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                {tN.wrestlers.map((w, index2) => (
                 <Dropdown
                  key={index2}
+                 disabled={winner.length !== 0}
                  array={blockParticipants.flatMap((innerArray) =>
                   innerArray
                    .map((participant) => participant.wrestlerCurName)
@@ -547,14 +622,16 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
              <div key={index2} className="flex gap-3 w-full items-center">
               <div className="flex-1">
                <Dropdown
+                disabled={winner.length !== 0}
                 array={wrestlers.map((w) => w.name || "")}
-                placeholder={`Рестлер ${index2 + 1}`}
+                placeholder={`Рестлер ${index + 1}`}
                 value={elem.wrestlerName}
                 setValue={(newValue) => {
                  if (newValue === "") return;
                  setPlayOff((prevItems) => {
                   const updatedParticipants = [...prevItems];
                   updatedParticipants[index][index2].wrestlerName = newValue;
+                  updatedParticipants[index][index2].wrestlerCurName = newValue;
                   updatedParticipants[index][index2].wrestlerId = wrestlers
                    .find((wr) => wr.name === newValue)!
                    .id.toString();
@@ -567,8 +644,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
               </div>
               <Input
                key={index2}
+               disabled={winner.length !== 0}
                className="w-1/2"
-               placeholder={`Имя в матче`}
+               placeholder={`Имя в турнире`}
                value={elem.wrestlerCurName}
                setValue={(newValue) => {
                 setPlayOff((prevItems) => {
@@ -609,8 +687,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
         {teamNames.map((tN, index) => (
          <div key={index} className="flex flex-col gap-3">
           <Dropdown
-           array={[...teams.map((s) => s.name || ""), "Nfr{b"]}
+           array={teams.map((s) => s.name || "")}
            value={tN.name}
+           disabled={winner.length !== 0}
            setValue={(newVal) =>
             setTeamNames((prev) => {
              const p = [...prev];
@@ -679,61 +758,70 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
        </div>
       )}
 
+      {type === "Round-robin" && tournament && (
+       <div className="flex flex-col gap-3">
+        <Dropdown
+         placeholder="Количество участников"
+         value={number}
+         disabled={winner.length !== 0}
+         setValue={setNumber}
+         array={["2", "4", "8", "16", "32"]}
+        />
+        {Array.from({ length: parseFloat(number) }, (_, index) => (
+         <Dropdown
+          key={index}
+          array={JSON.parse(JSON.stringify(blockParticipants)).map((b: any) =>
+           parseSide(b)
+          )}
+          placeholder={`Участник ${index + 1}`}
+          value={parseSide(playOff[index])}
+          disabled={winner.length !== 0}
+          setValue={(newValue) =>
+           setPlayOff((prev) => {
+            const newPlayOff = [...prev];
+            newPlayOff[index] =
+             blockParticipants[
+              JSON.parse(JSON.stringify(blockParticipants))
+               .map((b: any) => parseSide(b))
+               .indexOf(newValue)
+             ];
+            return newPlayOff;
+           })
+          }
+         />
+        ))}
+       </div>
+      )}
+
       {type === "Обычный" ? (
        <TournamentBracket
         participants={parseFloat(number)}
         items={playOff.slice(0, parseFloat(number))}
        />
-      ) : type === "Round-robin" && (peopleInBlock !== "" || tournament) ? (
-       <div className="flex flex-wrap justify-around gap-3">
-        {Array.from({ length: parseFloat(blockNumber) }, (_, index) => (
-         <TournamentBlock
-          key={index}
-          name={blockNames[index]}
-          wrestlers={JSON.parse(JSON.stringify(blockParticipants)).slice(
-           index * parseFloat(peopleInBlock),
-           (index + 1) * parseFloat(peopleInBlock)
-          )}
-          peopleInBlock={parseFloat(peopleInBlock)}
+      ) : type === "Round-robin" ? (
+       !tournament ? (
+        <div className="flex flex-wrap justify-around gap-10 mt-10">
+         {Array.from({ length: parseFloat(blockNumber) }, (_, index) => (
+          <TournamentBlock
+           key={index}
+           name={blockNames[index]}
+           wrestlers={JSON.parse(JSON.stringify(blockParticipants)).slice(
+            index * parseFloat(peopleInBlock),
+            (index + 1) * parseFloat(peopleInBlock)
+           )}
+          />
+         ))}
+        </div>
+       ) : (
+        <>
+         <TournamentBracket
+          participants={parseFloat(number)}
+          items={playOff.slice(0, parseFloat(number))}
          />
-        ))}
-       </div>
+        </>
+       )
       ) : null}
      </div>
-
-     {type === "Round-robin" && tournament && (
-      <div className="flex flex-col gap-3">
-       {" "}
-       <Dropdown
-        placeholder="Количество участников"
-        value={number}
-        setValue={setNumber}
-        array={["2", "4", "8", "16", "32"]}
-       />
-       {Array.from({ length: parseFloat(number) }, (_, index) => (
-        <Dropdown
-         key={index}
-         array={JSON.parse(JSON.stringify(blockParticipants)).map((b: any) =>
-          parseSide(b)
-         )}
-         placeholder={`Участник ${index}`}
-         value={parseSide(playOff[index])}
-         setValue={(newValue) =>
-          setPlayOff((prev) => {
-           const newPlayOff = prev;
-           newPlayOff[index] =
-            blockParticipants[
-             JSON.parse(JSON.stringify(blockParticipants))
-              .map((b: any) => parseSide(b))
-              .indexOf(newValue)
-            ];
-           return newPlayOff;
-          })
-         }
-        />
-       ))}
-      </div>
-     )}
 
      <div className="w-full flex flex-col gap-5">
       <Label size="medium" className="font-bold text-start">
@@ -777,15 +865,15 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
     </>
    )}
    <Button
+    isLoading={isLoading || isLoadingUpdate}
     onClick={() => {
      setIsError(true);
-     createTournament();
+     tournament ? updateTournament() : createTournament();
     }}
     size="lg"
     className="w-1/2"
-    isLoading={isLoading}
    >
-    Create
+    {tournament ? "Update" : "Create"}
    </Button>
   </div>
  );
