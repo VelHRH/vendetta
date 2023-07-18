@@ -39,9 +39,7 @@ const MatchForm = ({ match }: { match?: any }) => {
  const [order, setOrder] = useState<string>(match?.order.toString() || "");
  const [time, setTime] = useState<string>(match?.time || "");
  const [show, setShow] = useState<string>(match?.show || "");
- const [tournament, setTournament] = useState<{ id?: number; name: string }>(
-  match?.tournament?.toString() || { id: undefined, name: "" }
- );
+ const [tournament, setTournament] = useState<string>(match?.tournament || "");
  const [participants, setParticipants] = useState<
   {
    wrestlerName: string;
@@ -149,10 +147,8 @@ const MatchForm = ({ match }: { match?: any }) => {
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
-    show: shows!.find((s) => s.name === show)
-     ? shows!.find((s) => s.name === show)!.id
-     : parseFloat(show),
-    tournament: tournament.id,
+    show: shows!.find((s) => s.name === show)?.id || 0,
+    tournament: tournaments!.find((s) => s.name === tournament)?.id,
     winner: winner.includes(undefined!)
      ? undefined
      : winner.map((side) =>
@@ -222,10 +218,8 @@ const MatchForm = ({ match }: { match?: any }) => {
     ending: ending === "" ? "удержанием" : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
-    show: shows!.find((s) => s.name === show)
-     ? shows!.find((s) => s.name === show)!.id
-     : parseFloat(show),
-    tournament: tournament.id,
+    show: shows!.find((s) => s.name === show)?.id || 0,
+    tournament: tournaments!.find((s) => s.name === tournament)?.id,
     winner: winner.includes(undefined!)
      ? undefined
      : winner.map((side) =>
@@ -301,13 +295,8 @@ const MatchForm = ({ match }: { match?: any }) => {
     />
     <Dropdown
      array={tournaments.map((t) => t.name || "")}
-     value={tournament.name}
-     setValue={(newVal) =>
-      setTournament({
-       name: newVal,
-       id: tournaments.find((t) => t.name === newVal)?.id,
-      })
-     }
+     value={tournament}
+     setValue={setTournament}
      placeholder="Турнир"
     />
     {title.map((t, index) => (

@@ -31,9 +31,9 @@ export const MatchValidator = z.object({
   )
   .optional(),
  title: z.array(z.object({ id: z.number(), name: z.string() })).optional(),
- show: z.number(),
+ show: z.number().min(1),
  ending: z.string().optional(),
- tournament: z.number().optional(),
+ tournament: z.number().min(1).optional(),
  order: z.number(),
 });
 

@@ -6,12 +6,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import TournamentBracket from "@/components/TournamentBracket";
-import {
- areArraysEqual,
- calculateScores,
- findFirstDuplicate,
- sortSides,
-} from "@/lib/utils";
+import { sortSides } from "@/lib/utils";
 import MatchSide from "@/components/Row/MatchSide";
 import WrestlerLinkImage from "@/components/WrestlerLinkImage";
 import TournamentBlock from "@/components/TournamentBlock";
@@ -111,25 +106,17 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
            index
           )[0][0].block!
          }
+         allTournamentMatches={tournament.matches.map((m) => ({
+          id: m.id,
+          created_at: m.created_at,
+          match_sides: m.match_sides,
+          winners: m.winners,
+          ending: m.ending,
+         }))}
          wrestlers={thisBlockParticipants(
           tournament.block_participants,
           tournament.blocks_number!,
           index
-         )}
-         points={calculateScores(
-          thisBlockParticipants(
-           tournament.block_participants,
-           tournament.blocks_number!,
-           index
-          ),
-          tournament.matches
-           .sort(
-            (a, b) =>
-             new Date(a.created_at!).getTime() -
-             new Date(b.created_at!).getTime()
-           )
-           .map((m) => m.match_sides),
-          tournament.matches.map((m) => m.winners)
          )}
         />
        ))}

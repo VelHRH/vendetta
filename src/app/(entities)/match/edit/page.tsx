@@ -18,7 +18,17 @@ const EditMatch = async ({
   .select()
   .eq("id", match?.show)
   .single();
- return <MatchForm match={{ ...match, show: show?.name }} />;
+
+ const { data: tournament } = await supabase
+  .from("tournaments")
+  .select()
+  .eq("id", match?.tournament)
+  .single();
+ return (
+  <MatchForm
+   match={{ ...match, show: show?.name, tournament: tournament?.name }}
+  />
+ );
 };
 
 export default EditMatch;
