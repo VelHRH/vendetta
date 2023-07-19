@@ -144,7 +144,7 @@ const MatchForm = ({ match }: { match?: any }) => {
        return participant;
       })
     ),
-    ending: ending === "" ? "удержанием" : ending,
+    ending: ending === "" ? undefined : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
     show: shows!.find((s) => s.name === show)?.id || 0,
@@ -215,7 +215,7 @@ const MatchForm = ({ match }: { match?: any }) => {
        return participant;
       })
     ),
-    ending: ending === "" ? "удержанием" : ending,
+    ending: ending === "" ? undefined : ending,
     type: type === "" ? undefined : type,
     time: time === "" ? undefined : time,
     show: shows!.find((s) => s.name === show)?.id || 0,

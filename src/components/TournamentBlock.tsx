@@ -23,6 +23,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
 }) => {
  if (allTournamentMatches) {
   let passedBlockMatches: Json[][][] = [];
+  wrestlers.map((w) => w.map((s) => (s.points = 0)));
   allTournamentMatches.sort(
    (a, b) =>
     new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime()
@@ -61,7 +62,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
      for (let match_side of match.match_sides) {
       wrestlers
        .find((w) => areArraysEqual(w, match_side.wrestlers))
-       ?.map((w) => (w.points ? (w.points += 1) : (w.points = 1)));
+       ?.map((w) => (w.points! += 1));
      }
     } else {
      for (let match_side of match.match_sides) {
@@ -70,7 +71,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
        if (areArraysEqual(match_side.wrestlers, winner.winner)) {
         wrestlers
          .find((w) => areArraysEqual(w, match_side.wrestlers))
-         ?.map((w) => (w.points ? (w.points += 2) : (w.points = 2)));
+         ?.map((w) => (w.points! += 2));
         isMatchSideWinner = true;
         break;
        }
@@ -78,7 +79,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
       if (!isMatchSideWinner) {
        wrestlers
         .find((w) => areArraysEqual(w, match_side.wrestlers))
-        ?.map((w) => (w.points ? (w.points += 0) : (w.points = 0)));
+        ?.map((w) => (w.points! += 0));
       }
      }
     }
