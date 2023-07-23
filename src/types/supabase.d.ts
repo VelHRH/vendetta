@@ -377,7 +377,6 @@ interface Database {
      disband_date: string | null;
      id: number;
      name: string;
-     wrestlers: string[];
     };
     Insert: {
      avgRating?: number;
@@ -386,7 +385,6 @@ interface Database {
      disband_date?: string | null;
      id?: number;
      name: string;
-     wrestlers: string[];
     };
     Update: {
      avgRating?: number;
@@ -395,9 +393,82 @@ interface Database {
      disband_date?: string | null;
      id?: number;
      name?: string;
-     wrestlers?: string[];
     };
     Relationships: [];
+   };
+   teams_current_participants: {
+    Row: {
+     created_at: string;
+     id: number;
+     team_id: number;
+     wrestler_id: number;
+     wrestler_name: string;
+    };
+    Insert: {
+     created_at?: string;
+     id?: number;
+     team_id: number;
+     wrestler_id: number;
+     wrestler_name: string;
+    };
+    Update: {
+     created_at?: string;
+     id?: number;
+     team_id?: number;
+     wrestler_id?: number;
+     wrestler_name?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "teams_current_participants_team_id_fkey";
+      columns: ["team_id"];
+      referencedRelation: "teams";
+      referencedColumns: ["id"];
+     },
+     {
+      foreignKeyName: "teams_current_participants_wrestler_id_fkey";
+      columns: ["wrestler_id"];
+      referencedRelation: "wrestlers";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
+   teams_former_participants: {
+    Row: {
+     created_at: string;
+     id: number;
+     team_id: number;
+     wrestler_id: number;
+     wrestler_name: string;
+    };
+    Insert: {
+     created_at?: string;
+     id?: number;
+     team_id: number;
+     wrestler_id: number;
+     wrestler_name: string;
+    };
+    Update: {
+     created_at?: string;
+     id?: number;
+     team_id?: number;
+     wrestler_id?: number;
+     wrestler_name?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "teams_former_participants_team_id_fkey";
+      columns: ["team_id"];
+      referencedRelation: "teams";
+      referencedColumns: ["id"];
+     },
+     {
+      foreignKeyName: "teams_former_participants_wrestler_id_fkey";
+      columns: ["wrestler_id"];
+      referencedRelation: "wrestlers";
+      referencedColumns: ["id"];
+     }
+    ];
    };
    titles: {
     Row: {

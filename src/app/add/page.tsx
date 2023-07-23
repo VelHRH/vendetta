@@ -68,6 +68,18 @@ const Add: FC = () => {
     </Label>
     <ChevronsRight size={30} />
    </Link>
+   <Link
+    href="/team/add"
+    className={cn(
+     buttonVariants({ variant: "subtle" }),
+     "flex gap-1 items-center justify-between p-10"
+    )}
+   >
+    <Label size="medium" className="font-bold">
+     Новая команда
+    </Label>
+    <ChevronsRight size={30} />
+   </Link>
   </div>
  );
 };
