@@ -5,7 +5,6 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useMutation } from "@tanstack/react-query";
-import { CreateWrestlerPayload } from "@/lib/validators/wrestler";
 import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -14,8 +13,12 @@ import { CreateTeamPayload } from "@/lib/validators/team";
 
 const TeamForm = ({
  team,
+ team_current_participants,
+ team_former_participants,
 }: {
  team?: Database["public"]["Tables"]["teams"]["Row"];
+ team_current_participants?: Database["public"]["Tables"]["teams_current_participants"]["Row"][];
+ team_former_participants?: Database["public"]["Tables"]["teams_former_participants"]["Row"][];
 }) => {
  const [name, setName] = useState<string>(team?.name || "");
  const [creationDate, setCreationDate] = useState<string>(
@@ -25,12 +28,27 @@ const TeamForm = ({
   team?.disband_date || ""
  );
  const [current_participants, setCurrentParticipants] = useState<
-  { id: string; wrestlerName: string; wrestlerCurName: string }[]
- >([{ id: "", wrestlerName: "", wrestlerCurName: "" }]);
+  { wrestlerId: string; wrestlerName: string; wrestlerCurName: string }[]
+ >(
+  team_current_participants?.map((p) => ({
+   wrestlerId: p.wrestler_id.toString(),
+   wrestlerName: p.wrestler_name,
+   wrestlerCurName: p.wrestler_name,
+  })) || [{ wrestlerId: "", wrestlerName: "", wrestlerCurName: "" }]
+ );
  const [former_participants, setFormerParticipants] = useState<
-  { id: string; wrestlerName: string; wrestlerCurName: string }[]
- >([]);
- const [leader, setLeader] = useState<string>("");
+  { wrestlerId: string; wrestlerName: string; wrestlerCurName: string }[]
+ >(
+  team_former_participants?.map((p) => ({
+   wrestlerId: p.wrestler_id.toString(),
+   wrestlerName: p.wrestler_name,
+   wrestlerCurName: p.wrestler_name,
+  })) || []
+ );
+ const [leader, setLeader] = useState<string>(
+  team_current_participants?.find((p) => p.isLeader === true)?.wrestler_name ||
+   ""
+ );
  const [isError, setIsError] = useState<boolean>(false);
  const [wrestlers, setWrestlers] = useState<
   Database["public"]["Tables"]["wrestlers"]["Row"][]
@@ -154,7 +172,6 @@ const TeamForm = ({
       <div key={index} className="flex gap-3 w-full items-center">
        <div className="flex-1">
         <Dropdown
-         disabled={leader.length !== 0}
          array={wrestlers.map((w) => w.name || "")}
          placeholder={`Рестлер ${index + 1}`}
          value={p.wrestlerName}
@@ -164,7 +181,7 @@ const TeamForm = ({
            const updatedParticipants = [...prevItems];
            updatedParticipants[index].wrestlerName = newValue;
            updatedParticipants[index].wrestlerCurName = newValue;
-           updatedParticipants[index].id = wrestlers
+           updatedParticipants[index].wrestlerId = wrestlers
             .find((wr) => wr.name === newValue)!
             .id.toString();
 
@@ -174,7 +191,6 @@ const TeamForm = ({
         />
        </div>
        <Input
-        disabled={leader.length !== 0}
         className="w-1/2"
         placeholder={`Имя в турнире`}
         value={p.wrestlerCurName}
@@ -199,7 +215,7 @@ const TeamForm = ({
         ...prev,
         {
          wrestlerName: "",
-         id: "",
+         wrestlerId: "",
          wrestlerCurName: "",
         },
        ])
@@ -219,7 +235,6 @@ const TeamForm = ({
        <div key={index} className="flex gap-3 w-full items-center">
         <div className="flex-1">
          <Dropdown
-          disabled={leader.length !== 0}
           array={wrestlers.map((w) => w.name || "")}
           placeholder={`Рестлер ${index + 1}`}
           value={p.wrestlerName}
@@ -229,7 +244,7 @@ const TeamForm = ({
             const updatedParticipants = [...prevItems];
             updatedParticipants[index].wrestlerName = newValue;
             updatedParticipants[index].wrestlerCurName = newValue;
-            updatedParticipants[index].id = wrestlers
+            updatedParticipants[index].wrestlerId = wrestlers
              .find((wr) => wr.name === newValue)!
              .id.toString();
 
@@ -239,7 +254,6 @@ const TeamForm = ({
          />
         </div>
         <Input
-         disabled={leader.length !== 0}
          className="w-1/2"
          placeholder={`Имя в турнире`}
          value={p.wrestlerCurName}
@@ -264,7 +278,7 @@ const TeamForm = ({
          ...prev,
          {
           wrestlerName: "",
-          id: "",
+          wrestlerId: "",
           wrestlerCurName: "",
          },
         ])

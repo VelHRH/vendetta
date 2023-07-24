@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     .from("teams_current_participants")
     .insert({
      team_id: data!.id,
-     wrestler_id: parseFloat(participant.id),
+     wrestler_id: parseFloat(participant.wrestlerId),
      wrestler_name: participant.wrestlerCurName,
      isLeader: participant.wrestlerCurName === team.leader,
     });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     .from("teams_former_participants")
     .insert({
      team_id: data!.id,
-     wrestler_id: parseFloat(participant.id),
+     wrestler_id: parseFloat(participant.wrestlerId),
      wrestler_name: participant.wrestlerCurName,
     });
 
@@ -53,5 +53,72 @@ export async function POST(req: Request) {
   }
   if (typeof err === "string") return new Response(err, { status: 400 });
   return new Response("Error while creating", { status: 500 });
+ }
+}
+
+export async function PUT(req: Request) {
+ try {
+  const body = await req.json();
+  const team = TeamValidator.parse(body);
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+   .from("teams")
+   .update({
+    name: team.name,
+    creation_date: team.creation_date,
+    disband_date: team.disband_date,
+   })
+   .eq("id", id)
+   .select()
+   .single();
+  if (error || !data) throw error.message;
+
+  await supabase
+   .from("teams_current_participants")
+   .delete()
+   .eq("team_id", data!.id);
+  await supabase
+   .from("teams_former_participants")
+   .delete()
+   .eq("team_id", data!.id);
+
+  for (let participant of team.current_participants) {
+   const { error: participantsError } = await supabase
+    .from("teams_current_participants")
+    .insert({
+     team_id: data!.id,
+     wrestler_id: parseFloat(participant.wrestlerId),
+     wrestler_name: participant.wrestlerCurName,
+     isLeader: participant.wrestlerCurName === team.leader,
+    });
+
+   if (participantsError) throw participantsError.message;
+  }
+
+  for (let participant of team.former_participants) {
+   const { error: participantsError } = await supabase
+    .from("teams_former_participants")
+    .insert({
+     team_id: data!.id,
+     wrestler_id: parseFloat(participant.wrestlerId),
+     wrestler_name: participant.wrestlerCurName,
+    });
+
+   if (participantsError) throw participantsError.message;
+  }
+
+  return new Response(data!.id.toString());
+ } catch (err) {
+  console.log(err);
+  if (err instanceof z.ZodError) {
+   return new Response(err.message, { status: 422 });
+  }
+  if (typeof err === "string") return new Response(err, { status: 400 });
+  return new Response("Error while updating", { status: 500 });
  }
 }

@@ -30,26 +30,33 @@ const Navbar = async () => {
       href="/match"
       className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
      >
-      Matchguide
+      Матчгайд
      </Link>
      <Link
       href="/show"
       className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
      >
-      Shows
+      Шоу
      </Link>
      <Link
       href="/wrestler"
       className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
      >
-      Wrestlers
+      Рестлеры
+     </Link>
+     <Link
+      href="/team"
+      className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
+     >
+      Команды
      </Link>
      <Link
       href="/tournament"
       className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
      >
-      Tournaments
+      Турниры
      </Link>
+
      {profile?.role === "admin" && (
       <Link
        href="/add"

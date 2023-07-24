@@ -6,19 +6,19 @@ import createClient from "@/lib/supabase-server";
 import { normalizeRating, parseSide, sortSides } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
-const Matchguide = async ({
- searchParams,
-}: {
- searchParams: { sort: string };
-}) => {
+const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
  const supabase = createClient();
- const { data: shows } = await supabase
-  .from("shows")
-  .select("*, matches(*, comments_matches(*), match_sides(*))");
- const matches = shows?.flatMap((show) => show.matches);
- if (!matches) {
+ const { data: teams } = await supabase
+  .from("teams")
+  .select("*, comments_teams(*)");
+
+ if (!teams) {
   notFound();
  }
+
+ const { data: shows } = await supabase
+  .from("shows")
+  .select("*, matches(*, match_sides(*))");
 
  const {
   data: { user },
@@ -26,20 +26,16 @@ const Matchguide = async ({
 
  const { data: profile } = await supabase
   .from("users")
-  .select("*, comments_matches(*)")
+  .select("*, comments_teams(*)")
   .eq("id", user?.id)
   .single();
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5 justify-center">Оцененные матчи</Label>
-   <FilterDropdown
-    array={["Дате", "Рейтингу"]}
-    path="/match"
-    placeholder="Сортировать по..."
-   />
+   <Label className="font-bold mb-5 justify-center">Все команды</Label>
+
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
-    <p className="text-center w-1/2">Матч</p>
-    <p className="text-center flex-1">Шоу</p>
+    <p className="text-center w-1/2">Команда</p>
+    <p className="text-center flex-1">Последнее шоу</p>
     <p className="text-center w-32">
      <SortButton
       value="rating"
@@ -71,48 +67,52 @@ const Matchguide = async ({
      </SortButton>
     </p>
    </div>
-   {matches
-    .filter((match) => match.comments_matches.length > 0)
+   {teams
     .sort((a, b) =>
      searchParams.sort === "your"
-      ? (profile!.comments_matches.find((c) => c.item_id === b.id)?.rating ||
+      ? (profile!.comments_teams.find((c) => c.item_id === b.id)?.rating ||
          -1) -
-        (profile!.comments_matches.find((c) => c.item_id === a.id)?.rating ||
-         -1)
+        (profile!.comments_teams.find((c) => c.item_id === a.id)?.rating || -1)
       : searchParams.sort === "number"
-      ? b.comments_matches.length - a.comments_matches.length
+      ? b.comments_teams.length - a.comments_teams.length
       : normalizeRating({
-         ratings: b.comments_matches.length,
+         ratings: b.comments_teams.length,
          avgRating: b.avgRating,
         }) -
         normalizeRating({
-         ratings: a.comments_matches.length,
+         ratings: a.comments_teams.length,
          avgRating: a.avgRating,
         })
     )
-    .map((match, index) => (
+    .map((team, index) => (
      <ListElem
       key={index}
-      link={`/match/${match.id}`}
-      avgRating={match.avgRating}
-      main={`${index + 1}. ${sortSides(match.match_sides)
-       .map(
-        (s, i) =>
-         `${parseSide(s.wrestlers)} ${
-          i !== match.match_sides.length - 1 ? " vs. " : ""
-         }`
-       )
-       .join(" ")}`}
+      link={`/team/${team.id}`}
+      avgRating={team.avgRating}
+      main={team.name}
       secondary={
-       shows?.find((sh) => sh.matches.some((m) => m.id === match.id))?.name ||
-       "Error"
+       shows
+        ?.sort(
+         (a, b) =>
+          new Date(b.upload_date || new Date()).getTime() -
+          new Date(a.upload_date || new Date()).getTime()
+        )
+        .find((show) =>
+         show.matches.map((match) =>
+          match.match_sides.map((side) =>
+           side.wrestlers.map(
+            (wrestler) => wrestler.teamId === team.id.toString()
+           )
+          )
+         )
+        )?.name || "Нет матчей"
       }
-      comments={match.comments_matches}
+      comments={team.comments_teams}
       yourComments={
        !profile
         ? undefined
-        : profile?.comments_matches.find((c) => c.item_id === match.id)
-           ?.rating || -1
+        : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ||
+          -1
       }
      />
     ))}
@@ -120,4 +120,4 @@ const Matchguide = async ({
  );
 };
 
-export default Matchguide;
+export default Teams;

@@ -29,7 +29,7 @@ const Wrestlers = async ({
   .single();
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5 justify-center">All wrestlers</Label>
+   <Label className="font-bold mb-5 justify-center">Все рестлеры</Label>
    <FilterDropdown
     array={["Vendetta", "Все", "Остальные"]}
     path="/wrestler"

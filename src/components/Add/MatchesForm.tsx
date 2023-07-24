@@ -103,7 +103,7 @@ const MatchForm = ({ match }: { match?: any }) => {
 
   setParticipants(updatedParticipants);
  }, [teamNames]);
-
+ console.log(participants);
  const handleAddTeammate = (index: number) => {
   const firstParticipant = participants[index][0];
   const updatedFirstParticipant = {
@@ -411,9 +411,8 @@ const MatchForm = ({ match }: { match?: any }) => {
     </div>
    </div>
 
-   {participants.some(
-    (innerArray) =>
-     innerArray.some((obj) => obj.teamId !== undefined) && winner.length !== 0
+   {participants.some((innerArray) =>
+    innerArray.some((obj) => obj.teamId !== undefined)
    ) && (
     <div className="w-full flex flex-col gap-7">
      <Label size="medium" className="font-bold text-start">
@@ -431,7 +430,7 @@ const MatchForm = ({ match }: { match?: any }) => {
          setTeamNames((prev) => {
           const p = [...prev];
           p[index].name = newVal;
-
+          p[index].id = teams.find((t) => t.name === newVal)!.id.toString();
           return p;
          })
         }
