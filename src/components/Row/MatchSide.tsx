@@ -39,9 +39,7 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
        ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
-        <p className="mr-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
+        <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
        ) : null}
       </>
      ) : wrestlers.find((o) => o.wrestlerCurName === item.trim()) ? (
@@ -63,27 +61,15 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
        ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
-        <p className="mr-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
+        <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
        ) : null}
       </>
      ) : (
       <>
-       {item.trim()}
-       {getIntermediate(parseSide(wrestlers), item, index).trim() === "&" ? (
-        <p className="mx-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "(" ? (
-        <p className="ml-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
-        <p className="mr-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
-       ) : null}
+       {item === " " &&
+        parseSide(wrestlers).split(/[\(&\)]/).length > index + 1 && (
+         <p className="mr-2">) &</p>
+        )}
       </>
      )
     )}

@@ -151,8 +151,8 @@ export function parseSide(side: Json[]): string {
 
 export function sortSides(sides: any[]) {
  return sides.sort((a, b) => {
-  const firstObjA = a.wrestlers[0].wrestlerCurName;
-  const firstObjB = b.wrestlers[0].wrestlerCurName;
+  const firstObjA = a.wrestlers[0]?.wrestlerCurName;
+  const firstObjB = b.wrestlers[0]?.wrestlerCurName;
   return firstObjA.localeCompare(firstObjB);
  });
 }

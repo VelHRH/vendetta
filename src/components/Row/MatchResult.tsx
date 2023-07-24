@@ -9,7 +9,7 @@ interface MatchResultProps {
 
 const MatchResult: FC<MatchResultProps> = ({ winners, match_sides }) => {
  return (
-  <>
+  <div className="w-full items-center flex flex-wrap">
    {winners.map((p, index) => (
     <>
      <MatchSide key={p.id} wrestlers={p.winner} />
@@ -41,7 +41,7 @@ const MatchResult: FC<MatchResultProps> = ({ winners, match_sides }) => {
        2 && <p className="mr-2">,</p>}
     </>
    ))}
-  </>
+  </div>
  );
 };
 

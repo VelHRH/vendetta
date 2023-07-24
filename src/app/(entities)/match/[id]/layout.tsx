@@ -29,7 +29,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  }
  return (
   <div className="flex flex-col gap-5 items-center">
-   <div className="flex gap-2 flex-wrap">
+   <div className="flex gap-2">
     <Label className="font-bold">
      <MatchNoResult match_sides={match.match_sides} />
     </Label>

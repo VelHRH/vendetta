@@ -61,27 +61,27 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
     <div className="flex-1 p-3 flex flex-col gap-10">
      <div className="flex flex-col pb-10 gap-5 border-b-2 border-slate-500 w-full items-start">
       <Label size="medium" className="font-bold mb-3 pb-3">
-       Character information:
+       Информация о персонаже:
       </Label>
       {wrestler.nickname && (
        <Label size="small">
-        Also known as:{" "}
+        Также извест(ен/на) как:{" "}
         {wrestler.nickname.map((t) => (
          <InfoElement key={t}>{t}</InfoElement>
         ))}
        </Label>
       )}
       <Label size="small">
-       Total matches: <InfoElement>0</InfoElement>
+       Всего матчей: <InfoElement>0</InfoElement>
       </Label>
       {wrestler.career_start && (
        <>
         <Label size="small">
-         Start of in-ring career:{" "}
+         Начало карьеры:{" "}
          <InfoElement>{beginCareer.toLocaleDateString()}</InfoElement>
         </Label>
         <Label size="small">
-         Experience:{" "}
+         Опыт:{" "}
          <InfoElement>
           {Math.abs(experience.getUTCFullYear() - 1970)} years
          </InfoElement>
@@ -95,13 +95,13 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        </InfoElement>
       </Label>
       <Label size="small" className="flex gap-2 items-center">
-       Trainers:{" "}
+       Тренеры:{" "}
        {wrestler.trainer?.map((t) => (
         <InfoElement key={t}>{t}</InfoElement>
        ))}
       </Label>
       <Label size="small" className="flex gap-2 items-center">
-       Wrestling styles:{" "}
+       Рестлинг-стили:{" "}
        {wrestler.style?.map((s) => (
         <InfoElement key={s}>{s}</InfoElement>
        ))}
@@ -109,38 +109,38 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
      </div>
      <div className="flex flex-col pb-10 gap-5 items-start">
       <Label size="medium" className="font-bold mb-3 pb-3">
-       Personal information:
+       Персональная информация:
       </Label>
       <Label size="small">
-       Real name: <InfoElement>{wrestler.real_name}</InfoElement>
+       Настоящая имя: <InfoElement>{wrestler.real_name}</InfoElement>
       </Label>
       <Label size="small">
-       Sex: <InfoElement>{wrestler.sex}</InfoElement>
+       Пол: <InfoElement>{wrestler.sex}</InfoElement>
       </Label>
       {wrestler.born && (
        <>
         <Label size="small">
-         Age:{" "}
+         Возраст:{" "}
          <InfoElement>
           {Math.abs(age.getUTCFullYear() - 1970)} years
          </InfoElement>
         </Label>
         <Label size="small">
-         Birthday: <InfoElement>{wrestler.born}</InfoElement>
+         День рождения: <InfoElement>{wrestler.born}</InfoElement>
         </Label>
        </>
       )}
       <Label size="small">
-       Birthplace:{" "}
+       Место рождения:{" "}
        <InfoElement>
         {wrestler.city}, {wrestler.country}
        </InfoElement>
       </Label>
       <Label size="small">
-       Height: <InfoElement>{wrestler.height} cm</InfoElement>
+       Рост: <InfoElement>{wrestler.height} cm</InfoElement>
       </Label>
       <Label size="small">
-       Weight: <InfoElement>{wrestler.weight} kg</InfoElement>
+       Вес: <InfoElement>{wrestler.weight} kg</InfoElement>
       </Label>
      </div>
     </div>
