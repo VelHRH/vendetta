@@ -457,7 +457,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                 <div className="flex-1">
                  <Dropdown
                   placeholder={`Рестлер ${index2 + 1}`}
-                  array={wrestlers.map((w) => w.name || "")}
+                  array={wrestlers
+                   .sort((a, b) => a.name.localeCompare(b.name))
+                   .map((w) => w.name || "")}
                   value={elem.wrestlerName}
                   disabled={winner.length !== 0}
                   setValue={(newValue) => {

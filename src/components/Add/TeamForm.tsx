@@ -172,7 +172,9 @@ const TeamForm = ({
       <div key={index} className="flex gap-3 w-full items-center">
        <div className="flex-1">
         <Dropdown
-         array={wrestlers.map((w) => w.name || "")}
+         array={wrestlers
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((w) => w.name || "")}
          placeholder={`Рестлер ${index + 1}`}
          value={p.wrestlerName}
          setValue={(newValue) => {
@@ -235,7 +237,9 @@ const TeamForm = ({
        <div key={index} className="flex gap-3 w-full items-center">
         <div className="flex-1">
          <Dropdown
-          array={wrestlers.map((w) => w.name || "")}
+          array={wrestlers
+           .sort((a, b) => a.name.localeCompare(b.name))
+           .map((w) => w.name || "")}
           placeholder={`Рестлер ${index + 1}`}
           value={p.wrestlerName}
           setValue={(newValue) => {

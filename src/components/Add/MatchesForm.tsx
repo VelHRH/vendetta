@@ -276,7 +276,13 @@ const MatchForm = ({ match }: { match?: any }) => {
 
    <div className="grid grid-cols-3 gap-5 w-full items-center">
     <Dropdown
-     array={shows.map((s) => s.name || "")}
+     array={shows
+      .sort(
+       (a, b) =>
+        new Date(b.upload_date || new Date()).getTime() -
+        new Date(a.upload_date || new Date()).getTime()
+      )
+      .map((s) => s.name || "")}
      value={show}
      setValue={setShow}
      placeholder="Шоу"
@@ -341,7 +347,9 @@ const MatchForm = ({ match }: { match?: any }) => {
            <Dropdown
             key={`dropdown_${index1}_${index2}`}
             disabled={winner.length !== 0}
-            array={wrestlers!.map((w) => w.name || "")}
+            array={wrestlers!
+             .sort((a, b) => a.name.localeCompare(b.name))
+             .map((w) => w.name || "")}
             placeholder={`Рестлер ${index2 + 1}`}
             value={participants[index1][index2].wrestlerName}
             setValue={(newValue) => {
