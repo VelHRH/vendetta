@@ -2,7 +2,8 @@ import { DEFAULT_IMAGE } from "@/config";
 import { normalizeRating, ratingColor } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
+
+import createClient from "@/lib/supabase-server";
 
 interface WrestlerElemProps {
  wrestler: Database["public"]["Tables"]["wrestlers"]["Row"];
@@ -11,16 +12,21 @@ interface WrestlerElemProps {
  yourComments?: number;
 }
 
-const WrestlerElem: FC<WrestlerElemProps> = ({
+const WrestlerElem = async ({
  wrestler,
  place,
  comments,
  yourComments,
-}) => {
+}: WrestlerElemProps) => {
+ const supabase = createClient();
+
+ const { data: shows } = await supabase
+  .from("shows")
+  .select("*, matches(*, match_sides(*))");
  return (
   <Link
    href={`/wrestler/${wrestler.id}`}
-   className="w-full mb-4 flex justify-between items-center gap-3 text-xl h-16 group"
+   className="w-full mb-4 flex justify-between items-center gap-3 text-xl h-20 group"
   >
    <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full">
     {place}.
@@ -39,8 +45,22 @@ const WrestlerElem: FC<WrestlerElemProps> = ({
      Vendetta Champion
     </div>
    </div>
-   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full flex items-center">
-    Четоввмвмвмвмв ам
+   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full text-center">
+    {
+     shows!
+      .filter((show) =>
+       show.matches.some((match) =>
+        match.match_sides.some((side) =>
+         side.wrestlers.some((w) => w.wrestlerId === wrestler.id.toString())
+        )
+       )
+      )
+      .sort(
+       (a, b) =>
+        new Date(b.upload_date || new Date()).getTime() -
+        new Date(a.upload_date || new Date()).getTime()
+      )[0].name
+    }
    </div>
 
    {comments.length !== 0 ? (
