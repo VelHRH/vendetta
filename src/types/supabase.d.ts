@@ -90,6 +90,46 @@ interface Database {
      }
     ];
    };
+   comments_titles: {
+    Row: {
+     author: string;
+     created_at: string;
+     id: number;
+     item_id: number | null;
+     rating: number;
+     text: string;
+    };
+    Insert: {
+     author: string;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating: number;
+     text: string;
+    };
+    Update: {
+     author?: string;
+     created_at?: string;
+     id?: number;
+     item_id?: number | null;
+     rating?: number;
+     text?: string;
+    };
+    Relationships: [
+     {
+      foreignKeyName: "comments_titles_author_fkey";
+      columns: ["author"];
+      referencedRelation: "users";
+      referencedColumns: ["id"];
+     },
+     {
+      foreignKeyName: "comments_titles_item_id_fkey";
+      columns: ["item_id"];
+      referencedRelation: "titles";
+      referencedColumns: ["id"];
+     }
+    ];
+   };
    comments_teams: {
     Row: {
      author: string;
@@ -333,6 +373,7 @@ interface Database {
      end: string | null;
      id: number;
      start: string;
+     wrestler_name: string;
      title_id: number;
      wrestler_id: number;
     };
@@ -341,6 +382,7 @@ interface Database {
      end?: string | null;
      id?: number;
      start: string;
+     wrestler_name?: string;
      title_id: number;
      wrestler_id: number;
     };
@@ -349,6 +391,7 @@ interface Database {
      end?: string | null;
      id?: number;
      start?: string;
+     wrestler_name?: string;
      title_id?: number;
      wrestler_id?: number;
     };

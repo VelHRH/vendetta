@@ -2,22 +2,18 @@ import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
-import { normalizeRating, parseSide, sortSides } from "@/lib/utils";
+import { normalizeRating } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
-const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
+const Titles = async ({ searchParams }: { searchParams: { sort: string } }) => {
  const supabase = createClient();
- const { data: teams } = await supabase
-  .from("teams")
-  .select("*, comments_teams(*)");
+ const { data: titles } = await supabase
+  .from("titles")
+  .select("*, comments_titles(*), reigns(*)");
 
- if (!teams) {
+ if (!titles) {
   notFound();
  }
-
- const { data: shows } = await supabase
-  .from("shows")
-  .select("*, matches(*, match_sides(*))");
 
  const {
   data: { user },
@@ -25,16 +21,17 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
 
  const { data: profile } = await supabase
   .from("users")
-  .select("*, comments_teams(*)")
+  .select("*, comments_titles(*)")
   .eq("id", user?.id)
   .single();
+
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5 justify-center">Все команды</Label>
+   <Label className="font-bold mb-5 justify-center">Все титулы</Label>
 
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
-    <p className="text-center w-1/2">Команда</p>
-    <p className="text-center flex-1">Последнее шоу</p>
+    <p className="text-center w-1/2">Титул</p>
+    <p className="text-center flex-1">Владелец</p>
     <p className="text-center w-32">
      <SortButton
       value="rating"
@@ -66,52 +63,47 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
      </SortButton>
     </p>
    </div>
-   {teams
+   {titles
     .sort((a, b) =>
      searchParams.sort === "your"
-      ? (profile!.comments_teams.find((c) => c.item_id === b.id)?.rating ||
+      ? (profile!.comments_titles.find((c) => c.item_id === b.id)?.rating ||
          -1) -
-        (profile!.comments_teams.find((c) => c.item_id === a.id)?.rating || -1)
+        (profile!.comments_titles.find((c) => c.item_id === a.id)?.rating || -1)
       : searchParams.sort === "number"
-      ? b.comments_teams.length - a.comments_teams.length
+      ? b.comments_titles.length - a.comments_titles.length
       : normalizeRating({
-         ratings: b.comments_teams.length,
+         ratings: b.comments_titles.length,
          avgRating: b.avgRating,
         }) -
         normalizeRating({
-         ratings: a.comments_teams.length,
+         ratings: a.comments_titles.length,
          avgRating: a.avgRating,
         })
     )
-    .map((team, index) => (
+    .map((title, index) => (
      <ListElem
       key={index}
-      link={`/team/${team.id}`}
-      avgRating={team.avgRating}
-      main={team.name}
+      link={`/title/${title.id}`}
+      avgRating={title.avgRating}
+      main={title.name}
       secondary={
-       shows
-        ?.sort(
-         (a, b) =>
-          new Date(b.upload_date || new Date()).getTime() -
-          new Date(a.upload_date || new Date()).getTime()
-        )
-        .find((show) =>
-         show.matches.map((match) =>
-          match.match_sides.map((side) =>
-           side.wrestlers.map(
-            (wrestler) => wrestler.teamId === team.id.toString()
-           )
-          )
-         )
-        )?.name || "Нет матчей"
+       title.reigns.sort(
+        (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
+       )[0] &&
+       !title.reigns.sort(
+        (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
+       )[0].end
+        ? title.reigns.sort(
+           (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
+          )[0].wrestler_name
+        : "Вакантно"
       }
-      comments={team.comments_teams}
+      comments={title.comments_titles}
       yourComments={
        !profile
         ? undefined
-        : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ||
-          -1
+        : profile?.comments_titles.find((c) => c.item_id === title.id)
+           ?.rating || -1
       }
      />
     ))}
@@ -119,4 +111,4 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
  );
 };
 
-export default Teams;
+export default Titles;

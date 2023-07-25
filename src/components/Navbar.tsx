@@ -56,6 +56,12 @@ const Navbar = async () => {
      >
       Турниры
      </Link>
+     <Link
+      href="/title"
+      className={cn(buttonVariants({ variant: "subtle" }), "p-2")}
+     >
+      Титулы
+     </Link>
 
      {profile?.role === "admin" && (
       <Link
