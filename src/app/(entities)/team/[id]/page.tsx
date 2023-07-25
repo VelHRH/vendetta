@@ -87,7 +87,7 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
     <Label className="font-bold self-start">Ваш комментарий:</Label>
     {!loggedUserComment ? (
      <CommentForm
-      type="shows"
+      type="teams"
       itemId={parseFloat(params.id)}
       authorId={profile!.id}
       author={profile!.username || ""}
@@ -99,7 +99,7 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
       date={loggedUserComment.created_at!.toString()}
       text={loggedUserComment.text}
       id={loggedUserComment.id}
-      type="shows"
+      type="teams"
      />
     )}
    </>

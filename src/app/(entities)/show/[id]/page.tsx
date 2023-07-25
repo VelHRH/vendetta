@@ -52,7 +52,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
       <InfoElement>
        {show?.upload_date
         ? new Date(show.upload_date).toLocaleDateString()
-        : "Еще не состоялся"}
+        : "Еще не состоялось"}
       </InfoElement>
      </Label>
      <Label size="small">

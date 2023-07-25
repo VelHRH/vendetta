@@ -48,19 +48,22 @@ export default async function Home() {
          Matches to watch:
         </Label>
         <div className="flex flex-col text-xl gap-3 mt-5 items-start">
-         {nextShow.matches.slice(0, 6).map((match, index) => (
-          <InfoElement key={index}>
-           {index + 1}.{" "}
-           {sortSides(match.match_sides)
-            .map(
-             (s, i) =>
-              `${parseSide(s.wrestlers)} ${
-               i !== match.match_sides.length - 1 ? " vs. " : ""
-              }`
-            )
-            .join(" ")}
-          </InfoElement>
-         ))}
+         {nextShow.matches
+          .sort((a, b) => b.order - a.order)
+          .slice(0, 6)
+          .map((match, index) => (
+           <InfoElement key={index}>
+            {index + 1}.{" "}
+            {sortSides(match.match_sides)
+             .map(
+              (s, i) =>
+               `${parseSide(s.wrestlers)} ${
+                i !== match.match_sides.length - 1 ? " vs. " : ""
+               }`
+             )
+             .join(" ")}
+           </InfoElement>
+          ))}
         </div>
        </div>
       </div>

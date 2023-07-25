@@ -3,7 +3,7 @@ import createClient from "@/lib/supabase-server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const WrestlerMatches = async ({ params }: { params: { id: string } }) => {
+const TeamMatches = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
 
  const { data: shows } = await supabase
@@ -18,7 +18,7 @@ const WrestlerMatches = async ({ params }: { params: { id: string } }) => {
     .filter((show) =>
      show.matches.some((match) =>
       match.match_sides.some((side) =>
-       side.wrestlers.some((wrestler) => wrestler.wrestlerId === params.id)
+       side.wrestlers.some((wrestler) => wrestler.teamId === params.id)
       )
      )
     )
@@ -31,7 +31,7 @@ const WrestlerMatches = async ({ params }: { params: { id: string } }) => {
      show.matches
       .filter((match) =>
        match.match_sides.some((side) =>
-        side.wrestlers.some((wrestler) => wrestler.wrestlerId === params.id)
+        side.wrestlers.some((wrestler) => wrestler.teamId === params.id)
        )
       )
       .map((match) => (
@@ -63,4 +63,4 @@ const WrestlerMatches = async ({ params }: { params: { id: string } }) => {
  );
 };
 
-export default WrestlerMatches;
+export default TeamMatches;

@@ -48,7 +48,7 @@ const Comment = async ({
         rating: rating,
        }),
       }}
-      className="font-bold text-green-700"
+      className="font-bold"
      >
       {rating}
      </Label>
