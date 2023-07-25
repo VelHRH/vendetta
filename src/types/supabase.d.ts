@@ -523,6 +523,7 @@ interface Database {
      name: string;
      start: string;
      type: string;
+     promotion: string;
     };
     Insert: {
      avgRating?: number;
@@ -533,6 +534,7 @@ interface Database {
      name: string;
      start: string;
      type: string;
+     promotion: string;
     };
     Update: {
      avgRating?: number;
@@ -543,6 +545,7 @@ interface Database {
      name?: string;
      start?: string;
      type?: string;
+     promotion?: string;
     };
     Relationships: [];
    };
