@@ -14,7 +14,7 @@ const Wrestlers = async ({
  const supabase = createClient();
  const { data: wrestlers } = await supabase
   .from("wrestlers")
-  .select("*, comments_wrestlers(*)");
+  .select("*, comments_wrestlers(*), reigns(*)");
  if (!wrestlers) {
   notFound();
  }
@@ -90,6 +90,7 @@ const Wrestlers = async ({
     .map((wrestler, index) => (
      <WrestlerElem
       key={index}
+      reigns={wrestler.reigns}
       place={index + 1}
       wrestler={wrestler}
       comments={wrestler.comments_wrestlers}

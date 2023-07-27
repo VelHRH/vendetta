@@ -45,9 +45,8 @@ const Layout = async ({ children, params }: LayoutProps) => {
     <SectionButton link={`/title/${params.id}`} isMain>
      Overview
     </SectionButton>
-    <SectionButton link={`/title/${params.id}/holders`}>
-     Владельцы
-    </SectionButton>
+    <SectionButton link={`/title/${params.id}/holders`}>Holders</SectionButton>
+    <SectionButton link={`/title/${params.id}/matches`}>Matches</SectionButton>
    </div>
    {children}
   </div>

@@ -10,6 +10,7 @@ interface WrestlerElemProps {
  comments: Database["public"]["Tables"]["comments_wrestlers"]["Row"][];
  place: number;
  yourComments?: number;
+ reigns: Database["public"]["Tables"]["reigns"]["Row"][];
 }
 
 const WrestlerElem = async ({
@@ -17,6 +18,7 @@ const WrestlerElem = async ({
  place,
  comments,
  yourComments,
+ reigns,
 }: WrestlerElemProps) => {
  const supabase = createClient();
 
@@ -28,7 +30,7 @@ const WrestlerElem = async ({
    href={`/wrestler/${wrestler.id}`}
    className="w-full mb-4 flex justify-between items-center gap-3 text-xl h-20 group"
   >
-   <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full">
+   <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center h-full flex-wrap">
     {place}.
     <div className="h-full aspect-square relative">
      <Image
@@ -39,13 +41,19 @@ const WrestlerElem = async ({
      />
     </div>
     {wrestler.name}
-    <div
-     className={`p-1 font-semibold text-sm rounded-md bg-sky-600 text-white`}
-    >
-     Vendetta Champion
-    </div>
+    {reigns.map(
+     (reign) =>
+      !reign.end && (
+       <div
+        key={reign.id}
+        className={`p-1 font-semibold text-sm rounded-md bg-amber-400/70`}
+       >
+        Vendetta Champion
+       </div>
+      )
+    )}
    </div>
-   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full text-center">
+   <div className="flex-1 flex items-center duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full text-center">
     {
      shows!
       .filter((show) =>

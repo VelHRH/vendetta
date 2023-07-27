@@ -6,17 +6,16 @@ import { notFound } from "next/navigation";
 const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
 
- const { data: wrestler } = await supabase
-  .from("wrestlers")
-  .select("*, reigns(*)")
-  .eq("id", params.id)
-  .single();
- if (!wrestler) {
+ const { data: reigns } = await supabase
+  .from("reigns")
+  .select("*")
+  .eq("title_id", params.id);
+ if (!reigns) {
   notFound();
  }
  return (
   <div className="w-full">
-   {wrestler.reigns
+   {reigns
     .sort(
      (a, b) =>
       new Date(b.start || new Date()).getTime() -
@@ -26,13 +25,8 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
      <Reign
       key={reign.id}
       index={index}
-      main={
-       reign.title_name +
-       (reign.wrestler_name !== wrestler.name
-        ? ` (as ${reign.wrestler_name})`
-        : "")
-      }
-      link={`/title/${reign.title_id}`}
+      main={reign.wrestler_name}
+      link={`/wrestler/${reign.wrestler_id}`}
       matchesLink={`/title/${reign.title_id}/matches`}
       start={reign.start}
       end={reign.end}
