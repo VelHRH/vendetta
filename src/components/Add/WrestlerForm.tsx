@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "@/components/ui/Dropdown";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
@@ -14,8 +14,10 @@ import { Upload } from "lucide-react";
 import Image from "next/image";
 const WrestlerForm = ({
  wrestler,
+ fetchedReigns,
 }: {
  wrestler?: Database["public"]["Tables"]["wrestlers"]["Row"];
+ fetchedReigns?: Database["public"]["Tables"]["reigns"]["Row"][];
 }) => {
  const [sex, setSex] = useState<string>(wrestler?.sex || "");
  const [realname, setRealname] = useState<string>(wrestler?.real_name || "");
@@ -48,9 +50,39 @@ const WrestlerForm = ({
  const [isVendetta, setIsVendetta] = useState<string>(
   wrestler ? (wrestler.isVendetta ? "Yes" : "No") : ""
  );
+ const [reigns, setReigns] = useState<
+  {
+   wrestlerName: string;
+   titleName: string;
+   titleCurName: string;
+   titleId: number;
+   start: string;
+   end: string;
+  }[]
+ >(
+  fetchedReigns?.map((r) => ({
+   wrestlerName: r.wrestler_name,
+   titleName: r.title_name,
+   titleCurName: r.title_name,
+   titleId: r.title_id,
+   start: r.start,
+   end: r.end || "",
+  })) || []
+ );
+ const [titles, setTitles] = useState<
+  Database["public"]["Tables"]["titles"]["Row"][]
+ >([]);
  const [isError, setIsError] = useState<boolean>(false);
 
  const router = useRouter();
+
+ useEffect(() => {
+  const fetchData = async () => {
+   const { data: titles } = await supabase.from("titles").select();
+   setTitles(titles || []);
+  };
+  fetchData();
+ }, []);
 
  const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
   try {
@@ -109,6 +141,7 @@ const WrestlerForm = ({
     isVendetta: isVendetta !== "No",
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
+    reigns: reigns.filter((reign) => reign.titleId !== 0),
    };
    const { data } = await axios.post("/api/wrestler", payload);
    return data as string;
@@ -153,6 +186,7 @@ const WrestlerForm = ({
     isVendetta: isVendetta !== "No",
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
+    reigns: reigns.filter((reign) => reign.titleId !== 0),
    };
    const { data } = await axios.put(
     `/api/wrestler?id=${wrestler!.id}`,
@@ -295,6 +329,97 @@ const WrestlerForm = ({
       />
      </div>
     </div>
+   </div>
+
+   <div className="w-full flex flex-col gap-7">
+    <Label size="medium" className="font-bold text-start">
+     Титульные рейны:
+    </Label>
+    {reigns.map((reign, index) => (
+     <div key={index} className="grid grid-cols-3 gap-5 items-center">
+      <Dropdown
+       placeholder="Выберите титул"
+       array={[...titles].map((title) => title.name)}
+       value={reign.titleName}
+       setValue={(newVal) =>
+        setReigns((prev) => {
+         const newReigns = [...prev];
+         newReigns[index].titleName = newVal;
+         newReigns[index].titleId = titles.find((t) => (t.name = newVal))!.id;
+         newReigns[index].titleCurName = newVal;
+         return newReigns;
+        })
+       }
+      />
+      <Input
+       placeholder="Название титула в рейне"
+       value={reign.titleCurName}
+       setValue={(newVal) =>
+        setReigns((prev) => {
+         const newReigns = [...prev];
+         newReigns[index].titleCurName = newVal;
+         return newReigns;
+        })
+       }
+      />
+      <Input
+       placeholder="Имя рестлера в рейне"
+       value={reign.wrestlerName}
+       setValue={(newVal) =>
+        setReigns((prev) => {
+         const newReigns = [...prev];
+         newReigns[index].wrestlerName = newVal;
+         return newReigns;
+        })
+       }
+      />
+      <Input
+       placeholder="Начало"
+       type="date"
+       value={reign.start}
+       setValue={(newVal) =>
+        setReigns((prev) => {
+         const newReigns = [...prev];
+         newReigns[index].start = newVal;
+         return newReigns;
+        })
+       }
+      />
+      <Input
+       placeholder="Конец"
+       type="date"
+       value={reign.end}
+       setValue={(newVal) =>
+        setReigns((prev) => {
+         const newReigns = [...prev];
+         newReigns[index].end = newVal;
+         return newReigns;
+        })
+       }
+      />
+     </div>
+    ))}
+
+    <Button
+     variant={"subtle"}
+     className="w-full"
+     onClick={() =>
+      setReigns((prev) => {
+       const p = [...prev];
+       p.push({
+        titleId: 0,
+        titleName: "",
+        titleCurName: "",
+        wrestlerName: name,
+        start: "",
+        end: "",
+       });
+       return p;
+      })
+     }
+    >
+     + Добавить рейн
+    </Button>
    </div>
    <Button
     isLoading={isLoading || isLoadingUpdate}

@@ -374,6 +374,7 @@ interface Database {
      id: number;
      start: string;
      wrestler_name: string;
+     title_name: string;
      title_id: number;
      wrestler_id: number;
     };
@@ -383,6 +384,7 @@ interface Database {
      id?: number;
      start: string;
      wrestler_name?: string;
+     title_name: string;
      title_id: number;
      wrestler_id: number;
     };
@@ -392,6 +394,7 @@ interface Database {
      id?: number;
      start?: string;
      wrestler_name?: string;
+     title_name?: string;
      title_id?: number;
      wrestler_id?: number;
     };

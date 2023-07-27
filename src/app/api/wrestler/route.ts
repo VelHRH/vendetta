@@ -30,6 +30,19 @@ export async function POST(req: Request) {
    })
    .select();
   if (error) throw error;
+  if (wrestler.reigns.length > 0) {
+   for (let reign of wrestler.reigns) {
+    const { error: reignError } = await supabase.from("reigns").insert({
+     wrestler_id: data![0].id,
+     title_id: reign.titleId,
+     title_name: reign.titleCurName,
+     wrestler_name: reign.wrestlerName,
+     start: reign.start,
+     end: reign.end.length > 0 ? reign.end : null,
+    });
+    if (reignError) throw reignError;
+   }
+  }
   return new Response(data![0].id.toString());
  } catch (err) {
   console.log(err);
@@ -71,6 +84,21 @@ export async function PUT(req: Request) {
    })
    .eq("id", parseFloat(id || ""))
    .select();
+
+  await supabase.from("reigns").delete().eq("wrestler_id", data![0].id);
+  if (wrestler.reigns.length > 0) {
+   for (let reign of wrestler.reigns) {
+    const { error: reignError } = await supabase.from("reigns").insert({
+     wrestler_id: data![0].id,
+     title_id: reign.titleId,
+     title_name: reign.titleCurName,
+     wrestler_name: reign.wrestlerName,
+     start: reign.start,
+     end: reign.end.length > 0 ? reign.end : null,
+    });
+    if (reignError) throw reignError;
+   }
+  }
   if (error) throw error;
   return new Response(data![0].id.toString());
  } catch (err) {

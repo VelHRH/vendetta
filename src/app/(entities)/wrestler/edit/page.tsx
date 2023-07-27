@@ -1,5 +1,6 @@
 import WrestlerForm from "@/components/Add/WrestlerForm";
 import createClient from "@/lib/supabase-server";
+import { notFound } from "next/navigation";
 
 const EditWrestler = async ({
  searchParams,
@@ -9,10 +10,13 @@ const EditWrestler = async ({
  const supabase = createClient();
  const { data: wrestler } = await supabase
   .from("wrestlers")
-  .select("*")
+  .select("*, reigns(*)")
   .eq("id", searchParams.id)
   .single();
- return <WrestlerForm wrestler={wrestler!} />;
+ if (!wrestler) {
+  notFound();
+ }
+ return <WrestlerForm wrestler={wrestler} fetchedReigns={wrestler.reigns} />;
 };
 
 export default EditWrestler;

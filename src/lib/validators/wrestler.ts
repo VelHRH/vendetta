@@ -16,6 +16,16 @@ export const WrestlerValidator = z.object({
  careerstart: z.string().optional(),
  moves: z.array(z.string()),
  wrestler_img: z.string().optional(),
+ reigns: z.array(
+  z.object({
+   wrestlerName: z.string().min(1),
+   titleName: z.string(),
+   titleCurName: z.string().min(1),
+   titleId: z.number(),
+   start: z.string().min(1),
+   end: z.string(),
+  })
+ ),
 });
 
 export type CreateWrestlerPayload = z.infer<typeof WrestlerValidator>;

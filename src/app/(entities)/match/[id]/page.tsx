@@ -70,9 +70,13 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
      </Label>
      <Label size="small">
       Результат:{" "}
-      <InfoElement>
-       <MatchResult winners={match.winners} match_sides={match.match_sides} />
-      </InfoElement>
+      {match.winners.length === 0 ? (
+       <InfoElement>ничья</InfoElement>
+      ) : (
+       <InfoElement>
+        <MatchResult winners={match.winners} match_sides={match.match_sides} />
+       </InfoElement>
+      )}
      </Label>
      <Label size="small">
       Время: <InfoElement>{match.time}</InfoElement>
