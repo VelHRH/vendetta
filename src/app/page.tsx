@@ -50,7 +50,7 @@ export default async function Home() {
         <div className="flex flex-col text-xl gap-3 mt-5 items-start">
          {nextShow.matches
           .sort((a, b) => b.order - a.order)
-          .slice(0, 6)
+          .slice(0, 5)
           .map((match, index) => (
            <InfoElement key={index}>
             {index + 1}.{" "}

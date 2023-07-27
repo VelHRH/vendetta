@@ -52,6 +52,9 @@ const TitleOverview = async ({ params }: { params: { id: string } }) => {
       </Label>
      )}
      <Label size="small">
+      Промоушен: <InfoElement>{title.promotion}</InfoElement>
+     </Label>
+     <Label size="small">
       Владелец:{" "}
       <InfoElement>
        {holder && !holder.end ? (

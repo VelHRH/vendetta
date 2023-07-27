@@ -8,7 +8,7 @@ interface MatchNoResultProps {
 
 const MatchNoResult: FC<MatchNoResultProps> = ({ match_sides }) => {
  return (
-  <div className="w-full items-center flex flex-wrap">
+  <div className="items-center flex flex-wrap">
    {sortSides(match_sides).map((p, index) => (
     <>
      <MatchSide key={p.id} wrestlers={p.wrestlers} />
