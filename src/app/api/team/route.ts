@@ -1,6 +1,7 @@
 import createClient from "@/lib/supabase-server";
 import { z } from "zod";
 import { TeamValidator } from "@/lib/validators/team";
+import { title } from "process";
 
 export async function POST(req: Request) {
  try {
@@ -43,6 +44,25 @@ export async function POST(req: Request) {
     });
 
    if (participantsError) throw participantsError.message;
+  }
+
+  for (let reign of team.reigns) {
+   const titleInfo = reign.find((champion) => champion.titleId !== 0)!;
+   for (let champion of reign) {
+    if (champion.wrestlerId !== 0) {
+     const { error: reignError } = await supabase.from("reigns").insert({
+      team_id: data!.id,
+      team_name: team.name,
+      wrestler_id: champion.wrestlerId,
+      title_id: titleInfo.titleId,
+      title_name: titleInfo.titleCurName,
+      wrestler_name: champion.wrestlerName,
+      start: titleInfo.start,
+      end: titleInfo.end.length > 0 ? titleInfo.end : null,
+     });
+     if (reignError) throw reignError;
+    }
+   }
   }
 
   return new Response(data!.id.toString());
@@ -110,6 +130,25 @@ export async function PUT(req: Request) {
     });
 
    if (participantsError) throw participantsError.message;
+  }
+
+  for (let reign of team.reigns) {
+   const titleInfo = reign.find((champion) => champion.titleId !== 0)!;
+   for (let champion of reign) {
+    if (champion.wrestlerId !== 0) {
+     const { error: reignError } = await supabase.from("reigns").insert({
+      team_id: data!.id,
+      team_name: team.name,
+      wrestler_id: champion.wrestlerId,
+      title_id: titleInfo.titleId,
+      title_name: titleInfo.titleCurName,
+      wrestler_name: champion.wrestlerName,
+      start: titleInfo.start,
+      end: titleInfo.end.length > 0 ? titleInfo.end : null,
+     });
+     if (reignError) throw reignError;
+    }
+   }
   }
 
   return new Response(data!.id.toString());

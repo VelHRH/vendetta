@@ -19,6 +19,21 @@ export const TeamValidator = z.object({
    wrestlerId: z.string().min(1),
   })
  ),
+ reigns: z.array(
+  z
+   .array(
+    z.object({
+     wrestlerName: z.string(),
+     wrestlerId: z.number(),
+     titleName: z.string(),
+     titleCurName: z.string(),
+     titleId: z.number(),
+     start: z.string(),
+     end: z.string(),
+    })
+   )
+   .min(1)
+ ),
 });
 
 export type CreateTeamPayload = z.infer<typeof TeamValidator>;

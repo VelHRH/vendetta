@@ -48,7 +48,7 @@ const WrestlerElem = async ({
         key={reign.id}
         className={`p-1 font-semibold text-sm rounded-md bg-amber-400/70`}
        >
-        Vendetta Champion
+        {reign.title_name}
        </div>
       )
     )}

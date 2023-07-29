@@ -49,9 +49,23 @@ const TeamForm = ({
   team_current_participants?.find((p) => p.isLeader === true)?.wrestler_name ||
    ""
  );
+ const [reigns, setReigns] = useState<
+  {
+   wrestlerName: string;
+   wrestlerId: number;
+   titleName: string;
+   titleCurName: string;
+   titleId: number;
+   start: string;
+   end: string;
+  }[][]
+ >([]);
  const [isError, setIsError] = useState<boolean>(false);
  const [wrestlers, setWrestlers] = useState<
   Database["public"]["Tables"]["wrestlers"]["Row"][]
+ >([]);
+ const [titles, setTitles] = useState<
+  Database["public"]["Tables"]["titles"]["Row"][]
  >([]);
 
  const router = useRouter();
@@ -60,6 +74,8 @@ const TeamForm = ({
   const fetchData = async () => {
    const { data: wrestlers } = await supabase.from("wrestlers").select();
    setWrestlers(wrestlers || []);
+   const { data: titles } = await supabase.from("titles").select();
+   setTitles(titles || []);
   };
   fetchData();
  }, []);
@@ -73,6 +89,13 @@ const TeamForm = ({
     current_participants,
     former_participants,
     leader,
+    reigns: reigns
+     .filter((reign) => reign.some((champion) => champion.titleId !== 0))
+     .map((reign) =>
+      reign.filter(
+       (champion) => champion.wrestlerId !== 0 || champion.titleId !== 0
+      )
+     ),
    };
    const { data } = await axios.post("/api/team", payload);
    return data as string;
@@ -108,6 +131,13 @@ const TeamForm = ({
     current_participants,
     former_participants,
     leader,
+    reigns: reigns
+     .filter((reign) => reign.some((champion) => champion.titleId !== 0))
+     .map((reign) =>
+      reign.filter(
+       (champion) => champion.wrestlerId !== 0 || champion.titleId !== 0
+      )
+     ),
    };
    const { data } = await axios.put(`/api/team?id=${team!.id}`, payload);
    return data as string;
@@ -301,6 +331,140 @@ const TeamForm = ({
      value={leader}
      setValue={setLeader}
     />
+
+    <div className="w-full flex flex-col gap-7">
+     <Label size="medium" className="font-bold text-start">
+      Титульные рейны:
+     </Label>
+     {reigns.map((reign, index) => (
+      <div key={index} className="grid grid-cols-3 gap-5 items-center">
+       <Dropdown
+        placeholder="Выберите титул"
+        array={[...titles]
+         .filter((title) => title.type !== "Одиночный титул")
+         .map((title) => title.name)}
+        value={reign[0].titleName}
+        setValue={(newVal) =>
+         setReigns((prev) => {
+          const newReigns = [...prev];
+          for (let newReign of newReigns[index]) {
+           newReign.titleName = newVal;
+           newReign.titleId = titles.find((t) => (t.name = newVal))!.id;
+           newReign.titleCurName = newVal;
+          }
+
+          return newReigns;
+         })
+        }
+       />
+       <Input
+        placeholder="Название титула в рейне"
+        value={reign[0].titleCurName}
+        setValue={(newVal) =>
+         setReigns((prev) => {
+          const newReigns = [...prev];
+          for (let newReign of newReigns[index]) {
+           newReign.titleCurName = newVal;
+          }
+          return newReigns;
+         })
+        }
+       />
+       <Input
+        placeholder="Начало"
+        type="date"
+        value={reign[0].start}
+        setValue={(newVal) =>
+         setReigns((prev) => {
+          const newReigns = [...prev];
+          for (let newReign of newReigns[index]) {
+           newReign.start = newVal;
+          }
+          return newReigns;
+         })
+        }
+       />
+       <Input
+        placeholder="Конец"
+        type="date"
+        value={reign[0].end}
+        setValue={(newVal) =>
+         setReigns((prev) => {
+          const newReigns = [...prev];
+          for (let newReign of newReigns[index]) {
+           newReign.end = newVal;
+          }
+          return newReigns;
+         })
+        }
+       />
+       {reign.map((participant, index2) => (
+        <Dropdown
+         key={index2}
+         placeholder={`Чемпион ${index2 + 1}`}
+         array={current_participants.map((p) => p.wrestlerCurName)}
+         value={participant.wrestlerName}
+         setValue={(newVal) =>
+          setReigns((prev) => {
+           const newReigns = [...prev];
+           newReigns[index][index2].wrestlerName = newVal;
+           newReigns[index][index2].wrestlerId = parseFloat(
+            current_participants.find((p) => p.wrestlerCurName === newVal)!
+             .wrestlerId
+           );
+           return newReigns;
+          })
+         }
+        />
+       ))}
+       <Button
+        variant={"subtle"}
+        className="w-full"
+        onClick={() =>
+         setReigns((prev) => {
+          const p = [...prev];
+          p[index].push({
+           titleId: 0,
+           titleName: "",
+           titleCurName: "",
+           wrestlerId: 0,
+           wrestlerName: "",
+           start: "",
+           end: "",
+          });
+          return p;
+         })
+        }
+       >
+        + Добавить чемпиона
+       </Button>
+      </div>
+     ))}
+
+     <Button
+      variant={"subtle"}
+      className="w-full"
+      onClick={() =>
+       setReigns((prev) => {
+        const p = [...prev];
+        p.push([
+         {
+          titleId: 0,
+          titleName: "",
+          titleCurName: "",
+          wrestlerId: 0,
+          wrestlerName: "",
+          start: "",
+          end: "",
+         },
+        ]);
+        return p;
+       })
+      }
+     >
+      + Добавить рейн
+     </Button>
+    </div>
    </div>
    <Button
     isLoading={isLoading || isLoadingUpdate}
