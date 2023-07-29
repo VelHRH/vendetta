@@ -39,6 +39,8 @@ export async function POST(req: Request) {
      wrestler_name: reign.wrestlerName,
      start: reign.start,
      end: reign.end.length > 0 ? reign.end : null,
+     team_id: null,
+     team_name: null,
     });
     if (reignError) throw reignError;
    }
@@ -95,6 +97,8 @@ export async function PUT(req: Request) {
      wrestler_name: reign.wrestlerName,
      start: reign.start,
      end: reign.end.length > 0 ? reign.end : null,
+     team_id: null,
+     team_name: null,
     });
     if (reignError) throw reignError;
    }

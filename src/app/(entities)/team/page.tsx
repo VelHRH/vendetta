@@ -9,7 +9,7 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
  const supabase = createClient();
  const { data: teams } = await supabase
   .from("teams")
-  .select("*, comments_teams(*)");
+  .select("*, comments_teams(*), reigns(*)");
 
  if (!teams) {
   notFound();
@@ -97,9 +97,9 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
           new Date(a.upload_date || new Date()).getTime()
         )
         .find((show) =>
-         show.matches.map((match) =>
-          match.match_sides.map((side) =>
-           side.wrestlers.map(
+         show.matches.some((match) =>
+          match.match_sides.some((side) =>
+           side.wrestlers.some(
             (wrestler) => wrestler.teamId === team.id.toString()
            )
           )
@@ -113,6 +113,7 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
         : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ||
           -1
       }
+      reigns={team.reigns}
      />
     ))}
   </div>

@@ -349,7 +349,7 @@ const TeamForm = ({
           const newReigns = [...prev];
           for (let newReign of newReigns[index]) {
            newReign.titleName = newVal;
-           newReign.titleId = titles.find((t) => (t.name = newVal))!.id;
+           newReign.titleId = titles.find((t) => t.name === newVal)!.id;
            newReign.titleCurName = newVal;
           }
 

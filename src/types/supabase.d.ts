@@ -377,6 +377,8 @@ interface Database {
      title_name: string;
      title_id: number;
      wrestler_id: number;
+     team_id: number | null;
+     team_name: string | null;
     };
     Insert: {
      created_at?: string;
@@ -387,6 +389,8 @@ interface Database {
      title_name: string;
      title_id: number;
      wrestler_id: number;
+     team_id: number | null;
+     team_name: string | null;
     };
     Update: {
      created_at?: string;
@@ -397,6 +401,8 @@ interface Database {
      title_name?: string;
      title_id?: number;
      wrestler_id?: number;
+     team_id?: number | null;
+     team_name?: string | null;
     };
     Relationships: [
      {

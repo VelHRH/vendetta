@@ -3,11 +3,12 @@ import { FC } from "react";
 
 interface ReignProps {
  main: string;
- link?: string;
- matchesLink?: string;
+ link: string;
+ matchesLink: string;
  start: string;
  end: string | null;
  index: number;
+ withVacant?: string;
 }
 
 const Reign: FC<ReignProps> = ({
@@ -17,6 +18,7 @@ const Reign: FC<ReignProps> = ({
  start,
  end,
  index,
+ withVacant,
 }) => {
  return (
   <>
@@ -26,6 +28,30 @@ const Reign: FC<ReignProps> = ({
      <p className="flex-1 px-3"></p>
      <p className="w-32 px-3 text-center">Дни</p>
      <p className="w-32 px-3 text-center">Матчи</p>
+    </div>
+   )}
+   {withVacant !== undefined && (
+    <div
+     key={index}
+     className={`flex items-stretch bg-red-500/10 px-4 py-5 text-xl w-full rounded-md`}
+    >
+     <p className="w-1/5 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
+      {new Date(end!.toString()).toLocaleDateString()} -{" "}
+      {withVacant === "сейчас"
+       ? withVacant
+       : new Date(withVacant).toLocaleDateString()}
+     </p>
+     <p className="flex-1 border-r-2 dark:border-slate-600 border-slate-400 px-3">
+      VACANT
+     </p>
+     <p className="w-32 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
+      {getDaysDifference(
+       end!,
+       withVacant === "сейчас" ? new Date().toDateString() : withVacant
+      )}
+     </p>
+
+     <p className="hover:underline underline-offset-4 font-semibold w-32 text-center px-3"></p>
     </div>
    )}
    <div
@@ -39,27 +65,22 @@ const Reign: FC<ReignProps> = ({
      {end ? new Date(end.toString()).toLocaleDateString() : "сейчас"}
     </p>
     <p className="flex-1 font-semibold border-r-2 dark:border-slate-600 border-slate-400 px-3">
-     {link ? (
-      <Link href={link} className="hover:underline underline-offset-4">
-       {main}
-      </Link>
-     ) : (
-      main
-     )}
+     <Link href={link} className="hover:underline underline-offset-4">
+      {main}
+     </Link>
     </p>
     <p className="w-32 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
      {end
       ? getDaysDifference(start, end)
       : getDaysDifference(start, new Date().toDateString())}
     </p>
-    {matchesLink && (
-     <Link
-      href={matchesLink}
-      className="hover:underline underline-offset-4 font-semibold w-32 text-center px-3"
-     >
-      Матчи
-     </Link>
-    )}
+
+    <Link
+     href={matchesLink}
+     className="hover:underline underline-offset-4 font-semibold w-32 text-center px-3"
+    >
+     Матчи
+    </Link>
    </div>
   </>
  );

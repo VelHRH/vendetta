@@ -9,6 +9,7 @@ interface ListElemProps {
  secondary: string;
  link: string;
  avgRating: number;
+ reigns?: Database["public"]["Tables"]["reigns"]["Row"][];
 }
 
 const ListElem: FC<ListElemProps> = ({
@@ -18,6 +19,7 @@ const ListElem: FC<ListElemProps> = ({
  link,
  comments,
  yourComments,
+ reigns,
 }) => {
  return (
   <Link
@@ -26,6 +28,22 @@ const ListElem: FC<ListElemProps> = ({
   >
    <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center">
     {main}
+    {reigns
+     ?.filter(
+      (item, index, self) =>
+       index === self.findIndex((t) => t.title_name === item.title_name)
+     )
+     .map(
+      (reign) =>
+       !reign.end && (
+        <div
+         key={reign.id}
+         className={`p-1 font-semibold text-sm rounded-md bg-amber-400/70`}
+        >
+         {reign.title_name}
+        </div>
+       )
+     )}
    </div>
    <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 flex items-center text-center">
     {secondary}
