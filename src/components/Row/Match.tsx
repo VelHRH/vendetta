@@ -23,8 +23,14 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
        {match.challanges.map((title: any) => (
         <Link
          key={title.id}
-         href={`/title/${title.id}`}
-         className="rounded-full py-1 px-2 text-sm font-semibold border-2 duration-200 border-amber-400/70 self-start cursor-pointer hover:bg-amber-400/70"
+         href={`/title/${title.title_id}`}
+         className={`rounded-full py-1 px-2 text-sm font-semibold border-2 duration-200 ${
+          title.title_name === "Чемпионство Vendetta"
+           ? "border-amber-400/70 hover:bg-amber-400/70"
+           : title.title_name === "Командное чемпионство Vendetta"
+           ? "border-blue-400/70 hover:bg-blue-400/70"
+           : "border-red-400/70 hover:bg-red-400/70"
+         } self-start cursor-pointer`}
         >
          {title.title_name}
         </Link>

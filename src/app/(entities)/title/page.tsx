@@ -95,6 +95,9 @@ const Titles = async ({ searchParams }: { searchParams: { sort: string } }) => {
        )[0].end
         ? title.reigns.sort(
            (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
+          )[0].team_name ||
+          title.reigns.sort(
+           (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
           )[0].wrestler_name
         : "Вакантно"
       }

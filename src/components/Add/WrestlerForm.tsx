@@ -345,7 +345,7 @@ const WrestlerForm = ({
         setReigns((prev) => {
          const newReigns = [...prev];
          newReigns[index].titleName = newVal;
-         newReigns[index].titleId = titles.find((t) => (t.name = newVal))!.id;
+         newReigns[index].titleId = titles.find((t) => t.name === newVal)!.id;
          newReigns[index].titleCurName = newVal;
          return newReigns;
         })

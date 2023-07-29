@@ -59,10 +59,12 @@ const TitleOverview = async ({ params }: { params: { id: string } }) => {
       <InfoElement>
        {holder && !holder.end ? (
         <Link
-         href={`/wrestler/${holder.wrestler_id}`}
-         className="hover:underline underline-offset-4"
+         href={`/${holder.team_id ? "team" : "wrestler"}/${
+          holder.team_id || holder.wrestler_id
+         }`}
+         className="hover:underline underline-offset-4 font-semibold"
         >
-         {holder.wrestler_name}
+         {holder.team_name || holder.wrestler_name}
         </Link>
        ) : (
         "Вакантно"

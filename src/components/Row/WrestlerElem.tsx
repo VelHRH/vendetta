@@ -46,7 +46,13 @@ const WrestlerElem = async ({
       !reign.end && (
        <div
         key={reign.id}
-        className={`p-1 font-semibold text-sm rounded-md bg-amber-400/70`}
+        className={`p-1 font-semibold text-sm rounded-md ${
+         reign.title_name === "Чемпионство Vendetta"
+          ? "bg-amber-400/70"
+          : reign.title_name === "Командное чемпионство Vendetta"
+          ? "bg-blue-400/70"
+          : "bg-red-400/70"
+        }`}
        >
         {reign.title_name}
        </div>
