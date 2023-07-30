@@ -36,9 +36,11 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
     <Reign
      key={reign.id}
      index={index}
-     main={reign.team_name!}
-     link={`/team/${reign.team_id}`}
-     matchesLink={`/title/${reign.title_id}/matches`}
+     main={reign.team_name || reign.wrestler_name}
+     link={`/team/${reign.team_id || reign.wrestler_id}`}
+     matchesLink={`/title/${reign.title_id}/matches?start=${reign.start}${
+      reign.end ? `&end=${reign.end}` : ""
+     }`}
      start={reign.start}
      end={reign.end}
      withVacant={
