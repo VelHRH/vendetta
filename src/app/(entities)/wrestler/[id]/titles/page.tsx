@@ -33,7 +33,9 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
         : "")
       }
       link={`/title/${reign.title_id}`}
-      matchesLink={`/title/${reign.title_id}/matches`}
+      matchesLink={`/title/${reign.title_id}/matches?start=${reign.start}${
+       reign.end ? `&end=${reign.end}` : ""
+      }`}
       start={reign.start}
       end={reign.end}
      />

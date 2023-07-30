@@ -40,7 +40,7 @@ export default async function Home() {
           : nextShow.name}{" "}
         </Label>
         <InfoElement>
-         <p className="text-2xl font-medium">July 2023</p>
+         <p className="text-2xl font-medium">August 2023</p>
         </InfoElement>
        </div>
        <div className="w-full flex-1 p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md">

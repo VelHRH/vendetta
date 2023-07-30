@@ -6,6 +6,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
+import Image from "next/image";
 
 const TeamOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -38,15 +39,31 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
   <>
    <div className="w-full flex gap-5 pb-10 mb-5 border-b-2 border-slate-500">
     <div className="flex-1 flex flex-col gap-5">
+     {team.img_url && (
+      <div className="w-2/3 container mx-auto relative aspect-video">
+       <Image
+        src={team.img_url}
+        fill
+        alt="Poster"
+        className="object-cover rounded-md"
+       />
+      </div>
+     )}
      <Label size="small">
-      Дата создания: <InfoElement>{team.creation_date}</InfoElement>
+      Дата создания:{" "}
+      <InfoElement>
+       {new Date(team.creation_date).toLocaleDateString()}
+      </InfoElement>
      </Label>
      {team.disband_date && (
       <Label size="small">
-       Дата распада: <InfoElement>{team.disband_date}</InfoElement>
+       Дата распада:{" "}
+       <InfoElement>
+        {new Date(team.disband_date).toLocaleDateString()}
+       </InfoElement>
       </Label>
      )}
-     <Label size="small" className="flex items-start">
+     <Label size="small" className="flex items-center">
       Участники:{" "}
       <div className="flex gap-2">
        {team.teams_current_participants.map((p) => (
@@ -78,6 +95,16 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
         ))}
        </div>
       </Label>
+     )}
+     {team.history && (
+      <div className="flex flex-col gap-2 mt-2">
+       <Label size="small" className="flex items-start">
+        История:
+       </Label>
+       {team.history.map((hist) => (
+        <InfoElement key={hist}>• {hist}</InfoElement>
+       ))}
+      </div>
      )}
     </div>
     <RatingBlock comments={team.comments_teams} avgRating={team.avgRating} />

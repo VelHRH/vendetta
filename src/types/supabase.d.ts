@@ -469,6 +469,8 @@ interface Database {
      disband_date: string | null;
      id: number;
      name: string;
+     history: string[] | null;
+     img_url: string | null;
     };
     Insert: {
      avgRating?: number;
@@ -477,6 +479,8 @@ interface Database {
      disband_date?: string | null;
      id?: number;
      name: string;
+     history?: string[] | null;
+     img_url?: string | null;
     };
     Update: {
      avgRating?: number;
@@ -485,6 +489,8 @@ interface Database {
      disband_date?: string | null;
      id?: number;
      name?: string;
+     history?: string[] | null;
+     img_url?: string | null;
     };
     Relationships: [];
    };

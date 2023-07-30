@@ -1,7 +1,6 @@
 import createClient from "@/lib/supabase-server";
 import { z } from "zod";
 import { TeamValidator } from "@/lib/validators/team";
-import { title } from "process";
 
 export async function POST(req: Request) {
  try {
@@ -16,6 +15,8 @@ export async function POST(req: Request) {
     name: team.name,
     creation_date: team.creation_date,
     disband_date: team.disband_date,
+    history: team.history,
+    img_url: team.img_url,
    })
    .select()
    .single();
@@ -92,6 +93,8 @@ export async function PUT(req: Request) {
     name: team.name,
     creation_date: team.creation_date,
     disband_date: team.disband_date,
+    history: team.history,
+    img_url: team.img_url,
    })
    .eq("id", id)
    .select()

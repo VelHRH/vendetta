@@ -34,6 +34,8 @@ export const TeamValidator = z.object({
    )
    .min(1)
  ),
+ img_url: z.string().optional(),
+ history: z.array(z.string()).optional(),
 });
 
 export type CreateTeamPayload = z.infer<typeof TeamValidator>;
