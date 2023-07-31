@@ -17,7 +17,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  const supabase = createClient();
  const { data: team } = await supabase
   .from("teams")
-  .select("*")
+  .select("*, reigns(*)")
   .eq("id", params.id)
   .single();
  const {
@@ -46,6 +46,12 @@ const Layout = async ({ children, params }: LayoutProps) => {
      Overview
     </SectionButton>
     <SectionButton link={`/team/${params.id}/matches`}>Matches</SectionButton>
+    <SectionButton link={`/team/${params.id}/matchguide`}>
+     Matchguide
+    </SectionButton>
+    {team.reigns.length > 0 && (
+     <SectionButton link={`/team/${params.id}/titles`}>Titles</SectionButton>
+    )}
    </div>
    {children}
   </div>

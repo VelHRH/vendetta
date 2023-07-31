@@ -5,9 +5,14 @@ import Match from "./Row/Match";
 interface AllWrestlerMatchesProps {
  shows: any;
  id: string;
+ isTeam?: boolean;
 }
 
-const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({ shows, id }) => {
+const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({
+ shows,
+ id,
+ isTeam,
+}) => {
  let indexIncrement = 0;
  return (
   <div className="w-full">
@@ -16,7 +21,9 @@ const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({ shows, id }) => {
      (show: any) =>
       show.matches.some((match: any) =>
        match.match_sides.some((side: any) =>
-        side.wrestlers.some((wrestler: any) => wrestler.wrestlerId === id)
+        side.wrestlers.some((wrestler: any) =>
+         !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
+        )
        )
       ) && show.upload_date
     )
@@ -29,7 +36,9 @@ const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({ shows, id }) => {
      show.matches
       .filter((match: any) =>
        match.match_sides.some((side: any) =>
-        side.wrestlers.some((wrestler: any) => wrestler.wrestlerId === id)
+        side.wrestlers.some((wrestler: any) =>
+         !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
+        )
        )
       )
       .map((match: any, index2: number) => {

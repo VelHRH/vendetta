@@ -48,6 +48,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
     <SectionButton link={`/wrestler/${params.id}/matches`}>
      Matches
     </SectionButton>
+    <SectionButton link={`/wrestler/${params.id}/matchguide`}>
+     Matchguide
+    </SectionButton>
     {wrestler.reigns.length > 0 && (
      <SectionButton link={`/wrestler/${params.id}/titles`}>
       Titles
