@@ -17,7 +17,6 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
  const { data: shows } = await supabase
   .from("shows")
   .select("*, matches(*, challanges(*))");
-
  if (!shows) {
   notFound();
  }

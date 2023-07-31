@@ -21,6 +21,31 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
   notFound();
  }
 
+ const { data: shows } = await supabase
+  .from("shows")
+  .select("*, matches(*, comments_matches(*), match_sides(*), winners(*))");
+ const matches = [...shows!]
+  .flatMap((show) => show.matches)
+  .filter(
+   (match) =>
+    match.match_sides.some((side) =>
+     side.wrestlers.some((wrestler) => wrestler.teamId === params.id)
+    ) && match.time
+  );
+ const results = [...shows!]
+  .flatMap((show) => show.matches)
+  .filter((match) =>
+   match.winners.some((winner) =>
+    matches?.some((m) => m.id === winner.match_id)
+   )
+  );
+
+ const wins = [...results!].filter((result) =>
+  result.winners.some((winner) =>
+   winner.winner.some((wrestler) => wrestler.teamId === params.id)
+  )
+ );
+
  const {
   data: { user },
  } = await supabase.auth.getUser();
@@ -48,6 +73,40 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
         className="object-cover rounded-md"
        />
       </div>
+     )}
+     <Label size="small">
+      Всего матчей: <InfoElement>{matches?.length}</InfoElement>
+     </Label>
+
+     {wins.length > 0 && (
+      <Label size="small">
+       Победы:{" "}
+       <InfoElement>
+        {wins.length} ({((wins.length * 100) / matches.length).toFixed(2)} %)
+       </InfoElement>
+      </Label>
+     )}
+     {matches!.length - results!.length > 0 && (
+      <Label size="small">
+       Ничьи:{" "}
+       <InfoElement>
+        {matches!.length - results!.length} (
+        {(((matches!.length - results!.length) * 100) / matches.length).toFixed(
+         2
+        )}{" "}
+        %)
+       </InfoElement>
+      </Label>
+     )}
+     {results!.length - wins.length > 0 && (
+      <Label size="small">
+       Поражения:{" "}
+       <InfoElement>
+        {results!.length - wins.length} (
+        {(((results!.length - wins.length) * 100) / matches.length).toFixed(2)}{" "}
+        %)
+       </InfoElement>
+      </Label>
      )}
      <Label size="small">
       Дата создания:{" "}

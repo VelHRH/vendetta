@@ -14,6 +14,14 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
  if (!wrestler) {
   notFound();
  }
+
+ const { data: shows } = await supabase
+  .from("shows")
+  .select("*, matches(*, challanges(*))");
+ if (!shows) {
+  notFound();
+ }
+
  return (
   <div className="w-full">
    {wrestler.reigns
@@ -38,6 +46,28 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
       }`}
       start={reign.start}
       end={reign.end}
+      isCrossed={
+       reign.title_id === 6 &&
+       reign.end !== null &&
+       shows
+        .filter(
+         (show) =>
+          show.matches.some((match) =>
+           match.challanges.some((chal) => chal.title_id === reign.title_id)
+          ) &&
+          show.upload_date &&
+          new Date(show.upload_date).getTime() >=
+           new Date(reign.start || "2000-01-01").getTime() &&
+          new Date(show.upload_date).getTime() <=
+           new Date(reign.end || "3000-01-01").getTime()
+        )
+        .flatMap((show) => show.matches)
+        .filter((match) =>
+         match.challanges.some(
+          (chal) => chal.title_id === parseFloat(params.id)
+         )
+        ).length < 3
+      }
      />
     ))}
   </div>
