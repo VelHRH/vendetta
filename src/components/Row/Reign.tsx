@@ -9,6 +9,7 @@ interface ReignProps {
  end: string | null;
  index: number;
  withVacant?: string;
+ isCrossed?: boolean;
 }
 
 const Reign: FC<ReignProps> = ({
@@ -19,6 +20,7 @@ const Reign: FC<ReignProps> = ({
  end,
  index,
  withVacant,
+ isCrossed,
 }) => {
  return (
   <>
@@ -65,7 +67,12 @@ const Reign: FC<ReignProps> = ({
      {end ? new Date(end.toString()).toLocaleDateString() : "сейчас"}
     </p>
     <p className="flex-1 font-semibold border-r-2 dark:border-slate-600 border-slate-400 px-3">
-     <Link href={link} className="hover:underline underline-offset-4">
+     <Link
+      href={link}
+      className={`${
+       isCrossed && "line-through"
+      } hover:underline underline-offset-4`}
+     >
       {main}
      </Link>
     </p>

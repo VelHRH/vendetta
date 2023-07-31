@@ -103,7 +103,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
     </div>
    </div>
 
-   {user && totalSeconds >= 180 && (
+   {user && params.id !== "42" && totalSeconds >= 180 && (
     <>
      <Label className="font-bold self-start">Ваш комментарий:</Label>
      {!loggedUserComment ? (

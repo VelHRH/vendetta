@@ -14,6 +14,14 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
   notFound();
  }
 
+ const { data: shows } = await supabase
+  .from("shows")
+  .select("*, matches(*, challanges(*))");
+
+ if (!shows) {
+  notFound();
+ }
+
  const reigns = fetchedReigns
   .filter(
    (reign, index, self) =>
@@ -37,7 +45,9 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
      key={reign.id}
      index={index}
      main={reign.team_name || reign.wrestler_name}
-     link={`/team/${reign.team_id || reign.wrestler_id}`}
+     link={`/${reign.team_id ? "team" : "wrestler"}/${
+      reign.team_id || reign.wrestler_id
+     }`}
      matchesLink={`/title/${reign.title_id}/matches?start=${reign.start}${
       reign.end ? `&end=${reign.end}` : ""
      }`}
@@ -49,6 +59,28 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
          ? reigns[index - 1].start
          : "сейчас"
        : undefined
+     }
+     isCrossed={
+      reign.title_id === 6 &&
+      reign.end !== null &&
+      shows
+       .filter(
+        (show) =>
+         show.matches.some((match) =>
+          match.challanges.some(
+           (chal) => chal.title_id === parseFloat(params.id)
+          )
+         ) &&
+         show.upload_date &&
+         new Date(show.upload_date).getTime() >=
+          new Date(reign.start || "2000-01-01").getTime() &&
+         new Date(show.upload_date).getTime() <=
+          new Date(reign.end || "3000-01-01").getTime()
+       )
+       .flatMap((show) => show.matches)
+       .filter((match) =>
+        match.challanges.some((chal) => chal.title_id === parseFloat(params.id))
+       ).length < 3
      }
     />
    ))}
