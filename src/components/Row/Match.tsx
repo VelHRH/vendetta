@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
+import MatchNoResult from "./MatchNoResult";
 import MatchResult from "./MatchResult";
 
 interface MatchProps {
@@ -37,7 +38,14 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
        ))}
       </div>
      )}
-     <MatchResult match_sides={match.match_sides} winners={match.winners} />
+     {match.winners.length === 0 ? (
+      <div className="flex items-center gap-2">
+       <MatchNoResult match_sides={match.match_sides} />
+       <p>- ничья {match.ending}</p>
+      </div>
+     ) : (
+      <MatchResult winners={match.winners} match_sides={match.match_sides} />
+     )}
     </div>
    </div>
    <Link

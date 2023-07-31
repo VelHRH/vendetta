@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
  if (!profile || profile.role !== "admin") {
   if (
    req.nextUrl.pathname.endsWith("/add") ||
-   req.nextUrl.pathname.includes("/edit?")
+   req.nextUrl.pathname.includes("/edit")
   ) {
    return NextResponse.redirect(new URL("/", req.url));
   }
