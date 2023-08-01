@@ -103,7 +103,7 @@ const MatchForm = ({ match }: { match?: any }) => {
 
   setParticipants(updatedParticipants);
  }, [teamNames]);
- console.log(participants);
+
  const handleAddTeammate = (index: number) => {
   const firstParticipant = participants[index][0];
   const updatedFirstParticipant = {

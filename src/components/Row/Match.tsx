@@ -48,12 +48,17 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
      )}
     </div>
    </div>
-   <Link
-    href={`/show/${show.id}`}
-    className="flex-1 text-center hover:underline underline-offset-4 font-semibold flex items-center justify-center"
-   >
-    {show.name}
-   </Link>
+
+   {show.promotion?.includes("Vendetta Federation") ? (
+    <Link
+     href={`/show/${show.id}`}
+     className="flex-1 text-center hover:underline underline-offset-4 font-semibold flex items-center justify-center"
+    >
+     {show.name}
+    </Link>
+   ) : (
+    show.name
+   )}
    <div className="w-[10%] border-l-2 dark:border-slate-600 border-slate-400 flex items-center justify-center">
     {show.upload_date
      ? new Date(show.upload_date.toString() || "").toLocaleDateString()
