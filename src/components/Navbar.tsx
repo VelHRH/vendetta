@@ -6,6 +6,7 @@ import SwitchTheme from "./SwitchTheme";
 import { buttonVariants } from "./ui/Button";
 import { Plus, UserCircle2 } from "lucide-react";
 import { Icons } from "./Icons";
+import BackUpButton from "./BackUpButton";
 
 const Navbar = async () => {
  const supabase = createClient();
@@ -90,6 +91,7 @@ const Navbar = async () => {
        {profile?.username}
       </Link>
       <SignOut />
+      <BackUpButton />
      </>
     ) : (
      <Link href="/sign-in" className={buttonVariants()}>
