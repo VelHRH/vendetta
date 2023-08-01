@@ -31,7 +31,7 @@ const BackUpButton: FC<BackUpButtonProps> = ({}) => {
   },
  });
  return (
-  <Button onClick={handleBackUp} isLoading={isLoading}>
+  <Button onClick={() => handleBackUp()} isLoading={isLoading}>
    Back Up
   </Button>
  );

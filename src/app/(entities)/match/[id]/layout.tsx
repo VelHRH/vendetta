@@ -45,10 +45,10 @@ const Layout = async ({ children, params }: LayoutProps) => {
      )}
    </div>
    <div className="flex gap-2">
-    <SectionButton link={`/show/${params.id}`} isMain>
+    <SectionButton link={`/match/${params.id}`} isMain>
      Overview
     </SectionButton>
-    <SectionButton link={`/show/${params.id}/other`}>Other</SectionButton>
+    <SectionButton link={`/match/${params.id}/other`}>Other</SectionButton>
    </div>
    {children}
   </div>
