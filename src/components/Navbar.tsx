@@ -91,13 +91,13 @@ const Navbar = async () => {
        {profile?.username}
       </Link>
       <SignOut />
-      <BackUpButton />
      </>
     ) : (
      <Link href="/sign-in" className={buttonVariants()}>
       Sign In
      </Link>
     )}
+    {process.env.NODE_ENV === "development" && <BackUpButton />}
    </div>
   </div>
  );

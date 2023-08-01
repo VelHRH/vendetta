@@ -5,7 +5,6 @@ import { normalizeRating, parseSide, sortSides } from "@/lib/utils";
 
 import SortButton from "@/components/SortButton";
 import ListElem from "@/components/Row/ListElem";
-import { any } from "zod";
 
 const OtherMatches = async ({
  searchParams,
