@@ -19,7 +19,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  const { data: profile } = await supabase
   .from("users")
   .select(
-   "*, comments_shows(*), comments_wrestlers(*), comments_tournaments(*)"
+   "*, comments_shows(*), comments_wrestlers(*), comments_tournaments(*), comments_teams(*), comments_titles(*), comments_matches(*)"
   )
   .eq("username", params.slug.replace(/%20/g, " "))
   .single();
@@ -36,11 +36,12 @@ const Layout = async ({ children, params }: LayoutProps) => {
      <Label className="font-bold self-center">{profile.username}</Label>
      {profile.username === profile.id && (
       <InfoLabel>
-       This username was generated automaticaly. Change it in Edit section.
+       Это имя пользователя было сгенерировано автоматически. Измените его в
+       разделе «Редактировать».
       </InfoLabel>
      )}
      <Label size="small" className="mt-3">
-      Full name: {profile.full_name}
+      Полное имя: {profile.full_name}
      </Label>
      <Label size="small">Role: {profile.role}</Label>
      {user?.id === profile.id && (
@@ -50,13 +51,21 @@ const Layout = async ({ children, params }: LayoutProps) => {
      )}
     </div>
     <div className="flex flex-col gap-2 items-start">
-     <Label size="small">Rated matches: {0}</Label>
      <Label size="small">
-      Rated wrestlers: {profile.comments_wrestlers.length}
+      Оцененные матчи: {profile.comments_matches.length}
      </Label>
-     <Label size="small">Rated shows: {profile.comments_shows.length}</Label>
      <Label size="small">
-      Rated tournaments: {profile.comments_tournaments.length}
+      Оцененные рестлеры: {profile.comments_wrestlers.length}
+     </Label>
+     <Label size="small">Оцененные шоу: {profile.comments_shows.length}</Label>
+     <Label size="small">
+      Оцененные команды: {profile.comments_teams.length}
+     </Label>
+     <Label size="small">
+      Оцененные турниры: {profile.comments_tournaments.length}
+     </Label>
+     <Label size="small">
+      Оцененные титулы: {profile.comments_titles.length}
      </Label>
     </div>
     {user?.id === profile.id && (
@@ -64,20 +73,27 @@ const Layout = async ({ children, params }: LayoutProps) => {
       href={`/user/${params.slug}/edit`}
       className={cn(buttonVariants(), "w-full mt-10")}
      >
-      Edit
+      Редактировать
      </Link>
     )}
    </div>
    <div className="flex-1">
     <div className="flex justify-center gap-2 mb-5">
-     <SectionButton link={`/user/${params.slug}`} isMain>
-      Matches
+     <SectionButton link={`/user/${params.slug}`} isMain={2}>
+      Матчи
      </SectionButton>
      <SectionButton link={`/user/${params.slug}/wrestlers`}>
-      Wrestlers
+      Рестлеры
      </SectionButton>
-     <SectionButton link={`/user/${params.slug}/shows`}>Shows</SectionButton>
-     <SectionButton link={`/user/${params.slug}/edit`}>Edit</SectionButton>
+     <SectionButton link={`/user/${params.slug}/shows`}>Шоу</SectionButton>
+     <SectionButton link={`/user/${params.slug}/teams`}>Команды</SectionButton>
+     <SectionButton link={`/user/${params.slug}/tournaments`}>
+      Турниры
+     </SectionButton>
+     <SectionButton link={`/user/${params.slug}/titles`}>Титулы</SectionButton>
+     <SectionButton link={`/user/${params.slug}/edit`}>
+      Редактировать
+     </SectionButton>
     </div>
     <div className="flex flex-col gap-3">{children}</div>
    </div>

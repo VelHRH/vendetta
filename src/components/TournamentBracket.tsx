@@ -20,7 +20,6 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  items,
  allTournamentMatches,
 }) => {
- console.log(items);
  const cols = getBaseLog(2, participants) * 2 - 1;
  const [orderedMatches, setOrderedMatches] = useState<Json[][][]>([]);
  useEffect(() => {

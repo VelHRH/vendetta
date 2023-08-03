@@ -42,15 +42,15 @@ const Layout = async ({ children, params }: LayoutProps) => {
      )}
    </div>
    <div className="flex gap-2">
-    <SectionButton link={`/team/${params.id}`} isMain>
-     Overview
+    <SectionButton link={`/team/${params.id}`} isMain={2}>
+     Обзор
     </SectionButton>
-    <SectionButton link={`/team/${params.id}/matches`}>Matches</SectionButton>
+    <SectionButton link={`/team/${params.id}/matches`}>Матчи</SectionButton>
     <SectionButton link={`/team/${params.id}/matchguide`}>
-     Matchguide
+     Матчгайд
     </SectionButton>
     {team.reigns.length > 0 && (
-     <SectionButton link={`/team/${params.id}/titles`}>Titles</SectionButton>
+     <SectionButton link={`/team/${params.id}/titles`}>Титулы</SectionButton>
     )}
    </div>
    {children}

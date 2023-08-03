@@ -5,12 +5,14 @@ interface AllWrestlerMatchesProps {
  shows: any;
  id: string;
  isTeam?: boolean;
+ tournament?: number;
 }
 
 const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({
  shows,
  id,
  isTeam,
+ tournament,
 }) => {
  let indexIncrement = 0;
  return (
@@ -19,11 +21,13 @@ const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({
     .filter(
      (show: any) =>
       show.matches.some((match: any) =>
-       match.match_sides.some((side: any) =>
-        side.wrestlers.some((wrestler: any) =>
-         !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
-        )
-       )
+       tournament
+        ? match.tournament === tournament
+        : match.match_sides.some((side: any) =>
+           side.wrestlers.some((wrestler: any) =>
+            !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
+           )
+          )
       ) && show.upload_date
     )
     .sort(
@@ -33,12 +37,15 @@ const AllWrestlerMatches: FC<AllWrestlerMatchesProps> = ({
     )
     .map((show: any, index: number) =>
      show.matches
+      .sort((a: any, b: any) => b.order - a.order)
       .filter((match: any) =>
-       match.match_sides.some((side: any) =>
-        side.wrestlers.some((wrestler: any) =>
-         !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
-        )
-       )
+       tournament
+        ? match.tournament === tournament
+        : match.match_sides.some((side: any) =>
+           side.wrestlers.some((wrestler: any) =>
+            !isTeam ? wrestler.wrestlerId === id : wrestler.teamId === id
+           )
+          )
       )
       .map((match: any, index2: number) => {
        if (index2 > 0) indexIncrement += 1;

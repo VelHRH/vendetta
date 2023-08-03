@@ -6,7 +6,7 @@ import SortButton from "@/components/SortButton";
 import { notFound } from "next/navigation";
 import SectionButton from "@/components/SectionButton";
 
-const VendettaWrestlers = async ({
+const StrangerWrestlers = async ({
  searchParams,
 }: {
  searchParams: { sort: string };
@@ -15,7 +15,7 @@ const VendettaWrestlers = async ({
  const { data: wrestlers } = await supabase
   .from("wrestlers")
   .select("*, comments_wrestlers(*), reigns(*)")
-  .eq("isVendetta", true);
+  .eq("isVendetta", false);
  if (!wrestlers) {
   notFound();
  }
@@ -30,7 +30,7 @@ const VendettaWrestlers = async ({
   .single();
  return (
   <div className="w-full font-semibold">
-   <Label className="font-bold mb-5 justify-center">Рестлеры Vendetta</Label>
+   <Label className="font-bold mb-5 justify-center">Другие рестлеры</Label>
    <div className="flex gap-2">
     <SectionButton link={`/wrestler`} isMain={1}>
      Vendetta
@@ -109,4 +109,4 @@ const VendettaWrestlers = async ({
  );
 };
 
-export default VendettaWrestlers;
+export default StrangerWrestlers;
