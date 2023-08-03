@@ -170,7 +170,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        Персональная информация:
       </Label>
       <Label size="small">
-       Настоящая имя: <InfoElement>{wrestler.real_name}</InfoElement>
+       Настоящее имя: <InfoElement>{wrestler.real_name}</InfoElement>
       </Label>
       <Label size="small">
        Пол: <InfoElement>{wrestler.sex}</InfoElement>

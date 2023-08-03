@@ -40,15 +40,23 @@ const TeamMatchguide = async ({
   <div className="w-full">
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
     <p className="text-center w-1/2">Матч</p>
-    <p className="text-center flex-1">Шоу</p>
-    <p className="text-center w-32">
+    <p className="text-center flex-1">
      <SortButton
-      value="rating"
+      value="date"
       className={`${
        searchParams.sort !== "your" &&
        searchParams.sort !== "number" &&
+       searchParams.sort !== "rating" &&
        "text-amber-500"
       }`}
+     >
+      Шоу
+     </SortButton>
+    </p>
+    <p className="text-center w-32">
+     <SortButton
+      value="rating"
+      className={`${searchParams.sort === "rating" && "text-amber-500"}`}
      >
       Рейтинг
      </SortButton>
@@ -82,7 +90,8 @@ const TeamMatchguide = async ({
          -1)
       : searchParams.sort === "number"
       ? b.comments_matches.length - a.comments_matches.length
-      : normalizeRating({
+      : searchParams.sort === "rating"
+      ? normalizeRating({
          ratings: b.comments_matches.length,
          avgRating: b.avgRating,
         }) -
@@ -90,6 +99,7 @@ const TeamMatchguide = async ({
          ratings: a.comments_matches.length,
          avgRating: a.avgRating,
         })
+      : b.show - a.show
     )
     .map((match, index) => (
      <ListElem
