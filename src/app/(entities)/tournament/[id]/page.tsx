@@ -6,10 +6,11 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import TournamentBracket from "@/components/TournamentBracket";
-import { sortSides } from "@/lib/utils";
+import { areArraysEqual, sortSides } from "@/lib/utils";
 import MatchSide from "@/components/Row/MatchSide";
 import WrestlerLinkImage from "@/components/WrestlerLinkImage";
 import TournamentBlock from "@/components/TournamentBlock";
+import { match } from "assert";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -69,7 +70,6 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
        </Label>
        <div className="w-full grid grid-cols-8 gap-3 mt-5">
         {sortSides(tournament.winner)
-         .map((side) => side.wrestlers.flat())
          .flat()
          .map((wrestler, index) => (
           <WrestlerLinkImage key={index} wrestler={wrestler} />
@@ -89,9 +89,26 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
      <TournamentBracket
       participants={tournament.play_off_participants.length}
       items={tournament.play_off_participants}
-      allTournamentMatches={tournament.matches.map((m) =>
-       sortSides(m.match_sides).map((m) => m.wrestlers)
-      )}
+      allTournamentMatches={tournament.matches
+       .filter((m) => {
+        let isIn = true;
+        for (let side of m.match_sides) {
+         let isSideIn = false;
+         for (let participant of tournament.play_off_participants) {
+          if (areArraysEqual(participant, side.wrestlers)) {
+           isSideIn = true;
+           break;
+          }
+         }
+         if (!isSideIn) {
+          isIn = false;
+          break;
+         }
+        }
+        if (isIn) return m;
+       })
+
+       .map((m) => sortSides(m.match_sides).map((side) => side.wrestlers))}
      />
     ) : (
      <>

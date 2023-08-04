@@ -30,7 +30,7 @@ const AllWrestlers = async ({
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Все рестлеры</Label>
-   <div className="flex gap-2">
+   <div className="flex gap-2 justify-center">
     <SectionButton link={`/wrestler`} isMain={1}>
      Vendetta
     </SectionButton>

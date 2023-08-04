@@ -109,7 +109,7 @@ const MatchForm = ({ match }: { match?: any }) => {
   const updatedFirstParticipant = {
    ...firstParticipant,
    teamName: firstParticipant.teamName || "",
-   teamId: firstParticipant.teamName || "",
+   teamId: firstParticipant.teamId || "",
   };
 
   const updatedParticipants = [...participants];

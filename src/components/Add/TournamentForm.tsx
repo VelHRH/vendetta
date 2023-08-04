@@ -107,6 +107,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
  }, []);
 
  const router = useRouter();
+
  const { mutate: createTournament, isLoading } = useMutation({
   mutationFn: async () => {
    const payload: CreateTournamentPayload = {
@@ -304,7 +305,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
   const updatedFirstParticipant = {
    ...firstParticipant,
    teamName: firstParticipant.teamName || "",
-   teamId: firstParticipant.teamName || "",
+   teamId: firstParticipant.teamId || "",
   };
 
   const updatedParticipants = [...playOff];
@@ -546,7 +547,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                 setTeamNames((prev) => {
                  const p = [...prev];
                  p[index].name = newVal;
-
+                 p[index].id = teams
+                  .find((team) => team.name === newVal)!
+                  .id.toString();
                  return p;
                 })
                }
@@ -625,7 +628,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
               <div className="flex-1">
                <Dropdown
                 disabled={winner.length !== 0}
-                array={wrestlers.map((w) => w.name || "")}
+                array={wrestlers
+                 .sort((a, b) => a.name.localeCompare(b.name))
+                 .map((w) => w.name || "")}
                 placeholder={`Рестлер ${index + 1}`}
                 value={elem.wrestlerName}
                 setValue={(newValue) => {
@@ -696,7 +701,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
             setTeamNames((prev) => {
              const p = [...prev];
              p[index].name = newVal;
-
+             p[index].id = teams
+              .find((team) => team.name === newVal)!
+              .id.toString();
              return p;
             })
            }
@@ -838,11 +845,10 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
           ...playOff
            .map((side) => parseSide(side))
            .slice(0, parseFloat(number)),
-          "Ничья",
          ]}
-         value={win !== undefined ? parseSide(win) : "Ничья"}
+         value={win !== undefined ? parseSide(win) : "Неизвестно"}
          setValue={(newValue) => {
-          if (newValue === "Ничья") setWinner([]);
+          if (newValue === "Неизвестно") setWinner([]);
           setWinner((prev) => {
            const newArray = [...prev];
            newArray[index] =

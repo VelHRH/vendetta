@@ -115,6 +115,7 @@ export function removeDuplicateArrays(array1: Json[][][], array2: Json[][][]) {
 export function parseSide(side: Json[]): string {
  const teamNames: any[] = [];
  const individualNames: any[] = [];
+
  side
   .sort((a, b) => a.wrestlerCurName.localeCompare(b.wrestlerCurName))
   .forEach((participant) => {

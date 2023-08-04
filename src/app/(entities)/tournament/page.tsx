@@ -32,11 +32,7 @@ const AllTournaments = async ({
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Все турниры</Label>
-   <FilterDropdown
-    array={["Дате", "Рейтингу"]}
-    path="/tournament"
-    placeholder="Сортировать по..."
-   />
+
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
     <p className="text-center w-1/2">Турнир</p>
     <p className="text-center flex-1">
