@@ -98,7 +98,7 @@ const TournamentBlock: FC<TournamentBlockProps> = ({
       key={index}
       className="dark:bg-slate-700 bg-slate-300 p-2 flex justify-between gap-4 items-center"
      >
-      <div className="flex">
+      <div className="flex flex-wrap">
        <p className="mr-2">{index + 1}.</p>
        <MatchSide wrestlers={wr} />
       </div>
