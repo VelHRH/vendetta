@@ -37,7 +37,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
   if (
    tournament &&
    tournament.play_off_participants &&
-   tournament.play_off_participants.length === 32
+   tournament.play_off_participants.length !== 0
   ) {
    return tournament.play_off_participants;
   } else {
@@ -94,7 +94,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
  const [teams, setTeams] = useState<
   Database["public"]["Tables"]["teams"]["Row"][]
  >([]);
- const [number, setNumber] = useState<string>("");
+ const [number, setNumber] = useState<string>(
+  tournament.play_off_participants?.length.toString() || ""
+ );
 
  useEffect(() => {
   const fetchData = async () => {
@@ -547,9 +549,9 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
                 setTeamNames((prev) => {
                  const p = [...prev];
                  p[index].name = newVal;
-                 p[index].id = teams
-                  .find((team) => team.name === newVal)!
-                  .id.toString();
+                 p[index].id =
+                  teams.find((team) => team.name === newVal)?.id.toString() ||
+                  "";
                  return p;
                 })
                }
@@ -701,9 +703,8 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
             setTeamNames((prev) => {
              const p = [...prev];
              p[index].name = newVal;
-             p[index].id = teams
-              .find((team) => team.name === newVal)!
-              .id.toString();
+             p[index].id =
+              teams.find((team) => team.name === newVal)?.id.toString() || "";
              return p;
             })
            }

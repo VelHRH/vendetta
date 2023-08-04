@@ -14,7 +14,6 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  items,
  allTournamentMatches,
 }) => {
- console.log(allTournamentMatches);
  const cols = getBaseLog(2, participants) * 2 - 1;
  const [orderedMatches, setOrderedMatches] = useState<Json[][][]>([]);
  useEffect(() => {
@@ -41,7 +40,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
      whichIndexes(participants, i)[-1]
     );
     if (stage.length < 2) continue;
-    for (let j = 0; j < stage.length - 1; j += 2) {
+    for (let j = 0; j < stage.length; j += 2) {
      const pair = [...stage[j], ...stage[j + 1]];
      const foundArray = uniqueMatches.find((innerArray) =>
       innerArray.every((subArray) =>

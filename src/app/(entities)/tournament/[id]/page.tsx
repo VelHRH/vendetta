@@ -10,7 +10,6 @@ import { areArraysEqual, sortSides } from "@/lib/utils";
 import MatchSide from "@/components/Row/MatchSide";
 import WrestlerLinkImage from "@/components/WrestlerLinkImage";
 import TournamentBlock from "@/components/TournamentBlock";
-import { match } from "assert";
 
 const TournamentOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -107,7 +106,6 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
         }
         if (isIn) return m;
        })
-
        .map((m) => sortSides(m.match_sides).map((side) => side.wrestlers))}
      />
     ) : (
