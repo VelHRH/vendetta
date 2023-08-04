@@ -4,6 +4,7 @@ import { FC } from "react";
 
 interface MatchSideProps {
  wrestlers: Json[];
+ noTeamName?: boolean;
 }
 
 const getIntermediate = (str: string, item: string, index: number) => {
@@ -14,34 +15,38 @@ const getIntermediate = (str: string, item: string, index: number) => {
  );
 };
 
-const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
+const MatchSide: FC<MatchSideProps> = ({ wrestlers, noTeamName }) => {
  return (
   <>
    {parseSide(wrestlers)
     .split(/[\(&\)]/)
     .map((item, index) =>
      wrestlers.find((o) => o.teamName === item.trim()) ? (
-      <>
-       <Link
-        href={`/team/${
-         wrestlers.find((o) => o.teamName === item.trim())?.teamId
-        }`}
-        className="font-semibold hover:underline underline-offset-4"
-       >
-        {item.trim()}
-       </Link>
-       {getIntermediate(parseSide(wrestlers), item, index).trim() === "&" ? (
-        <p className="mx-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "(" ? (
-        <p className="ml-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
-       ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
-        <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
-       ) : null}
-      </>
+      noTeamName ? null : (
+       <>
+        <Link
+         href={`/team/${
+          wrestlers.find((o) => o.teamName === item.trim())?.teamId
+         }`}
+         className="font-semibold hover:underline underline-offset-4"
+        >
+         {item.trim()}
+        </Link>
+        {getIntermediate(parseSide(wrestlers), item, index).trim() === "&" ? (
+         <p className="mx-2">
+          {getIntermediate(parseSide(wrestlers), item, index)}
+         </p>
+        ) : getIntermediate(parseSide(wrestlers), item, index).trim() ===
+          "(" ? (
+         <p className="ml-2">
+          {getIntermediate(parseSide(wrestlers), item, index)}
+         </p>
+        ) : getIntermediate(parseSide(wrestlers), item, index).trim() ===
+          ")" ? (
+         <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
+        ) : null}
+       </>
+      )
      ) : wrestlers.find((o) => o.wrestlerCurName === item.trim()) ? (
       <>
        <Link
@@ -57,19 +62,22 @@ const MatchSide: FC<MatchSideProps> = ({ wrestlers }) => {
          {getIntermediate(parseSide(wrestlers), item, index)}
         </p>
        ) : getIntermediate(parseSide(wrestlers), item, index).trim() === "(" ? (
-        <p className="ml-2">
-         {getIntermediate(parseSide(wrestlers), item, index)}
-        </p>
+        !noTeamName && (
+         <p className="ml-2">
+          {getIntermediate(parseSide(wrestlers), item, index)}
+         </p>
+        )
        ) : getIntermediate(parseSide(wrestlers), item, index).trim() === ")" ? (
-        <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
+        !noTeamName && (
+         <p>{getIntermediate(parseSide(wrestlers), item, index)}</p>
+        )
        ) : null}
       </>
      ) : (
       <>
        {item === " " &&
-        parseSide(wrestlers).split(/[\(&\)]/).length > index + 1 && (
-         <p className="mr-2">) &</p>
-        )}
+        parseSide(wrestlers).split(/[\(&\)]/).length > index + 1 &&
+        !noTeamName && <p className="mr-2">) &</p>}
       </>
      )
     )}
