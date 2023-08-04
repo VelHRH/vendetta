@@ -66,7 +66,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
  }, [items]);
 
  return (
-  <div className={`flex p-5 w-full justify-center`}>
+  <div className={`flex p-5 justify-center w-auto`}>
    {Array.from({ length: cols }, (_, index) => (
     <div key={index} className={`flex flex-col justify-around gap-14`}>
      {index % 2 === 0

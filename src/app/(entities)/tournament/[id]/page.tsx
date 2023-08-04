@@ -82,7 +82,7 @@ const TournamentOverview = async ({ params }: { params: { id: string } }) => {
      avgRating={tournament.avgRating}
     />
    </div>
-   <div className="flex gap-5 flex-col items-center w-full">
+   <div className="flex gap-5 flex-col items-center w-auto">
     <Label className="font-bold mb-5">Подробности турнира:</Label>
     {tournament.type === "Обычный" ? (
      <TournamentBracket
