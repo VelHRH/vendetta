@@ -1,4 +1,3 @@
-import FilterDropdown from "@/components/FilterDropdown";
 import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
@@ -32,11 +31,7 @@ const AllShows = async ({
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Все шоу</Label>
-   <FilterDropdown
-    array={["Дате", "Рейтингу"]}
-    path="/show"
-    placeholder="Сортировать по..."
-   />
+
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
     <p className="text-center w-1/2">Шоу</p>
     <p className="text-center flex-1">

@@ -70,13 +70,13 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
    {Array.from({ length: cols }, (_, index) => (
     <div key={index} className={`flex flex-col justify-around gap-14`}>
      {index % 2 === 0
-      ? whichIndexes(participants, index).map((ind, index2) => (
+      ? whichIndexes(participants, index).map((ind) => (
          <div key={ind} className="h-[3.5rem] flex gap-1 flex-col min-w-[70px]">
           {orderedMatches[ind] ? (
            orderedMatches[ind].map((elem, i) => (
             <div
              key={i}
-             className="w-full p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md flex"
+             className="p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md flex flex-wrap"
             >
              <MatchSide wrestlers={orderedMatches[ind][i]} />
             </div>
