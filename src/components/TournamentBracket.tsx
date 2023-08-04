@@ -76,7 +76,7 @@ const TournamentBracket: FC<TournamentBracketProps> = ({
            orderedMatches[ind].map((elem, i) => (
             <div
              key={i}
-             className="p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md flex"
+             className="p-1 dark:bg-slate-700 bg-slate-300 h-1/2 rounded-t-md flex w-auto flex-wrap overflow-hidden"
             >
              <MatchSide wrestlers={orderedMatches[ind][i]} />
             </div>
