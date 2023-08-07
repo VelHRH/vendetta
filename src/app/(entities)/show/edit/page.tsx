@@ -1,5 +1,11 @@
 import ShowForm from "@/components/Add/ShowForm";
 import createClient from "@/lib/supabase-server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Исправление шоу",
+ description: "Исправление шоу",
+};
 
 const EditShow = async ({ searchParams }: { searchParams: { id: string } }) => {
  const supabase = createClient();

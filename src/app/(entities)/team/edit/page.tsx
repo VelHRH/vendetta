@@ -1,5 +1,11 @@
 import TeamForm from "@/components/Add/TeamForm";
 import createClient from "@/lib/supabase-server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Исправление команды",
+ description: "Исправление команды",
+};
 
 const EditShow = async ({ searchParams }: { searchParams: { id: string } }) => {
  const supabase = createClient();

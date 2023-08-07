@@ -2,8 +2,14 @@ import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
-import { normalizeRating, parseSide, sortSides } from "@/lib/utils";
+import { normalizeRating } from "@/lib/utils";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+ title: "Команды/Группировки",
+ description: "Все Команды и группировки.",
+};
 
 const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
  const supabase = createClient();

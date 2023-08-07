@@ -3,7 +3,13 @@ import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { normalizeRating } from "@/lib/utils";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+ title: "Титулы",
+ description: "Все титулы Vendetta",
+};
 
 const Titles = async ({ searchParams }: { searchParams: { sort: string } }) => {
  const supabase = createClient();

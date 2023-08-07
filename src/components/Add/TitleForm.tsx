@@ -5,13 +5,13 @@ import { CreateTitlePayload } from "@/lib/validators/title";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/Button";
 import Dropdown from "../ui/Dropdown";
 import Input from "../ui/Input";
 import Label from "../ui/Label";
 
-const TitleForm: FC = ({
+const TitleForm = ({
  title,
 }: {
  title?: Database["public"]["Tables"]["titles"]["Row"];

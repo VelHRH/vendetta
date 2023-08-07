@@ -1,11 +1,15 @@
-import FilterDropdown from "@/components/FilterDropdown";
 import ListElem from "@/components/Row/ListElem";
-import TournamentElem from "@/components/Row/TournamentElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { normalizeRating } from "@/lib/utils";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+ title: "Турниры",
+ description: "Все турниры Vendetta",
+};
 
 const AllTournaments = async ({
  searchParams,

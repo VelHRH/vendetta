@@ -4,6 +4,12 @@ import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Label from "@/components/ui/Label";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Добавление",
+ description: "Добавление объекта",
+};
 
 const Add: FC = () => {
  return (

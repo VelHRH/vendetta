@@ -4,7 +4,13 @@ import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { normalizeRating, parseSide, sortSides } from "@/lib/utils";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+ title: "Матчгайд",
+ description: "Оцененые матчи Vendetta",
+};
 
 const Matchguide = async ({
  searchParams,

@@ -5,6 +5,12 @@ import { normalizeRating } from "@/lib/utils";
 import SortButton from "@/components/SortButton";
 import { notFound } from "next/navigation";
 import SectionButton from "@/components/SectionButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Рестлеры",
+ description: "Все рестлеры выступавшие в Vendetta",
+};
 
 const AllWrestlers = async ({
  searchParams,

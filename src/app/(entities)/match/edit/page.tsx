@@ -1,5 +1,11 @@
 import MatchForm from "@/components/Add/MatchesForm";
 import createClient from "@/lib/supabase-server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Исправление матча",
+ description: "Исправление матча",
+};
 
 const EditMatch = async ({
  searchParams,

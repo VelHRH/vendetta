@@ -81,7 +81,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
    teamName?: string;
    teamId?: string;
   }[][]
- >([]);
+ >(tournament?.winner || []);
  const [blockNumber, setBlockNumber] = useState<string>("");
  const [peopleInBlock, setPeopleInBlock] = useState<string>("");
  const [isError, setIsError] = useState<boolean>(false);
@@ -95,7 +95,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
   Database["public"]["Tables"]["teams"]["Row"][]
  >([]);
  const [number, setNumber] = useState<string>(
-  tournament.play_off_participants?.length.toString() || ""
+  tournament?.play_off_participants?.length.toString() || ""
  );
 
  useEffect(() => {
