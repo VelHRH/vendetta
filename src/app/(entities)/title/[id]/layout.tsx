@@ -8,6 +8,20 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+ const supabase = createClient();
+ const { data: title } = await supabase
+  .from("titles")
+  .select("*")
+  .eq("id", params.id)
+  .single();
+
+ if (!title) {
+  notFound();
+ }
+ return { title: title.name };
+}
+
 interface LayoutProps {
  children: ReactNode;
  params: { id: string };

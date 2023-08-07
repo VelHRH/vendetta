@@ -11,7 +11,7 @@ const MatchNoResult: FC<MatchNoResultProps> = ({ match_sides }) => {
   <div className="items-center flex flex-wrap">
    {sortSides(match_sides).map((p, index) => (
     <>
-     <MatchSide key={p.id} wrestlers={p.wrestlers} />
+     <MatchSide wrestlers={p.wrestlers} />
      {index !== match_sides.length - 1 && <p className="mx-3">vs.</p>}
     </>
    ))}

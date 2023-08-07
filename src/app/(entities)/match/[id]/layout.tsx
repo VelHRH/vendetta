@@ -8,6 +8,28 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 import MatchNoResult from "@/components/Row/MatchNoResult";
+import { parseSide, sortSides } from "@/lib/utils";
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+ const supabase = createClient();
+ const { data: match } = await supabase
+  .from("matches")
+  .select("*, match_sides(*)")
+  .eq("id", params.id)
+  .single();
+ if (!match) {
+  notFound();
+ }
+ let matchTitle = "";
+
+ for (let side of sortSides(match.match_sides)) {
+  matchTitle += `${parseSide(side.wrestlers)}`;
+  if (match.match_sides.indexOf(side) !== match.match_sides.length - 1) {
+   matchTitle += " vs. ";
+  }
+ }
+ return { title: matchTitle };
+}
 
 interface LayoutProps {
  children: ReactNode;

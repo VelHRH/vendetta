@@ -8,6 +8,20 @@ import { cn } from "@/lib/utils";
 import SectionButton from "@/components/SectionButton";
 import InfoLabel from "@/components/ui/InfoLabel";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+ const supabase = createClient();
+ const { data: profile } = await supabase
+  .from("users")
+  .select("*")
+  .eq("id", params.id)
+  .single();
+
+ if (!profile) {
+  notFound();
+ }
+ return { title: profile.username };
+}
+
 interface LayoutProps {
  children: ReactNode;
  params: { slug: string };

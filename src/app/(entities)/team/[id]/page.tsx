@@ -8,6 +8,20 @@ import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
 import Image from "next/image";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+ const supabase = createClient();
+ const { data: team } = await supabase
+  .from("teams")
+  .select("*")
+  .eq("id", params.id)
+  .single();
+ if (!team) {
+  notFound();
+ }
+
+ return { title: team.name };
+}
+
 const TeamOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
  const { data: team } = await supabase
