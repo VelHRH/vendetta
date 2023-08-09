@@ -8,12 +8,16 @@ import { cn } from "@/lib/utils";
 import SectionButton from "@/components/SectionButton";
 import InfoLabel from "@/components/ui/InfoLabel";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+ params,
+}: {
+ params: { slug: string };
+}) {
  const supabase = createClient();
  const { data: profile } = await supabase
   .from("users")
   .select("*")
-  .eq("id", params.id)
+  .eq("username", params.slug.replace(/%20/g, " "))
   .single();
 
  if (!profile) {

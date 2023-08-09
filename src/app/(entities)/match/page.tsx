@@ -38,11 +38,6 @@ const Matchguide = async ({
  return (
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Оцененные матчи</Label>
-   <FilterDropdown
-    array={["Дате", "Рейтингу"]}
-    path="/match"
-    placeholder="Сортировать по..."
-   />
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
     <p className="text-center w-1/2">Матч</p>
     <p className="text-center flex-1">Шоу</p>
