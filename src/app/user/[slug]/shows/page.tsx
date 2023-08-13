@@ -38,6 +38,7 @@ const RatedShows = async ({ params }: { params: { slug: string } }) => {
        id={shows?.find((w) => w.id === comment.item_id)!.id!}
        rating={comment.rating}
        date={comment.created_at}
+       type="show"
       />
      ))
    ) : (

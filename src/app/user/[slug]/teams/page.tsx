@@ -40,6 +40,7 @@ const RatedTeams = async ({ params }: { params: { slug: string } }) => {
        id={teams?.find((w) => w.id === comment.item_id)!.id!}
        rating={comment.rating}
        date={comment.created_at}
+       type="team"
       />
      ))
    ) : (

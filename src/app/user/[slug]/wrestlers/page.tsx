@@ -38,6 +38,7 @@ const RatedWrestlers = async ({ params }: { params: { slug: string } }) => {
        id={wrestlers?.find((w) => w.id === comment.item_id)!.id!}
        rating={comment.rating}
        date={comment.created_at}
+       type="wrestler"
       />
      ))
    ) : (

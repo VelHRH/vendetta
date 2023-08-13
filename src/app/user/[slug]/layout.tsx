@@ -109,9 +109,11 @@ const Layout = async ({ children, params }: LayoutProps) => {
       Турниры
      </SectionButton>
      <SectionButton link={`/user/${params.slug}/titles`}>Титулы</SectionButton>
-     <SectionButton link={`/user/${params.slug}/edit`}>
-      Редактировать
-     </SectionButton>
+     {user?.id === profile.id && (
+      <SectionButton link={`/user/${params.slug}/edit`}>
+       Редактировать
+      </SectionButton>
+     )}
     </div>
     <div className="flex flex-col gap-3">{children}</div>
    </div>
