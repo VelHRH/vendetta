@@ -2,7 +2,7 @@ import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
-import { normalizeRating } from "@/lib/utils";
+import { formatDateToDdMmYyyy, normalizeRating } from "@/lib/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -108,7 +108,7 @@ const AllTournaments = async ({
       main={`${index + 1}. ${tournament.name}`}
       secondary={
        tournament.start
-        ? new Date(tournament.start.toString() || "").toLocaleDateString()
+        ? formatDateToDdMmYyyy(new Date(tournament.start.toString() || ""))
         : "Еще не вышло"
       }
       comments={tournament.comments_tournaments}

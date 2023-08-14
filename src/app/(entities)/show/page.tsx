@@ -2,7 +2,7 @@ import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
-import { normalizeRating } from "@/lib/utils";
+import { formatDateToDdMmYyyy, normalizeRating } from "@/lib/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -109,7 +109,7 @@ const AllShows = async ({
       main={`${index + 1}. ${show.name}`}
       secondary={
        show.upload_date
-        ? new Date(show.upload_date.toString() || "").toLocaleDateString()
+        ? formatDateToDdMmYyyy(new Date(show.upload_date.toString() || ""))
         : "Еще не вышло"
       }
       comments={show.comments_shows}

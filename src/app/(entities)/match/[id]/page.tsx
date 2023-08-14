@@ -6,7 +6,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
-import { sortSides } from "@/lib/utils";
+import { formatDateToDdMmYyyy, sortSides } from "@/lib/utils";
 import WrestlerLinkImage from "@/components/WrestlerLinkImage";
 import MatchResult from "@/components/Row/MatchResult";
 
@@ -68,7 +68,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
       Дата:{" "}
       <InfoElement>
        {show?.upload_date
-        ? new Date(show.upload_date).toLocaleDateString()
+        ? formatDateToDdMmYyyy(new Date(show.upload_date))
         : "Еще не состоялся"}
       </InfoElement>
      </Label>

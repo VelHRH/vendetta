@@ -35,9 +35,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
      {isFull && (
       <>
        <p className="text-center w-32">Рейтинг</p>
-       {match.comments_matches.find((c) => c.author === user?.id) && (
-        <p className="text-center w-32">Ваш рейтинг</p>
-       )}
+       <p className="text-center w-32">Ваш рейтинг</p>
       </>
      )}
     </div>

@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
 import Image from "next/image";
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
  const supabase = createClient();
@@ -125,14 +126,14 @@ const TeamOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="small">
       Дата создания:{" "}
       <InfoElement>
-       {new Date(team.creation_date).toLocaleDateString()}
+       {formatDateToDdMmYyyy(new Date(team.creation_date))}
       </InfoElement>
      </Label>
      {team.disband_date && (
       <Label size="small">
        Дата распада:{" "}
        <InfoElement>
-        {new Date(team.disband_date).toLocaleDateString()}
+        {formatDateToDdMmYyyy(new Date(team.disband_date))}
        </InfoElement>
       </Label>
      )}

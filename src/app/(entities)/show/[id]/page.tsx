@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import RatingBlock from "@/components/RatingBlock";
 import MatchShowElem from "@/components/Row/MatchShowElem";
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 
 const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -51,7 +52,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
       Дата загрузки:{" "}
       <InfoElement>
        {show?.upload_date
-        ? new Date(show.upload_date).toLocaleDateString()
+        ? formatDateToDdMmYyyy(new Date(show.upload_date))
         : "Еще не состоялось"}
       </InfoElement>
      </Label>

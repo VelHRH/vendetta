@@ -1,3 +1,4 @@
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 import Link from "next/link";
 import { FC } from "react";
 import MatchNoResult from "./MatchNoResult";
@@ -61,7 +62,7 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
    )}
    <div className="w-[10%] border-l-2 dark:border-slate-600 border-slate-400 flex items-center justify-center">
     {show.upload_date
-     ? new Date(show.upload_date.toString() || "").toLocaleDateString()
+     ? formatDateToDdMmYyyy(new Date(show.upload_date.toString() || ""))
      : ""}
    </div>
   </div>

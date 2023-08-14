@@ -1,4 +1,4 @@
-import { ratingColor } from "@/lib/utils";
+import { formatDateToDdMmYyyy, ratingColor } from "@/lib/utils";
 import Link from "next/link";
 import { FC, ReactNode } from "react";
 
@@ -38,7 +38,7 @@ const ProfileElem: FC<ProfileElemProps> = ({
    <div
     className={`dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-1/5 rounded-md justify-center p-3 flex items-center`}
    >
-    {new Date(date).toLocaleDateString()}
+    {formatDateToDdMmYyyy(new Date(date))}
    </div>
   </Link>
  );

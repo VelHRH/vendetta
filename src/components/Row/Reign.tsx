@@ -1,3 +1,4 @@
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -38,10 +39,10 @@ const Reign: FC<ReignProps> = ({
      className={`flex items-stretch bg-red-500/10 px-4 py-5 text-xl w-full rounded-md`}
     >
      <p className="w-1/5 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
-      {new Date(end!.toString()).toLocaleDateString()} -{" "}
+      {formatDateToDdMmYyyy(new Date(end!.toString()))} -{" "}
       {withVacant === "сейчас"
        ? withVacant
-       : new Date(withVacant).toLocaleDateString()}
+       : formatDateToDdMmYyyy(new Date(withVacant))}
      </p>
      <p className="flex-1 border-r-2 dark:border-slate-600 border-slate-400 px-3">
       VACANT
@@ -63,8 +64,8 @@ const Reign: FC<ReignProps> = ({
     } px-4 py-5 text-xl w-full rounded-md`}
    >
     <p className="w-1/5 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
-     {new Date(start.toString()).toLocaleDateString()} -{" "}
-     {end ? new Date(end.toString()).toLocaleDateString() : "сейчас"}
+     {formatDateToDdMmYyyy(new Date(start.toString()))} -{" "}
+     {end ? formatDateToDdMmYyyy(new Date(end.toString())) : "сейчас"}
     </p>
     <p className="flex-1 font-semibold border-r-2 dark:border-slate-600 border-slate-400 px-3">
      <Link

@@ -1,4 +1,4 @@
-import { ratingColor } from "@/lib/utils";
+import { formatDateToDdMmYyyy, ratingColor } from "@/lib/utils";
 import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 import EditComment from "./EditComment";
@@ -53,7 +53,7 @@ const Comment = async ({
       {rating}
      </Label>
      <p className="font-bold text-xl text-slate-500">
-      {dateConvert.toLocaleDateString()}
+      {formatDateToDdMmYyyy(dateConvert)}
      </p>
      {id && (
       <div className="gsp-2 flex">

@@ -7,6 +7,7 @@ import Comment from "@/components/Comment";
 import CommentForm from "@/components/Add/CommentForm";
 import InfoElement from "@/components/InfoElement";
 import RatingBlock from "@/components/RatingBlock";
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 
 const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -136,7 +137,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
        <>
         <Label size="small">
          Начало карьеры:{" "}
-         <InfoElement>{beginCareer.toLocaleDateString()}</InfoElement>
+         <InfoElement>{formatDateToDdMmYyyy(beginCareer)}</InfoElement>
         </Label>
         <Label size="small">
          Опыт:{" "}

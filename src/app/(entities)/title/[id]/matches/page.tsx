@@ -1,5 +1,6 @@
 import Match from "@/components/Row/Match";
 import createClient from "@/lib/supabase-server";
+import { formatDateToDdMmYyyy } from "@/lib/utils";
 
 import { notFound } from "next/navigation";
 
@@ -23,10 +24,10 @@ const TitleMatches = async ({
    {searchParams?.start ? (
     <div className="mb-2 w-full text-center text-2xl font-semibold">
      {searchParams.end
-      ? `${new Date(searchParams.start).toLocaleDateString()} - ${new Date(
-         searchParams.end
-        ).toLocaleDateString()}`
-      : `${new Date(searchParams.start).toLocaleDateString()} - сейчас`}
+      ? `${formatDateToDdMmYyyy(
+         new Date(searchParams.start)
+        )} - ${formatDateToDdMmYyyy(new Date(searchParams.end))}`
+      : `${formatDateToDdMmYyyy(new Date(searchParams.start))} - сейчас`}
     </div>
    ) : null}
    {shows

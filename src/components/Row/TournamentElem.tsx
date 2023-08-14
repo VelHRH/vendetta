@@ -1,4 +1,8 @@
-import { normalizeRating, ratingColor } from "@/lib/utils";
+import {
+ formatDateToDdMmYyyy,
+ normalizeRating,
+ ratingColor,
+} from "@/lib/utils";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -23,7 +27,7 @@ const ShowElem: FC<WrestlerElemProps> = ({
    </div>
    <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 h-full flex items-center">
     {tournament.start
-     ? new Date(tournament.start.toString() || "").toLocaleDateString()
+     ? formatDateToDdMmYyyy(new Date(tournament.start.toString() || ""))
      : "Еще не стартовал"}
    </div>
 
