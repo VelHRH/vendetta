@@ -107,8 +107,8 @@ const Titles = async ({ searchParams }: { searchParams: { sort: string } }) => {
           )[0].wrestler_name
         : "Вакантно"
       }
-      comments={title.comments_titles}
-      yourComments={
+      commentsN={title.comments_titles.length}
+      yourRating={
        !profile
         ? undefined
         : profile?.comments_titles.find((c) => c.item_id === title.id)

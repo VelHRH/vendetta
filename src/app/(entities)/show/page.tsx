@@ -112,8 +112,8 @@ const AllShows = async ({
         ? formatDateToDdMmYyyy(new Date(show.upload_date.toString() || ""))
         : "Еще не вышло"
       }
-      comments={show.comments_shows}
-      yourComments={
+      commentsN={show.comments_shows.length}
+      yourRating={
        !profile
         ? undefined
         : profile.comments_shows.find((c) => c.item_id === show.id)?.rating ||

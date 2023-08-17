@@ -8,7 +8,7 @@ import { Button } from "./ui/Button";
 interface SortButtonProps
  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
  children: string;
- value: "rating" | "your" | "number" | "date";
+ value: "rating" | "your" | "number" | "date" | "avg";
 }
 
 const SortButton: FC<SortButtonProps> = ({ children, value, className }) => {

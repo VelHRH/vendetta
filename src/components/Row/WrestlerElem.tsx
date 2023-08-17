@@ -95,9 +95,7 @@ const WrestlerElem = async ({
      }).toFixed(2)}
     </div>
    ) : (
-    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center">
-     --
-    </div>
+    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 aspect-square rounded-md justify-center p-3 h-full flex items-center"></div>
    )}
    {yourComments ? (
     yourComments !== -1 ? (
@@ -112,9 +110,7 @@ const WrestlerElem = async ({
       {yourComments}
      </div>
     ) : (
-     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center">
-      --
-     </div>
+     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center"></div>
     )
    ) : null}
    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 h-full flex items-center">

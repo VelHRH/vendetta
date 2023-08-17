@@ -111,8 +111,8 @@ const AllTournaments = async ({
         ? formatDateToDdMmYyyy(new Date(tournament.start.toString() || ""))
         : "Еще не вышло"
       }
-      comments={tournament.comments_tournaments}
-      yourComments={
+      commentsN={tournament.comments_tournaments.length}
+      yourRating={
        !profile
         ? undefined
         : profile?.comments_tournaments.find((c) => c.item_id === tournament.id)

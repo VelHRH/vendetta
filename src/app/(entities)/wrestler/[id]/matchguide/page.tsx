@@ -118,8 +118,8 @@ const WrestlerMatchguide = async ({
        shows?.find((sh) => sh.matches.some((m) => m.id === match.id))?.name ||
        "Error"
       }
-      comments={match.comments_matches}
-      yourComments={
+      commentsN={match.comments_matches.length}
+      yourRating={
        !profile
         ? undefined
         : profile?.comments_matches.find((c) => c.item_id === match.id)

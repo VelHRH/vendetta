@@ -112,8 +112,8 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
          )
         )?.name || "Нет матчей"
       }
-      comments={team.comments_teams}
-      yourComments={
+      commentsN={team.comments_teams.length}
+      yourRating={
        !profile
         ? undefined
         : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ||
