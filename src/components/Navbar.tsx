@@ -28,7 +28,7 @@ const Navbar = async () => {
   .eq("id", user?.id)
   .single();
  return (
-  <div className="fixed h-[80px] text-lg lg:text-xl z-50 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-10 w-full">
+  <div className="fixed h-[80px] text-lg lg:text-xl z-50 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-3 lg:px-10 w-full">
    <div className="flex gap-5 lg:gap-10 items-center">
     <Link href="/" className="flex gap-2 font-bold items-center">
      <Icons.logo className="h-[35px] w-[37px] lg:h-[45px] lg:w-[47px] text-slate-900 dark:text-slate-100" />
@@ -36,7 +36,7 @@ const Navbar = async () => {
     </Link>
     <div className="lg:hidden">
      <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
        <Button variant={"subtle"} className="flex items-center gap-1">
         <ChevronDown /> Меню
        </Button>
@@ -56,31 +56,28 @@ const Navbar = async () => {
          <DropdownMenuSeparator />
         </>
        )}
-       <DropdownMenuItem>
-        <Link href="/match">Матчгайд</Link>
-       </DropdownMenuItem>
-       <DropdownMenuItem>
-        <Link href="/show">Шоу</Link>
-       </DropdownMenuItem>
-       <DropdownMenuItem>
-        <Link href="/wrestler">Рестлеры</Link>
-       </DropdownMenuItem>
-       <DropdownMenuItem>
-        <Link href="/team">Команды</Link>
-       </DropdownMenuItem>
-       <DropdownMenuItem>
-        <Link href="/tournament">Турниры</Link>
-       </DropdownMenuItem>
-       <DropdownMenuItem>
-        <Link href="/title">Титулы</Link>
-       </DropdownMenuItem>
+       <Link href="/match">
+        <DropdownMenuItem>Матчгайд</DropdownMenuItem>
+       </Link>
+       <Link href="/show">
+        <DropdownMenuItem>Шоу</DropdownMenuItem>
+       </Link>
+       <Link href="/wrestler">
+        <DropdownMenuItem>Рестлеры</DropdownMenuItem>
+       </Link>
+       <Link href="/team">
+        <DropdownMenuItem>Команды</DropdownMenuItem>
+       </Link>
+       <Link href="/tournament">
+        <DropdownMenuItem>Турниры</DropdownMenuItem>
+       </Link>
+       <Link href="/title">
+        <DropdownMenuItem>Титулы</DropdownMenuItem>
+       </Link>
        {profile?.role === "admin" && (
-        <DropdownMenuItem>
-         <Link href="/add" className="flex items-center gap-1">
-          <Plus />
-          Добавить
-         </Link>
-        </DropdownMenuItem>
+        <Link href="/add">
+         <DropdownMenuItem>Добавить</DropdownMenuItem>
+        </Link>
        )}
       </DropdownMenuContent>
      </DropdownMenu>
