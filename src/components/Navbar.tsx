@@ -31,7 +31,7 @@ const Navbar = async () => {
   <div className="fixed h-[80px] text-lg lg:text-xl z-50 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm flex justify-between items-center top-0 left-[50%] translate-x-[-50%] px-10 w-full">
    <div className="flex gap-5 lg:gap-10 items-center">
     <Link href="/" className="flex gap-2 font-bold items-center">
-     <Icons.logo className="h-[35px] w-[37px] text-slate-900 dark:text-slate-100" />
+     <Icons.logo className="h-[35px] w-[37px] lg:h-[45px] lg:w-[47px] text-slate-900 dark:text-slate-100" />
      <p>Vendetta</p>
     </Link>
     <div className="lg:hidden">
