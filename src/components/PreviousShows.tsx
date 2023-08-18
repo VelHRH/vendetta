@@ -12,9 +12,9 @@ interface PreviousShowsProps {
 const PreviousShows: FC<PreviousShowsProps> = ({ shows }) => {
  const [isMore, setIsMore] = useState<boolean>(false);
  return (
-  <div className="flex flex-col p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md">
-   <Label className="mb-5 font-semibold">Previous shows</Label>
-   <div className="grid grid-cols-3 gap-4">
+  <div className="flex flex-col p-3 lg:p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md">
+   <Label className="mb-3 lg:mb-5 font-semibold">Previous shows</Label>
+   <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
     {shows
      ?.filter((s) => s.upload_date !== null)
      .sort((a, b) => b.upload_date!.localeCompare(a.upload_date!))
@@ -25,7 +25,9 @@ const PreviousShows: FC<PreviousShowsProps> = ({ shows }) => {
        key={show.id}
        className={`rounded-md aspect-video cursor-pointer relative flex flex-col justify-center`}
       >
-       <div className="text-center font-bold text-xl">{show.name}</div>
+       <div className="text-center font-bold text-md lg:text-xl">
+        {show.name}
+       </div>
        <Image
         src={
          show.show_img

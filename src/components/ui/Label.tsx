@@ -11,7 +11,11 @@ const Label: FC<LabelProps> = ({ size, children, className, ...props }) => {
   <p
    className={cn(
     `${
-     size === "small" ? "text-xl" : size === "medium" ? "text-2xl" : "text-4xl"
+     size === "small"
+      ? "text-md lg:text-xl"
+      : size === "medium"
+      ? "text-lg lg:text-2xl"
+      : "text-xl lg:text-4xl"
     } break-all flex gap-2 items-center flex-wrap`,
     className
    )}

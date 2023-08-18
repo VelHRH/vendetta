@@ -24,14 +24,17 @@ export default async function Home() {
    {nextShow && (
     <Link
      href={`/show/${nextShow.id}`}
-     className="flex flex-col p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md cursor-pointer duration-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+     className="flex flex-col p-3 lg:p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md cursor-pointer duration-200 hover:bg-slate-200 dark:hover:bg-slate-800"
     >
      <Label className="mb-5 font-semibold">Next show</Label>
 
-     <div key={nextShow.id} className="flex gap-5">
-      <div className="flex flex-col gap-5 w-2/5">
-       <div className="w-full p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md flex flex-col gap-4 items-start">
-        <Label className="text-3xl font-bold">
+     <div
+      key={nextShow.id}
+      className="flex flex-col lg:flex-row gap-3 lg:gap-5"
+     >
+      <div className="flex flex-col gap-3 lg:gap-5 w-full lg:w-2/5">
+       <div className="w-full p-3 lg:p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md flex flex-col gap-2 lg:gap-4 items-start">
+        <Label className="lg:text-3xl font-bold">
          {nextShow.name.includes("[")
           ? nextShow.name.slice(
              nextShow.name.indexOf("[") + 1,
@@ -40,14 +43,14 @@ export default async function Home() {
           : nextShow.name}{" "}
         </Label>
         <InfoElement>
-         <p className="text-2xl font-medium">August 2023</p>
+         <p className="text-lg lg:text-2xl font-medium">August 2023</p>
         </InfoElement>
        </div>
-       <div className="w-full flex-1 p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md">
+       <div className="w-full flex-1 p-3 lg:p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md">
         <Label className="font-bold" size="medium">
          Matches to watch:
         </Label>
-        <div className="flex flex-col text-xl gap-3 mt-5 items-start">
+        <div className="flex flex-col text-xl gap-2 lg:gap-3 mt-3 lg:mt-5 items-start">
          {nextShow.matches
           .sort((a, b) => b.order - a.order)
           .slice(0, 5)
