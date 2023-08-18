@@ -34,38 +34,40 @@ const RatedShows = async ({
    <Label className="font-bold mb-2 flex justify-center" size="medium">
     Оцененные шоу:
    </Label>
-   <div className="flex justify-between items-center py-2 mt-5 gap-3">
-    <p className="text-center w-1/2">Шоу</p>
-    <p className="text-center flex-1">
-     <SortButton
-      value="date"
-      className={`${
-       searchParams.sort !== "rating" &&
-       searchParams.sort !== "avg" &&
-       "text-amber-500"
-      }`}
-     >
-      Оценено
-     </SortButton>
-    </p>
-    <p className="text-center w-32">
-     <SortButton
-      value="rating"
-      className={`${searchParams.sort === "rating" && "text-amber-500"}`}
-     >
-      Оценка
-     </SortButton>
-    </p>
+   {profile.comments_shows.length > 0 && (
+    <div className="flex justify-between items-center py-2 mt-5 gap-3">
+     <p className="text-center w-1/2">Шоу</p>
+     <p className="text-center flex-1">
+      <SortButton
+       value="date"
+       className={`${
+        searchParams.sort !== "rating" &&
+        searchParams.sort !== "avg" &&
+        "text-amber-500"
+       }`}
+      >
+       Оценено
+      </SortButton>
+     </p>
+     <p className="text-center w-32">
+      <SortButton
+       value="rating"
+       className={`${searchParams.sort === "rating" && "text-amber-500"}`}
+      >
+       Оценка
+      </SortButton>
+     </p>
 
-    <p className="text-center w-32">
-     <SortButton
-      value="avg"
-      className={`${searchParams.sort === "avg" && "text-amber-500"}`}
-     >
-      Среднее
-     </SortButton>
-    </p>
-   </div>
+     <p className="text-center w-32">
+      <SortButton
+       value="avg"
+       className={`${searchParams.sort === "avg" && "text-amber-500"}`}
+      >
+       Среднее
+      </SortButton>
+     </p>
+    </div>
+   )}
    {profile.comments_shows.length > 0 ? (
     profile.comments_shows
      .sort((a, b) =>

@@ -24,7 +24,7 @@ const RatedMatches = async ({ params }: { params: { slug: string } }) => {
 
  return (
   <>
-   <Label className="font-bold mb-2 flex justify-center" size="medium">
+   <Label className="font-bold mb-3 flex justify-center" size="medium">
     Оцененные матчи:
    </Label>
    {profile.comments_matches.length > 0 ? (
