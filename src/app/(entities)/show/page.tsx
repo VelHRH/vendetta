@@ -81,7 +81,6 @@ const AllShows = async ({
     </p>
    </div>
    {shows
-    .filter((show) => show.promotion?.includes("Vendetta Federation"))
     .sort((a, b) =>
      searchParams.sort === "rating"
       ? normalizeRating({

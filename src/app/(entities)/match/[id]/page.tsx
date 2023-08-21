@@ -52,16 +52,12 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="small">
       Шоу:{" "}
       <InfoElement>
-       {show?.promotion?.includes("Vendetta Federation") ? (
-        <Link
-         href={`/show/${show?.id}`}
-         className="hover:underline underline-offset-4"
-        >
-         {show?.name}
-        </Link>
-       ) : (
-        show?.name
-       )}
+       <Link
+        href={`/show/${show?.id}`}
+        className="hover:underline underline-offset-4"
+       >
+        {show?.name}
+       </Link>
       </InfoElement>
      </Label>
      <Label size="small">

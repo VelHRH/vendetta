@@ -37,7 +37,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  const {
   data: { user },
  } = await supabase.auth.getUser();
- if (!show || !show.promotion?.includes("Vendetta Federation")) {
+ if (!show) {
   notFound();
  }
  return (
