@@ -1,8 +1,9 @@
 import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
+import InfoLabel from "@/components/ui/InfoLabel";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
-import { formatDateToDdMmYyyy } from "@/lib/utils";
+import { avgShowByMatches, formatDateToDdMmYyyy } from "@/lib/utils";
 import { Frown } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -34,6 +35,11 @@ const RatedShows = async ({
    <Label className="font-bold mb-2 flex justify-center" size="medium">
     Оцененные шоу:
    </Label>
+
+   <InfoLabel>
+    Колонка &quot;Среднее&quot; отвечает за средний рейтинг оцененных вами
+    матчей на каждом шоу.
+   </InfoLabel>
    {profile.comments_shows.length > 0 && (
     <div className="flex justify-between items-center py-2 mt-5 gap-3">
      <p className="text-center w-1/2">Шоу</p>
@@ -74,7 +80,8 @@ const RatedShows = async ({
       searchParams.sort === "rating"
        ? b.rating - a.rating
        : searchParams.sort === "avg"
-       ? avgByMatches(matches, b, profile) - avgByMatches(matches, a, profile)
+       ? avgShowByMatches(matches, b.item_id!, profile) -
+         avgShowByMatches(matches, a.item_id!, profile)
        : new Date(b.created_at || new Date()).getTime() -
          new Date(a.created_at || new Date()).getTime()
      )
@@ -86,7 +93,9 @@ const RatedShows = async ({
        link={`/show/${shows?.find((w) => w.id === comment.item_id)!.id!}`}
        avgRating={comment.rating}
        yourRating={
-        matches ? avgByMatches(matches, comment, profile) : undefined
+        matches
+         ? avgShowByMatches(matches, comment.item_id!, profile)
+         : undefined
        }
       />
      ))
@@ -100,23 +109,3 @@ const RatedShows = async ({
 };
 
 export default RatedShows;
-
-const avgByMatches = (
- matches: any,
- comment: Database["public"]["Tables"]["comments_matches"]["Row"],
- profile: Database["public"]["Tables"]["users"]["Row"]
-) => {
- return parseFloat(
-  (
-   matches
-    .filter((match: any) => match.show === comment.item_id)
-    .flatMap((match: any) => match.comments_matches)
-    .filter((comment: any) => comment.author === profile.id)
-    .reduce((sum: number, comment: any) => sum + comment.rating, 0) /
-    matches
-     .filter((match: any) => match.show === comment.item_id)
-     .flatMap((match: any) => match.comments_matches)
-     .filter((comment: any) => comment.author === profile.id).length || -1
-  ).toFixed(2)
- );
-};

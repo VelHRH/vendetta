@@ -98,8 +98,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
    <div className="flex-1">
     <div className="flex justify-center gap-2 mb-5">
      <SectionButton link={`/user/${params.slug}`} isMain={2}>
-      Матчи
+      Общее
      </SectionButton>
+     <SectionButton link={`/user/${params.slug}/matches`}>Матчи</SectionButton>
      <SectionButton link={`/user/${params.slug}/wrestlers`}>
       Рестлеры
      </SectionButton>

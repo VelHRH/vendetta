@@ -13,7 +13,7 @@ const PreviousShows: FC<PreviousShowsProps> = ({ shows }) => {
  const [isMore, setIsMore] = useState<boolean>(false);
  return (
   <div className="flex flex-col p-3 lg:p-7 border-[3px] border-slate-300 dark:border-slate-700 rounded-md">
-   <Label className="mb-3 lg:mb-5 font-semibold">Previous shows</Label>
+   <Label className="mb-3 lg:mb-5 font-semibold">Прошлые шоу</Label>
    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
     {shows
      ?.filter((s) => s.upload_date !== null)

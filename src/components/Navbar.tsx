@@ -4,7 +4,7 @@ import createClient from "../lib/supabase-server";
 import SignOut from "./Auth/SignOut";
 import SwitchTheme from "./SwitchTheme";
 import { Button, buttonVariants } from "./ui/Button";
-import { ChevronDown, Plus, UserCircle2 } from "lucide-react";
+import { List, Plus, UserCircle2 } from "lucide-react";
 import { Icons } from "./Icons";
 import BackUpButton from "./BackUpButton";
 import {
@@ -38,7 +38,7 @@ const Navbar = async () => {
      <DropdownMenu>
       <DropdownMenuTrigger asChild>
        <Button variant={"subtle"} className="flex items-center gap-1">
-        <ChevronDown /> Меню
+        <List /> Меню
        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

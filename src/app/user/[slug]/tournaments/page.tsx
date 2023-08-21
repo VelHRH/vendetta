@@ -1,5 +1,6 @@
 import ListElem from "@/components/Row/ListElem";
 import SortButton from "@/components/SortButton";
+import InfoLabel from "@/components/ui/InfoLabel";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
 import { formatDateToDdMmYyyy } from "@/lib/utils";
@@ -36,6 +37,10 @@ const RatedTournaments = async ({
    <Label className="font-bold mb-2 flex justify-center" size="medium">
     Оцененные турниры:
    </Label>
+   <InfoLabel>
+    Колонка &quot;Среднее&quot; отвечает за средний рейтинг оцененных вами
+    матчей на каждом турнире.
+   </InfoLabel>
    {profile.comments_tournaments.length > 0 && (
     <div className="flex justify-between items-center py-2 mt-5 gap-3">
      <p className="text-center w-1/2">Турнир</p>

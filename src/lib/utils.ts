@@ -160,8 +160,90 @@ export function sortSides(sides: any[]) {
 
 export function formatDateToDdMmYyyy(date: Date) {
  const day = String(date.getDate()).padStart(2, "0");
- const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+ const month = String(date.getMonth() + 1).padStart(2, "0");
  const year = date.getFullYear();
 
  return `${day}.${month}.${year}`;
 }
+
+export const avgWrestlerByMatches = (
+ matches: any,
+ wrestlerId: string,
+ profile: Database["public"]["Tables"]["users"]["Row"]
+) => {
+ return parseFloat(
+  (
+   matches
+    .filter((match: any) =>
+     match.match_sides.some((side: any) =>
+      side.wrestlers.some((wrestler: any) => wrestler.wrestlerId === wrestlerId)
+     )
+    )
+    .flatMap((match: any) => match.comments_matches)
+    .filter((comment: any) => comment.author === profile.id)
+    .reduce((sum: number, comment: any) => sum + comment.rating, 0) /
+    matches
+     .filter((match: any) =>
+      match.match_sides.some((side: any) =>
+       side.wrestlers.some(
+        (wrestler: any) => wrestler.wrestlerId === wrestlerId
+       )
+      )
+     )
+     .flatMap((match: any) => match.comments_matches)
+     .filter((comment: any) => comment.author === profile.id).length || -1
+  ).toFixed(2)
+ );
+};
+
+export const avgShowByMatches = (
+ matches: any,
+ showId: number,
+ profile: Database["public"]["Tables"]["users"]["Row"]
+) => {
+ return parseFloat(
+  (
+   matches
+    .filter((match: any) => match.show === showId)
+    .flatMap((match: any) => match.comments_matches)
+    .filter((comment: any) => comment.author === profile.id)
+    .reduce((sum: number, comment: any) => sum + comment.rating, 0) /
+    matches
+     .filter((match: any) => match.show === showId)
+     .flatMap((match: any) => match.comments_matches)
+     .filter((comment: any) => comment.author === profile.id).length || -1
+  ).toFixed(2)
+ );
+};
+
+export const avgTeamByMatches = (
+ matches: any,
+ teamId: string,
+ profile: Database["public"]["Tables"]["users"]["Row"]
+) => {
+ return parseFloat(
+  (
+   matches
+    .filter((match: any) =>
+     match.match_sides.some((side: any) =>
+      side.wrestlers.some(
+       (wrestler: any) => wrestler.teamId === teamId.toString()
+      )
+     )
+    )
+    .flatMap((match: any) => match.comments_matches)
+    .filter((comment: any) => comment.author === profile.id)
+    .reduce((sum: number, comment: any) => sum + comment.rating, 0) /
+    matches
+     .filter((match: any) =>
+      match.match_sides.some((side: any) =>
+       side.wrestlers.some(
+        (wrestler: any) => wrestler.teamId === teamId.toString()
+       )
+      )
+     )
+     .flatMap((match: any) => match.comments_matches)
+     .filter((comment: any) => comment.author === profile.id).length || -1
+  ).toFixed(2)
+ );
+};
