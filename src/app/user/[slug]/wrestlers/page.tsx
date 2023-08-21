@@ -82,7 +82,7 @@ const RatedWrestlers = async ({
        ? b.rating - a.rating
        : searchParams.sort === "avg"
        ? avgWrestlerByMatches(matches, b.item_id!.toString(), profile) -
-         avgWrestlerByMatches(matches, b.item_id!.toString(), profile)
+         avgWrestlerByMatches(matches, a.item_id!.toString(), profile)
        : new Date(b.created_at || new Date()).getTime() -
          new Date(a.created_at || new Date()).getTime()
      )

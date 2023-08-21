@@ -53,6 +53,10 @@ const RatedMatches = async ({ params }: { params: { slug: string } }) => {
          )
         ).length >= 5
       )
+      .filter(
+       (wrestler) =>
+        avgWrestlerByMatches(matches, wrestler.id.toString(), profile) > -1
+      )
       .sort(
        (a, b) =>
         avgWrestlerByMatches(matches, b.id.toString(), profile) -
@@ -93,6 +97,7 @@ const RatedMatches = async ({ params }: { params: { slug: string } }) => {
       .filter(
        (s) => matches!.filter((match: any) => match.show === s.id).length >= 3
       )
+      .filter((show) => avgShowByMatches(matches, show.id, profile) > -1)
       .sort(
        (a, b) =>
         avgShowByMatches(matches, b.id, profile) -
@@ -139,6 +144,9 @@ const RatedMatches = async ({ params }: { params: { slug: string } }) => {
           )
          )
         ).length >= 3
+      )
+      .filter(
+       (team) => avgTeamByMatches(matches, team.id.toString(), profile) > -1
       )
       .sort(
        (a, b) =>
