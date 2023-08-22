@@ -47,8 +47,8 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
 
  return (
   <>
-   <div className="w-full flex gap-5 pb-10 border-b-2 border-slate-500">
-    <div className="flex-1 flex flex-col gap-5">
+   <div className="w-full flex flex-col lg:flex-row gap-5 pb-10 border-b-2 border-slate-500">
+    <div className="lg:flex-1 flex flex-col gap-5">
      <Label size="small">
       Шоу:{" "}
       <InfoElement>
@@ -87,6 +87,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
       Способ окончания: <InfoElement>{match.ending}</InfoElement>
      </Label>
     </div>
+
     <RatingBlock
      comments={match.comments_matches}
      avgRating={match.avgRating}
@@ -95,7 +96,7 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
 
    <div className="w-full flex flex-col pb-10 mb-10 gap-2 border-b-2 border-slate-500">
     <Label className="font-bold">Галерея:</Label>
-    <div className="w-full grid grid-cols-8 gap-3 mt-5">
+    <div className="w-full grid grid-cols-5 lg:grid-cols-8 gap-3 mt-5">
      {sortSides(match.match_sides)
       .map((side) => side.wrestlers.flat())
       .flat()

@@ -2,12 +2,12 @@
 import { cn } from "@/lib/utils";
 import { ArrowUpWideNarrow } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { Button } from "./ui/Button";
 
 interface SortButtonProps
  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
- children: string;
+ children: ReactNode;
  value: "rating" | "your" | "number" | "date" | "avg";
 }
 

@@ -13,7 +13,7 @@ const WrestlerLinkImage: FC<WrestlerLinkImageProps> = ({ wrestler }) => {
    key={wrestler.wrestlerId}
    className={`aspect-square cursor-pointer relative flex flex-col justify-center`}
   >
-   <div className="text-center font-bold text-xl">
+   <div className="text-center break-words font-bold text-md lg:text-xl">
     {wrestler.wrestlerCurName}
    </div>
    <Image

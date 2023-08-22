@@ -9,6 +9,7 @@ import Link from "next/link";
 import createClient from "@/lib/supabase-server";
 import MatchNoResult from "@/components/Row/MatchNoResult";
 import { parseSide, sortSides } from "@/lib/utils";
+import RatingBlock from "@/components/RatingBlock";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
  const supabase = createClient();
@@ -52,7 +53,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
  return (
   <div className="flex flex-col gap-5 items-center">
    <div className="flex gap-2">
-    <Label className="font-bold">
+    <Label size="medium" className="font-semibold lg:font-bold">
      <MatchNoResult match_sides={match.match_sides} />
     </Label>
     {user &&

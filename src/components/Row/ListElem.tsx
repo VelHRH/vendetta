@@ -24,9 +24,9 @@ const ListElem: FC<ListElemProps> = ({
  return (
   <Link
    href={link}
-   className="w-full mb-4 flex justify-between gap-3 text-xl items-stretch group"
+   className="w-full mb-4 flex justify-between gap-3 text-sm lg:text-xl items-stretch group"
   >
-   <div className="w-1/2 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center">
+   <div className="flex-1 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 rounded-md p-3 flex gap-4 font-bold items-center">
     {main}
     {reigns
      ?.filter(
@@ -45,7 +45,7 @@ const ListElem: FC<ListElemProps> = ({
        )
      )}
    </div>
-   <div className="flex-1 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 flex items-center text-center">
+   <div className="w-1/4 duration-300 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-md justify-center p-3 flex items-center text-center">
     {secondary}
    </div>
 
@@ -59,7 +59,7 @@ const ListElem: FC<ListElemProps> = ({
        }),
       }),
      }}
-     className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"
+     className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-14 lg:w-32 rounded-md justify-center p-3 flex items-center"
     >
      {commentsN && commentsN !== 0
       ? normalizeRating({
@@ -69,7 +69,7 @@ const ListElem: FC<ListElemProps> = ({
       : avgRating}
     </div>
    ) : (
-    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"></div>
+    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-14 lg:w-32 rounded-md justify-center p-3 flex items-center"></div>
    )}
    {yourRating ? (
     yourRating !== -1 ? (
@@ -79,16 +79,16 @@ const ListElem: FC<ListElemProps> = ({
         rating: yourRating,
        }),
       }}
-      className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"
+      className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300  w-14 lg:w-32 rounded-md justify-center p-3 flex items-center"
      >
       {yourRating}
      </div>
     ) : (
-     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center"></div>
+     <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-14 lg:w-32 rounded-md justify-center p-3 flex items-center"></div>
     )
    ) : null}
    {commentsN !== undefined && (
-    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-32 rounded-md justify-center p-3 flex items-center">
+    <div className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 duration-300 w-14 lg:w-32 rounded-md justify-center p-3 flex items-center">
      {commentsN}
     </div>
    )}

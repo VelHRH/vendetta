@@ -39,9 +39,9 @@ const Matchguide = async ({
   <div className="w-full font-semibold">
    <Label className="font-bold mb-5 justify-center">Оцененные матчи</Label>
    <div className="flex justify-between items-center py-2 mt-5 gap-3">
-    <p className="text-center w-1/2">Матч</p>
-    <p className="text-center flex-1">Шоу</p>
-    <p className="text-center w-32">
+    <p className="text-center flex-1">Матч</p>
+    <p className="text-center w-1/4">Шоу</p>
+    <p className="text-center w-14 lg:w-32">
      <SortButton
       value="rating"
       className={`${
@@ -50,25 +50,25 @@ const Matchguide = async ({
        "text-amber-500"
       }`}
      >
-      Рейтинг
+      <div className="hidden lg:block">Рейтинг</div>
      </SortButton>
     </p>
     {profile && (
-     <p className="text-center w-32">
+     <p className="text-center w-14 lg:w-32">
       <SortButton
        value="your"
        className={`${searchParams.sort === "your" && "text-amber-500"}`}
       >
-       Ваш
+       <div className="hidden lg:block">Ваш</div>
       </SortButton>
      </p>
     )}
-    <p className="text-center w-32">
+    <p className="text-center w-14 lg:w-32">
      <SortButton
       value="number"
       className={`${searchParams.sort === "number" && "text-amber-500"}`}
      >
-      Оценок
+      <div className="hidden lg:block">Оценок</div>
      </SortButton>
     </p>
    </div>
