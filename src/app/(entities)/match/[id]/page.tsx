@@ -64,7 +64,9 @@ const MatchOverview = async ({ params }: { params: { id: string } }) => {
       Дата:{" "}
       <InfoElement>
        {show?.upload_date
-        ? formatDateToDdMmYyyy(new Date(show.upload_date))
+        ? match.id !== 100
+          ? formatDateToDdMmYyyy(new Date(show.upload_date))
+          : "23.06.2012"
         : "Еще не состоялся"}
       </InfoElement>
      </Label>

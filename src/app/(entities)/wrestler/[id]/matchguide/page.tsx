@@ -17,7 +17,13 @@ const WrestlerMatchguide = async ({
   .from("shows")
   .select("*, matches(*, comments_matches(*), match_sides(*))");
  const matches = shows
-  ?.flatMap((show) => show.matches)
+  ?.flatMap((show) =>
+   show.matches.map((match) =>
+    match.id === 100
+     ? { ...match, date: "2012-06-23" }
+     : { ...match, date: show.upload_date }
+   )
+  )
   .filter((match) =>
    match.match_sides.some((side) =>
     side.wrestlers.some((wrestler) => wrestler.wrestlerId === params.id)
@@ -99,7 +105,8 @@ const WrestlerMatchguide = async ({
          ratings: a.comments_matches.length,
          avgRating: a.avgRating,
         })
-      : b.show - a.show
+      : new Date(b.date || new Date()).getTime() -
+        new Date(a.date || new Date()).getTime()
     )
     .map((match, index) => (
      <ListElem

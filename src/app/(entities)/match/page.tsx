@@ -74,6 +74,7 @@ const Matchguide = async ({
    </div>
    {matches
     .filter((match) => match.comments_matches.length > 0)
+
     .sort((a, b) =>
      searchParams.sort === "your"
       ? (profile!.comments_matches.find((c) => c.item_id === b.id)?.rating ||

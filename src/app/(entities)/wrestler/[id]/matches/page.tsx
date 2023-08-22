@@ -13,7 +13,14 @@ const WrestlerMatches = async ({ params }: { params: { id: string } }) => {
   notFound();
  }
 
- return <AllWrestlerMatches shows={shows} id={params.id} />;
+ return (
+  <AllWrestlerMatches
+   shows={shows.map((show) =>
+    show.id === 23 ? { ...show, upload_date: "2012-06-23" } : show
+   )}
+   id={params.id}
+  />
+ );
 };
 
 export default WrestlerMatches;

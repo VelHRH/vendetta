@@ -17,7 +17,7 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
     index % 2 === 0 && "dark:bg-slate-800 bg-slate-200"
    } px-4 py-5 text-xl w-full rounded-md gap-3 items-stretch`}
   >
-   <div className="flex w-[60%] border-r-2 dark:border-slate-600 border-slate-400 pr-3 items-center">
+   <div className="flex flex-1 border-r-2 dark:border-slate-600 border-slate-400 pr-3 items-center">
     <p className="mr-3">{index + 1}.</p>
     <div className="flex flex-col gap-1">
      {match.challanges.length > 0 && (
@@ -50,16 +50,13 @@ const Match: FC<MatchProps> = ({ index, match, show }) => {
     </div>
    </div>
 
-   {show.promotion?.includes("Vendetta Federation") ? (
-    <Link
-     href={`/show/${show.id}`}
-     className="flex-1 text-center hover:underline underline-offset-4 font-semibold flex items-center justify-center"
-    >
-     {show.name}
-    </Link>
-   ) : (
-    show.name
-   )}
+   <Link
+    href={`/show/${show.id}`}
+    className="w-[27%] text-center hover:underline underline-offset-4 font-semibold flex items-center justify-center"
+   >
+    {show.name}
+   </Link>
+
    <div className="w-[10%] border-l-2 dark:border-slate-600 border-slate-400 flex items-center justify-center">
     {show.upload_date
      ? formatDateToDdMmYyyy(new Date(show.upload_date.toString() || ""))
