@@ -51,7 +51,7 @@ const MatchElem = async ({ matchId, isFull, index }: MatchElemProps) => {
       {match.challanges.map((title) => (
        <Link
         key={title.id}
-        href={`/title/${title.id}`}
+        href={`/title/${title.title_id}`}
         className={`rounded-full py-1 px-2 text-sm font-semibold border-2 duration-200 ${
          title.title_name === "Чемпионство Vendetta"
           ? "border-amber-400/70 hover:bg-amber-400/70"
