@@ -32,14 +32,14 @@ const Comment = async ({
  return (
   <div className="w-full p-7 bg-slate-200 dark:bg-slate-800 flex flex-col rounded-sm text-lg break-words">
    <div className="flex mb-5 pb-3 border-b-2 border-slate-500 gap-3">
-    <Link href={`/user/${user?.username}`} className="w-1/2 flex justify-start">
+    <div className="w-1/2 flex justify-start">
      <Label
       size="medium"
       className="hover:underline underline-offset-4 font-bold"
      >
-      {user?.username}
+      <Link href={`/user/${user?.username}`}>{user?.username}</Link>
      </Label>
-    </Link>
+    </div>
     <div className="flex justify-between items-center flex-1">
      <Label
       size="medium"

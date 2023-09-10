@@ -1,4 +1,5 @@
 import InfoElement from "@/components/InfoElement";
+import LastCommets from "@/components/LastCommets";
 import PreviousShows from "@/components/PreviousShows";
 import Label from "@/components/ui/Label";
 import createClient from "@/lib/supabase-server";
@@ -10,7 +11,7 @@ import { notFound } from "next/navigation";
 export default async function Home() {
  const supabase = createClient();
 
- const { data: shows, error } = await supabase
+ const { data: shows } = await supabase
   .from("shows")
   .select("*, matches(*, match_sides(*))");
  if (!shows) {
@@ -86,6 +87,7 @@ export default async function Home() {
     </Link>
    )}
    <PreviousShows shows={shows} />
+   <LastCommets />
   </div>
  );
 }
