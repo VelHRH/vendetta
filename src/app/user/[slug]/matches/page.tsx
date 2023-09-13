@@ -15,7 +15,7 @@ const RatedMatches = async ({ params }: { params: { slug: string } }) => {
  const { data: profile } = await supabase
   .from("users")
   .select("*, comments_matches(*)")
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
 
  if (!profile) {

@@ -12,14 +12,13 @@ import { notFound } from "next/navigation";
 
 const RatedMatches = async ({ params }: { params: { slug: string } }) => {
  const supabase = createClient();
-
  const { data: wrestlers } = await supabase.from("wrestlers").select();
  const { data: teams } = await supabase.from("teams").select();
  const { data: shows } = await supabase.from("shows").select();
  const { data: profile } = await supabase
   .from("users")
   .select()
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
 
  if (!profile) {

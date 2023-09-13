@@ -17,7 +17,7 @@ export async function generateMetadata({
  const { data: profile } = await supabase
   .from("users")
   .select("*")
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
 
  if (!profile) {
@@ -39,7 +39,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
   .select(
    "*, comments_shows(*), comments_wrestlers(*), comments_tournaments(*), comments_teams(*), comments_titles(*), comments_matches(*)"
   )
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
  const {
   data: { user },

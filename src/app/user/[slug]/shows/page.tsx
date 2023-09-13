@@ -21,7 +21,7 @@ const RatedShows = async ({
  const { data: profile } = await supabase
   .from("users")
   .select("*, comments_shows(*)")
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
 
  if (!profile) {

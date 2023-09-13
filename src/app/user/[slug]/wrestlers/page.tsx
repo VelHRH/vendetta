@@ -21,7 +21,7 @@ const RatedWrestlers = async ({
  const { data: profile } = await supabase
   .from("users")
   .select("*, comments_wrestlers(*)")
-  .eq("username", params.slug.replace(/%20/g, " "))
+  .eq("username", decodeURIComponent(params.slug))
   .single();
 
  if (!profile) {
