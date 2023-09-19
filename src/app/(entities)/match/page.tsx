@@ -77,10 +77,14 @@ const Matchguide = async ({
 
     .sort((a, b) =>
      searchParams.sort === "your"
-      ? (profile!.comments_matches.find((c) => c.item_id === b.id)?.rating ||
-         -1) -
-        (profile!.comments_matches.find((c) => c.item_id === a.id)?.rating ||
-         -1)
+      ? (profile?.comments_matches.find((c) => c.item_id === b.id)?.rating === 0
+         ? 0
+         : profile!.comments_matches.find((c) => c.item_id === b.id)?.rating ||
+           -1) -
+        (profile?.comments_matches.find((c) => c.item_id === a.id)?.rating === 0
+         ? 0
+         : profile!.comments_matches.find((c) => c.item_id === a.id)?.rating ||
+           -1)
       : searchParams.sort === "number"
       ? b.comments_matches.length - a.comments_matches.length
       : normalizeRating({

@@ -91,10 +91,16 @@ const AllTournaments = async ({
          avgRating: a.avgRating,
         })
       : searchParams.sort === "your"
-      ? (profile!.comments_tournaments.find((c) => c.item_id === b.id)
-         ?.rating || -1) -
-        (profile!.comments_tournaments.find((c) => c.item_id === a.id)
-         ?.rating || -1)
+      ? (profile?.comments_tournaments.find((c) => c.item_id === b.id)
+         ?.rating === 0
+         ? 0
+         : profile!.comments_tournaments.find((c) => c.item_id === b.id)
+            ?.rating || -1) -
+        (profile?.comments_tournaments.find((c) => c.item_id === b.id)
+         ?.rating === 0
+         ? 0
+         : profile!.comments_tournaments.find((c) => c.item_id === a.id)
+            ?.rating || -1)
       : searchParams.sort === "number"
       ? b.comments_tournaments.length - a.comments_tournaments.length
       : new Date(b.start || new Date()).getTime() -

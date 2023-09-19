@@ -92,9 +92,14 @@ const AllShows = async ({
          avgRating: a.avgRating,
         })
       : searchParams.sort === "your"
-      ? (profile!.comments_shows.find((c) => c.item_id === b.id)?.rating ||
-         -1) -
-        (profile!.comments_shows.find((c) => c.item_id === a.id)?.rating || -1)
+      ? (profile?.comments_shows.find((c) => c.item_id === b.id)?.rating === 0
+         ? 0
+         : profile!.comments_shows.find((c) => c.item_id === b.id)?.rating ||
+           -1) -
+        (profile?.comments_shows.find((c) => c.item_id === a.id)?.rating === 0
+         ? 0
+         : profile!.comments_shows.find((c) => c.item_id === a.id)?.rating ||
+           -1)
       : searchParams.sort === "number"
       ? b.comments_shows.length - a.comments_shows.length
       : new Date(b.upload_date || new Date()).getTime() -
