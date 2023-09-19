@@ -49,12 +49,12 @@ const ListElem: FC<ListElemProps> = ({
     {secondary}
    </div>
 
-   {avgRating !== 0 ? (
+   {commentsN !== 0 ? (
     <div
      style={{
       color: ratingColor({
        rating: normalizeRating({
-        ratings: commentsN || 1,
+        ratings: avgRating === 0 ? 0 : commentsN || 1,
         avgRating: avgRating,
        }),
       }),

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FC, ReactNode } from "react";
 
 interface ProfileElemProps {
- main: ReactNode;
+ main: ReactNode | string;
  rating: number;
  id: number;
  date: string;
