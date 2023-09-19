@@ -112,6 +112,9 @@ const Titles = async ({ searchParams }: { searchParams: { sort: string } }) => {
        !profile
         ? undefined
         : profile?.comments_titles.find((c) => c.item_id === title.id)
+           ?.rating === 0
+        ? 0
+        : profile?.comments_titles.find((c) => c.item_id === title.id)
            ?.rating || -1
       }
      />

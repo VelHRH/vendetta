@@ -107,6 +107,9 @@ const VendettaWrestlers = async ({
        !profile
         ? undefined
         : profile?.comments_wrestlers.find((c) => c.item_id === wrestler.id)
+           ?.rating === 0
+        ? 0
+        : profile?.comments_wrestlers.find((c) => c.item_id === wrestler.id)
            ?.rating || -1
       }
      />

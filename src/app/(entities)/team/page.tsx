@@ -116,6 +116,9 @@ const Teams = async ({ searchParams }: { searchParams: { sort: string } }) => {
       yourRating={
        !profile
         ? undefined
+        : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ===
+          0
+        ? 0
         : profile?.comments_teams.find((c) => c.item_id === team.id)?.rating ||
           -1
       }

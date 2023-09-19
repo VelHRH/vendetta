@@ -115,6 +115,9 @@ const AllShows = async ({
       yourRating={
        !profile
         ? undefined
+        : profile.comments_shows.find((c) => c.item_id === show.id)?.rating ===
+          0
+        ? 0
         : profile.comments_shows.find((c) => c.item_id === show.id)?.rating ||
           -1
       }

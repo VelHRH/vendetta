@@ -114,6 +114,9 @@ const Matchguide = async ({
        !profile
         ? undefined
         : profile?.comments_matches.find((c) => c.item_id === match.id)
+           ?.rating === 0
+        ? 0
+        : profile?.comments_matches.find((c) => c.item_id === match.id)
            ?.rating || -1
       }
      />

@@ -116,6 +116,9 @@ const AllTournaments = async ({
        !profile
         ? undefined
         : profile?.comments_tournaments.find((c) => c.item_id === tournament.id)
+           ?.rating === 0
+        ? 0
+        : profile?.comments_tournaments.find((c) => c.item_id === tournament.id)
            ?.rating || -1
       }
      />
