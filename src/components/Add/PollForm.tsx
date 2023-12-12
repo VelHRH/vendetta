@@ -1,4 +1,9 @@
 'use client';
+import { CreatePollPayload } from '@/lib/validators/poll';
+import { useMutation } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { toast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '../ui/Button';
 import Input from '../ui/Input';
@@ -8,7 +13,42 @@ const PollForm = () => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
-  const [options, setOptions] = useState<{ name: string; link: string }[]>([]);
+  const [options, setOptions] = useState<{ name: string; url?: string; voters: string[] }[]>([]);
+
+  const router = useRouter();
+
+  const { mutate: createPoll, isLoading } = useMutation({
+    mutationFn: async () => {
+      const payload: CreatePollPayload = {
+        name,
+        description,
+        options: options.filter(option => option.name !== ''),
+      };
+      const { data } = await axios.post('/api/poll', payload);
+      return data as string;
+    },
+    onError: err => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 422) {
+          return toast({
+            title: 'Input error',
+            description: 'Not all fields are filled out correctly',
+            variant: 'destructive',
+          });
+        }
+      }
+      toast({
+        title: 'There was an error',
+        description: 'Could not create the poll',
+        variant: 'destructive',
+      });
+    },
+    onSuccess: data => {
+      router.push(`/team/${data}`);
+      router.refresh();
+    },
+  });
+
   return (
     <div className="flex flex-col items-center gap-10 w-full">
       <Label className="font-bold">Создание опроса...</Label>
@@ -44,11 +84,11 @@ const PollForm = () => {
             />
             <Input
               placeholder="Сcылка (если надо)"
-              value={option.link}
+              value={option.url || ''}
               setValue={newVal =>
                 setOptions(prev => {
                   const p = [...prev];
-                  p[index].link = newVal;
+                  p[index].url = newVal;
                   return p;
                 })
               }
@@ -63,7 +103,7 @@ const PollForm = () => {
               ...prev,
               {
                 name: '',
-                link: '',
+                voters: [],
               },
             ])
           }
@@ -71,6 +111,17 @@ const PollForm = () => {
           + Добавить вариант
         </Button>
       </div>
+      <Button
+        isLoading={isLoading}
+        onClick={() => {
+          setIsError(true);
+          createPoll();
+        }}
+        size="lg"
+        className="w-1/2"
+      >
+        {'Create'}
+      </Button>
     </div>
   );
 };
