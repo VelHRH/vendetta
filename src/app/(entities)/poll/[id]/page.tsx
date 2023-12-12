@@ -15,7 +15,7 @@ const PollPage = async ({ params }: { params: { id: string } }) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log(user);
+
   return <Poll poll={poll} options={poll.poll_options} user={user} />;
 };
 

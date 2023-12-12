@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Label from '@/components/ui/Label';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { countPollVotes } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Опросы',
@@ -34,13 +35,4 @@ const Polls = async () => {
     </div>
   );
 };
-
-const countPollVotes = (options: Database['public']['Tables']['poll_options']['Row'][]) => {
-  let sum = 0;
-  for (let option of options) {
-    sum += option.voters.length;
-  }
-  return sum;
-};
-
 export default Polls;

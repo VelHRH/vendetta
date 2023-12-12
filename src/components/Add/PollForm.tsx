@@ -44,7 +44,7 @@ const PollForm = () => {
       });
     },
     onSuccess: data => {
-      router.push(`/team/${data}`);
+      router.push(`/poll/${data}`);
       router.refresh();
     },
   });
