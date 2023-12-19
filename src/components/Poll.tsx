@@ -52,7 +52,6 @@ const Poll = ({ poll, options, user, next, isVoted }: PollProps) => {
       router.refresh();
     },
   });
-
   return (
     <div className="flex flex-col items-center mx-auto w-[40%] gap-3">
       <div className="text-3xl font-bold">{poll.name}</div>
@@ -104,7 +103,7 @@ const Poll = ({ poll, options, user, next, isVoted }: PollProps) => {
           </Button>
         )
       ) : (
-        next && <Link href={`/poll/${next}`}></Link>
+        next && <Link href={`/poll/${next}`}>Следующий опрос</Link>
       )}
     </div>
   );
