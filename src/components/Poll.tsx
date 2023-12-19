@@ -15,9 +15,11 @@ interface PollProps {
   poll: Database['public']['Tables']['polls']['Row'];
   options: Database['public']['Tables']['poll_options']['Row'][];
   user: User | null;
+  next: number | undefined;
+  isVoted: boolean;
 }
 
-const Poll = ({ poll, options, user }: PollProps) => {
+const Poll = ({ poll, options, user, next, isVoted }: PollProps) => {
   const [choice, setChoice] = useState<number>(-1);
 
   const router = useRouter();
@@ -51,13 +53,6 @@ const Poll = ({ poll, options, user }: PollProps) => {
     },
   });
 
-  const isVoted = () => {
-    for (let option of options) {
-      if (user && option.voters.includes(user.id)) return true;
-    }
-    return false;
-  };
-
   return (
     <div className="flex flex-col items-center mx-auto w-[40%] gap-3">
       <div className="text-3xl font-bold">{poll.name}</div>
@@ -76,8 +71,8 @@ const Poll = ({ poll, options, user }: PollProps) => {
               option.name
             )}
           </div>
-          {isVoted() ? (
-            `${100 * (option.voters.length / allVoters)}%`
+          {isVoted || poll.isClosed ? (
+            `${(100 * (option.voters.length / allVoters)).toFixed(2)}%`
           ) : choice !== index ? (
             <div
               onClick={() => setChoice(index)}
@@ -92,13 +87,14 @@ const Poll = ({ poll, options, user }: PollProps) => {
         </div>
       ))}
       <div className="text-sm font-normal text-slate-500 mt-5">{allVoters} голосов</div>
-      {!user ? (
+      {poll.isClosed ? (
+        <div className="text-sm font-normal text-slate-500 mt-5">Опрос закрыт</div>
+      ) : !user ? (
         <div className="text-sm font-normal text-slate-500 mt-5">
           Авторизуйтесь чтобы голосовать
         </div>
-      ) : (
-        choice !== -1 &&
-        !isVoted() && (
+      ) : !isVoted ? (
+        choice !== -1 && (
           <Button
             className="w-full hover:scale-105 transition"
             onClick={() => handleVote()}
@@ -107,6 +103,8 @@ const Poll = ({ poll, options, user }: PollProps) => {
             Голосовать
           </Button>
         )
+      ) : (
+        next && <Link href={`/poll/${next}`}></Link>
       )}
     </div>
   );
