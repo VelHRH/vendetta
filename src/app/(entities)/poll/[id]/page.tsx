@@ -7,9 +7,11 @@ const PollPage = async ({ params }: { params: { id: string } }) => {
   const supabase = createClient();
   const { data: polls } = await supabase.from('polls').select('*, poll_options(*)');
   const poll = polls?.find(p => p.id.toString() === params.id);
-  if (!polls || !poll) {
+  const { data: users } = await supabase.from('users').select('id, username');
+  if (!polls || !poll || !users) {
     notFound();
   }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -24,6 +26,7 @@ const PollPage = async ({ params }: { params: { id: string } }) => {
       user={user}
       next={nextPoll?.id}
       isVoted={isVoted(user, poll.poll_options)}
+      allUsers={users}
     />
   );
 };

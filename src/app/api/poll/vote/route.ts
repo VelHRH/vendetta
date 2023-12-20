@@ -8,7 +8,6 @@ export async function POST(req: Request) {
     const supabase = createClient();
     const { data } = await supabase.from('poll_options').select().eq('id', option_id).single();
     if (!data) throw 'No such option';
-    console.log({ option_id, voter });
     const { error } = await supabase
       .from('poll_options')
       .update({

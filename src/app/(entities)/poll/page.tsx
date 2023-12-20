@@ -12,12 +12,15 @@ export const metadata: Metadata = {
 
 const Polls = async () => {
   const supabase = createClient();
-  const { data: polls } = await supabase.from('polls').select('*, poll_options(*)');
+  const { data: polls } = await supabase
+    .from('polls')
+    .select('*, poll_options(*)')
+    .order('created_at', { ascending: false });
   if (!polls) notFound();
   return (
     <div className="w-full font-semibold">
       <Label className="font-bold mb-5 justify-center">Опросы</Label>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-3 gap-5">
         {polls?.map(poll => (
           <Link
             href={`/poll/${poll.id}`}
@@ -26,8 +29,13 @@ const Polls = async () => {
           >
             <div className="text-2xl">{poll.name}</div>
             <div className="font-normal">{poll.description}</div>
-            <div className="text-sm font-normal text-slate-500 mt-5">
-              {countPollVotes(poll.poll_options)} голосов
+            <div className="text-sm font-normal text-slate-500 mt-5 flex gap-3 justify-center items-center">
+              {countPollVotes(poll.poll_options)} голосов{' '}
+              <div
+                className={`w-2 aspect-square rounded-full ${
+                  poll.isClosed ? 'bg-red-500' : 'bg-green-500'
+                }`}
+              ></div>
             </div>
           </Link>
         ))}
