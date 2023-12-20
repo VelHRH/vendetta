@@ -9,7 +9,7 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from './ui/Button';
+import { Button, buttonVariants } from './ui/Button';
 
 interface PollProps {
   poll: Database['public']['Tables']['polls']['Row'];
@@ -103,7 +103,11 @@ const Poll = ({ poll, options, user, next, isVoted }: PollProps) => {
           </Button>
         )
       ) : (
-        next && <Link href={`/poll/${next}`}>Следующий опрос</Link>
+        next && (
+          <Link href={`/poll/${next}`} className={buttonVariants()}>
+            Следующий опрос
+          </Link>
+        )
       )}
     </div>
   );

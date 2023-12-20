@@ -39,7 +39,7 @@ export default async function Home() {
                     : nextShow.name}{' '}
                 </Label>
                 <InfoElement>
-                  <p className="text-lg lg:text-2xl font-medium">November 2023</p>
+                  <p className="text-lg lg:text-2xl font-medium">January 2024</p>
                 </InfoElement>
               </div>
               <div className="w-full flex-1 p-3 lg:p-5 border-2 border-slate-300 dark:border-slate-700 rounded-md">
