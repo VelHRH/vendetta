@@ -73,7 +73,10 @@ const Layout = async ({ children, params }: LayoutProps) => {
           <Label size="small">Оцененные титулы: {profile.comments_titles.length}</Label>
         </div>
         {user?.id === profile.id && (
-          <Link href={`/user/${params.slug}/edit`} className={cn(buttonVariants(), 'w-full mt-10')}>
+          <Link
+            href={`/user/${params.slug}/change`}
+            className={cn(buttonVariants(), 'w-full mt-10')}
+          >
             Редактировать
           </Link>
         )}
