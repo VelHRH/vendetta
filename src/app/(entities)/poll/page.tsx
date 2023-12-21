@@ -25,11 +25,10 @@ const Polls = async () => {
           <Link
             href={`/poll/${poll.id}`}
             key={poll.id}
-            className="dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-lg p-5 text-center cursor-pointer hover:scale-105 duration-300"
+            className="flex flex-col justify-between gap-5 dark:bg-slate-800 bg-slate-200 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 rounded-lg p-5 text-center cursor-pointer hover:scale-105 duration-300"
           >
             <div className="text-2xl">{poll.name}</div>
-            <div className="font-normal">{poll.description}</div>
-            <div className="text-sm font-normal text-slate-500 mt-5 flex gap-3 justify-center items-center">
+            <div className="text-sm font-normal text-slate-500 flex gap-3 justify-center items-center">
               {countPollVotes(poll.poll_options)} голосов{' '}
               <div
                 className={`w-2 aspect-square rounded-full ${

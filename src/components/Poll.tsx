@@ -64,7 +64,7 @@ const Poll = ({ poll, options, user, next, isVoted, allUsers }: PollProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center mx-auto w-[40%] gap-3">
+    <div className="flex flex-col items-center mx-auto w-[40%] gap-5">
       <div className="text-3xl font-bold">{poll.name}</div>
       <div>{poll.description}</div>
       {options.map((option, index) => (
