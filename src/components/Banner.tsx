@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const Banner = () => {
-  const [isClosed, setIsClosed] = useState<boolean>(false);
+  const [isClosed, setIsClosed] = useState<boolean>(true);
 
   return (
     <div
