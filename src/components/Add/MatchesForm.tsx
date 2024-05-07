@@ -1,17 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
-import Label from "../ui/Label";
-import Input from "../ui/Input";
-import { Button } from "../ui/Button";
+import { toast } from "@/hooks/use-toast";
+import supabase from "@/lib/supabase-browser";
+import { parseSide } from "@/lib/utils";
+import { CreateMatchPayload } from "@/lib/validators/match";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CreateMatchPayload } from "@/lib/validators/match";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/Button";
 import Dropdown from "../ui/Dropdown";
-import supabase from "@/lib/supabase-browser";
 import InfoLabel from "../ui/InfoLabel";
-import { parseSide } from "@/lib/utils";
+import Input from "../ui/Input";
+import Label from "../ui/Label";
 
 const MatchForm = ({ match }: { match?: any }) => {
  const [wrestlers, setWrestlers] = useState<
@@ -527,7 +527,7 @@ const MatchForm = ({ match }: { match?: any }) => {
      {winner.map((win, index) => (
       <Dropdown
        key={`win_${index}`}
-       array={participants.map((p) => parseSide(p))}
+       array={[...participants.map((p) => parseSide(p)), "Ничья"]}
        value={win !== undefined ? parseSide(win) : "Ничья"}
        setValue={(newValue) => {
         if (newValue === "Ничья") setWinner([]);

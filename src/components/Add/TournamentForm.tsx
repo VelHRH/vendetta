@@ -1,19 +1,19 @@
 "use client";
+import { toast } from "@/hooks/use-toast";
 import supabase from "@/lib/supabase-browser";
-import { useEffect, useState } from "react";
-import Label from "../ui/Label";
-import Input from "../ui/Input";
-import { Button } from "../ui/Button";
+import { parseSide } from "@/lib/utils";
+import { CreateTournamentPayload } from "@/lib/validators/tournament";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import TournamentBlock from "../TournamentBlock";
+import TournamentBracket from "../TournamentBracket";
+import { Button } from "../ui/Button";
 import Dropdown from "../ui/Dropdown";
 import InfoLabel from "../ui/InfoLabel";
-import TournamentBracket from "../TournamentBracket";
-import { CreateTournamentPayload } from "@/lib/validators/tournament";
-import { parseSide } from "@/lib/utils";
-import TournamentBlock from "../TournamentBlock";
+import Input from "../ui/Input";
+import Label from "../ui/Label";
 
 const TournamentForm = ({ tournament }: { tournament?: any }) => {
  const [name, setName] = useState<string>(tournament?.name || "");
@@ -845,7 +845,7 @@ const TournamentForm = ({ tournament }: { tournament?: any }) => {
          array={[
           ...playOff
            .map((side) => parseSide(side))
-           .slice(0, parseFloat(number)),
+           .slice(0, parseFloat(number))
          ]}
          value={win !== undefined ? parseSide(win) : "Неизвестно"}
          setValue={(newValue) => {
