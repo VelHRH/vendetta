@@ -73,7 +73,7 @@ const WrestlerElem = async ({
        (a, b) =>
         new Date(b.upload_date || new Date()).getTime() -
         new Date(a.upload_date || new Date()).getTime()
-      )[0].name
+      )[0]?.name
     }
    </div>
 
