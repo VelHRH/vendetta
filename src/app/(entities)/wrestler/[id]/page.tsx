@@ -142,7 +142,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
         <Label size="small">
          Опыт:{" "}
          <InfoElement>
-          {Math.abs(experience.getUTCFullYear() - 1970)} years
+          {wrestler.age - Math.abs(age.getUTCFullYear()) + Math.abs(experience.getUTCFullYear())} years
          </InfoElement>
         </Label>
        </>
@@ -181,7 +181,7 @@ const WrestlerOverview = async ({ params }: { params: { id: string } }) => {
         <Label size="small">
          Возраст:{" "}
          <InfoElement>
-          {Math.abs(age.getUTCFullYear() - 1970)} years
+          {wrestler.age} years
          </InfoElement>
         </Label>
         <Label size="small">

@@ -37,17 +37,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'challanges_match_id_fkey';
-            columns: ['match_id'];
-            referencedRelation: 'matches';
-            referencedColumns: ['id'];
+            foreignKeyName: "challanges_match_id_fkey";
+            columns: ["match_id"];
+            referencedRelation: "matches";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'challanges_title_id_fkey';
-            columns: ['title_id'];
-            referencedRelation: 'titles';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "challanges_title_id_fkey";
+            columns: ["title_id"];
+            referencedRelation: "titles";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_matches: {
@@ -77,17 +77,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_matches_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_matches_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_matches_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'matches';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_matches_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "matches";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_titles: {
@@ -117,17 +117,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_titles_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_titles_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_titles_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'titles';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_titles_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "titles";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_teams: {
@@ -157,17 +157,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_teams_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_teams_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_teams_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'teams';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_teams_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_shows: {
@@ -197,17 +197,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_shows_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_shows_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_shows_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'shows';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_shows_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "shows";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_tournaments: {
@@ -237,17 +237,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_tournaments_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_tournaments_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_tournaments_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'tournaments';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_tournaments_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "tournaments";
+            referencedColumns: ["id"];
+          }
         ];
       };
       comments_wrestlers: {
@@ -277,17 +277,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'comments_wrestlers_author_fkey';
-            columns: ['author'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "comments_wrestlers_author_fkey";
+            columns: ["author"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'comments_wrestlers_item_id_fkey';
-            columns: ['item_id'];
-            referencedRelation: 'wrestlers';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "comments_wrestlers_item_id_fkey";
+            columns: ["item_id"];
+            referencedRelation: "wrestlers";
+            referencedColumns: ["id"];
+          }
         ];
       };
       match_sides: {
@@ -311,11 +311,11 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'match_sides_match_id_fkey';
-            columns: ['match_id'];
-            referencedRelation: 'matches';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "match_sides_match_id_fkey";
+            columns: ["match_id"];
+            referencedRelation: "matches";
+            referencedColumns: ["id"];
+          }
         ];
       };
       matches: {
@@ -354,17 +354,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'matches_show_fkey';
-            columns: ['show'];
-            referencedRelation: 'shows';
-            referencedColumns: ['id'];
+            foreignKeyName: "matches_show_fkey";
+            columns: ["show"];
+            referencedRelation: "shows";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'matches_tournament_fkey';
-            columns: ['tournament'];
-            referencedRelation: 'tournaments';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "matches_tournament_fkey";
+            columns: ["tournament"];
+            referencedRelation: "tournaments";
+            referencedColumns: ["id"];
+          }
         ];
       };
       reigns: {
@@ -406,17 +406,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'reigns_title_id_fkey';
-            columns: ['title_id'];
-            referencedRelation: 'titles';
-            referencedColumns: ['id'];
+            foreignKeyName: "reigns_title_id_fkey";
+            columns: ["title_id"];
+            referencedRelation: "titles";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'reigns_wrestler_id_fkey';
-            columns: ['wrestler_id'];
-            referencedRelation: 'wrestlers';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "reigns_wrestler_id_fkey";
+            columns: ["wrestler_id"];
+            referencedRelation: "wrestlers";
+            referencedColumns: ["id"];
+          }
         ];
       };
       shows: {
@@ -521,17 +521,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'teams_current_participants_team_id_fkey';
-            columns: ['team_id'];
-            referencedRelation: 'teams';
-            referencedColumns: ['id'];
+            foreignKeyName: "teams_current_participants_team_id_fkey";
+            columns: ["team_id"];
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'teams_current_participants_wrestler_id_fkey';
-            columns: ['wrestler_id'];
-            referencedRelation: 'wrestlers';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "teams_current_participants_wrestler_id_fkey";
+            columns: ["wrestler_id"];
+            referencedRelation: "wrestlers";
+            referencedColumns: ["id"];
+          }
         ];
       };
       teams_former_participants: {
@@ -558,17 +558,17 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'teams_former_participants_team_id_fkey';
-            columns: ['team_id'];
-            referencedRelation: 'teams';
-            referencedColumns: ['id'];
+            foreignKeyName: "teams_former_participants_team_id_fkey";
+            columns: ["team_id"];
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'teams_former_participants_wrestler_id_fkey';
-            columns: ['wrestler_id'];
-            referencedRelation: 'wrestlers';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "teams_former_participants_wrestler_id_fkey";
+            columns: ["wrestler_id"];
+            referencedRelation: "wrestlers";
+            referencedColumns: ["id"];
+          }
         ];
       };
       polls: {
@@ -622,11 +622,11 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'poll_options_poll_fkey';
-            columns: ['poll'];
-            referencedRelation: 'polls';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "poll_options_poll_fkey";
+            columns: ["poll"];
+            referencedRelation: "polls";
+            referencedColumns: ["id"];
+          }
         ];
       };
       titles: {
@@ -737,11 +737,11 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'users_id_fkey';
-            columns: ['id'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "users_id_fkey";
+            columns: ["id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
         ];
       };
       winners: {
@@ -765,11 +765,11 @@ interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'winners_match_id_fkey';
-            columns: ['match_id'];
-            referencedRelation: 'matches';
-            referencedColumns: ['id'];
-          },
+            foreignKeyName: "winners_match_id_fkey";
+            columns: ["match_id"];
+            referencedRelation: "matches";
+            referencedColumns: ["id"];
+          }
         ];
       };
       wrestlers: {
@@ -792,6 +792,7 @@ interface Database {
           trainer: string[];
           weight: number | null;
           wrestler_img: string | null;
+          age: number;
         };
         Insert: {
           avgRating?: number;
@@ -812,6 +813,7 @@ interface Database {
           trainer: string[];
           weight?: number | null;
           wrestler_img?: string | null;
+          age?: number;
         };
         Update: {
           avgRating?: number;
@@ -832,6 +834,7 @@ interface Database {
           trainer?: string[];
           weight?: number | null;
           wrestler_img?: string | null;
+          age?: number;
         };
         Relationships: [];
       };

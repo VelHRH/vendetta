@@ -50,6 +50,7 @@ const WrestlerForm = ({
  const [isVendetta, setIsVendetta] = useState<string>(
   wrestler ? (wrestler.isVendetta ? "Yes" : "No") : ""
  );
+ const [age, setAge] = useState<number>(wrestler?.age || 0);
  const [reigns, setReigns] = useState<
   {
    wrestlerName: string;
@@ -142,6 +143,7 @@ const WrestlerForm = ({
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
     reigns: reigns.filter((reign) => reign.titleId !== 0),
+    age,
    };
    const { data } = await axios.post("/api/wrestler", payload);
    return data as string;
@@ -187,6 +189,7 @@ const WrestlerForm = ({
     wrestler_img: imgUrl || undefined,
     moves: moves.replace(/\s/g, "").split(","),
     reigns: reigns.filter((reign) => reign.titleId !== 0),
+    age,
    };
    const { data } = await axios.put(
     `/api/wrestler?id=${wrestler!.id}`,
@@ -252,9 +255,20 @@ const WrestlerForm = ({
       setValue={setBirth}
       type="date"
      />
+     <Input
+      placeholder="Date of birth"
+      value={birth}
+      setValue={setBirth}
+      type="date"
+     />
      <Input placeholder="Country" value={country} setValue={setCountry} />
      <Input placeholder="City" value={city} setValue={setCity} />
      <Input placeholder="Real name" value={realname} setValue={setRealname} />
+     <Input
+      placeholder="Age"
+      value={age.toString()}
+      setValue={(newVal) => setAge(parseInt(newVal))}
+     />
     </div>
    </div>
    <div className="w-full">
