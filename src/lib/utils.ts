@@ -225,6 +225,34 @@ export const avgTeamByMatches = (
   );
 };
 
+// "Чемпионство Берсерка": победитель титульного матча становится лишь
+// владельцем титула, чемпионом — только после первой успешной защиты.
+export const BERSERK_TITLE_ID = 6;
+
+export function getBerserkReignStatus(
+  reign: { title_id: number; start: string; end: string | null },
+  shows: {
+    upload_date: string | null;
+    matches: { challanges: { title_id: number }[] }[];
+  }[],
+): 'champion' | 'holder' | null {
+  if (reign.title_id !== BERSERK_TITLE_ID) return null;
+
+  const titleMatches = shows
+    .filter(
+      show =>
+        show.upload_date &&
+        new Date(show.upload_date).getTime() >= new Date(reign.start || '2000-01-01').getTime() &&
+        new Date(show.upload_date).getTime() <= new Date(reign.end || '3000-01-01').getTime(),
+    )
+    .flatMap(show => show.matches)
+    .filter(match => match.challanges.some(chal => chal.title_id === BERSERK_TITLE_ID)).length;
+
+  // завершившееся владение включает и матч, где титул был выигран, и матч,
+  // где он был потерян; текущее — только матч, где он был выигран
+  return titleMatches >= (reign.end ? 3 : 2) ? 'champion' : 'holder';
+}
+
 export const countPollVotes = (options: Database['public']['Tables']['poll_options']['Row'][]) => {
   let sum = 0;
   for (let option of options) {

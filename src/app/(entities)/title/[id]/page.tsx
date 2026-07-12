@@ -6,6 +6,7 @@ import createClient from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import RatingBlock from "@/components/RatingBlock";
 import Link from "next/link";
+import { BERSERK_TITLE_ID, getBerserkReignStatus } from "@/lib/utils";
 
 const TitleOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -36,6 +37,16 @@ const TitleOverview = async ({ params }: { params: { id: string } }) => {
   (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
  )[0];
 
+ let holderStatus: "champion" | "holder" | null = null;
+ if (title.id === BERSERK_TITLE_ID && holder && !holder.end) {
+  const { data: shows } = await supabase
+   .from("shows")
+   .select("*, matches(*, challanges(*))");
+  if (shows) {
+   holderStatus = getBerserkReignStatus(holder, shows);
+  }
+ }
+
  return (
   <>
    <div className="w-full flex gap-5 pb-10 mb-5 border-b-2 border-slate-500">
@@ -55,7 +66,11 @@ const TitleOverview = async ({ params }: { params: { id: string } }) => {
       Промоушен: <InfoElement>{title.promotion}</InfoElement>
      </Label>
      <Label size="small">
-      Владелец:{" "}
+      {holderStatus === "champion"
+       ? "Чемпион:"
+       : holderStatus === "holder"
+       ? "Владелец титула:"
+       : "Владелец:"}{" "}
       <InfoElement>
        {holder && !holder.end ? (
         <Link

@@ -11,6 +11,7 @@ interface ReignProps {
  index: number;
  withVacant?: string;
  isCrossed?: boolean;
+ note?: string;
 }
 
 const Reign: FC<ReignProps> = ({
@@ -22,6 +23,7 @@ const Reign: FC<ReignProps> = ({
  index,
  withVacant,
  isCrossed,
+ note,
 }) => {
  return (
   <>
@@ -76,6 +78,11 @@ const Reign: FC<ReignProps> = ({
      >
       {main}
      </Link>
+     {note && (
+      <span className="ml-3 text-sm font-normal text-amber-600 dark:text-amber-500">
+       {note}
+      </span>
+     )}
     </p>
     <p className="w-32 text-center border-r-2 dark:border-slate-600 border-slate-400 px-3">
      {end

@@ -1,5 +1,6 @@
 import Reign from "@/components/Row/Reign";
 import createClient from "@/lib/supabase-server";
+import { getBerserkReignStatus } from "@/lib/utils";
 
 import { notFound } from "next/navigation";
 
@@ -30,7 +31,9 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
       new Date(b.start || new Date()).getTime() -
       new Date(a.start || new Date()).getTime()
     )
-    .map((reign, index) => (
+    .map((reign, index) => {
+     const berserkStatus = getBerserkReignStatus(reign, shows);
+     return (
      <Reign
       key={reign.id}
       index={index}
@@ -46,30 +49,17 @@ const WrestlerTitles = async ({ params }: { params: { id: string } }) => {
       }`}
       start={reign.start}
       end={reign.end}
-      isCrossed={
-       reign.title_id === 6 &&
-       reign.end !== null &&
-       shows
-        .filter(
-         (show) =>
-          show.matches.some((match) =>
-           match.challanges.some((chal) => chal.title_id === reign.title_id)
-          ) &&
-          show.upload_date &&
-          new Date(show.upload_date).getTime() >=
-           new Date(reign.start || "2000-01-01").getTime() &&
-          new Date(show.upload_date).getTime() <=
-           new Date(reign.end || "3000-01-01").getTime()
-        )
-        .flatMap((show) => show.matches)
-        .filter((match) =>
-         match.challanges.some(
-          (chal) => chal.title_id === parseFloat(params.id)
-         )
-        ).length < 3
+      isCrossed={berserkStatus === "holder" && reign.end !== null}
+      note={
+       berserkStatus === "holder"
+        ? reign.end
+          ? "владелец титула — не стал чемпионом"
+          : "владелец титула — ещё без успешной защиты"
+        : undefined
       }
      />
-    ))}
+     );
+    })}
   </div>
  );
 };
