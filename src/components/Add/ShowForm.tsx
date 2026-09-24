@@ -36,6 +36,7 @@ const ShowForm = ({
  const [attendance, setAttendance] = useState<string>(
   show?.attendance?.toString() || ""
  );
+ const [duration, setDuration] = useState<string>(show?.duration || "");
  const [imgUrl, setImgUrl] = useState<string | null>(show?.show_img || null);
  const [isError, setIsError] = useState<boolean>(false);
 
@@ -86,13 +87,17 @@ const ShowForm = ({
     name,
     date,
     promotions:
-     promotions.split(",").filter((p) => p.trim()).length === 0
+     mode === "content"
+      ? []
+      : promotions.split(",").filter((p) => p.trim()).length === 0
       ? ["Vendetta Federation"]
       : promotions.split(",").filter((p) => p.trim()),
     showType,
-    location,
-    arena,
-    attendance: parseFloat(attendance) || undefined,
+    location: mode === "content" ? "" : location,
+    arena: mode === "content" ? "" : arena,
+    attendance:
+     mode === "content" ? undefined : parseFloat(attendance) || undefined,
+    duration: mode === "content" ? duration.trim() || null : null,
     show_img: imgUrl || undefined,
    };
    const { data } = await axios.post("/api/show", payload);
@@ -126,13 +131,17 @@ const ShowForm = ({
     name,
     date,
     promotions:
-     promotions.split(",").filter((p) => p.trim()).length === 0
+     mode === "content"
+      ? []
+      : promotions.split(",").filter((p) => p.trim()).length === 0
       ? ["Vendetta Federation"]
       : promotions.split(",").filter((p) => p.trim()),
     showType,
-    location,
-    arena,
-    attendance: parseFloat(attendance) || undefined,
+    location: mode === "content" ? "" : location,
+    arena: mode === "content" ? "" : arena,
+    attendance:
+     mode === "content" ? undefined : parseFloat(attendance) || undefined,
+    duration: mode === "content" ? duration.trim() || null : null,
     show_img: imgUrl || undefined,
    };
    const { data } = await axios.put(`/api/show?id=${show!.id}`, payload);
@@ -193,7 +202,7 @@ const ShowForm = ({
      Фильм / сериал / спецвыпуск
     </Button>
    </div>
-   <div className="grid grid-cols-3 gap-5 w-full">
+   <div className="grid grid-cols-1 gap-5 w-full md:grid-cols-3">
     <Input
      placeholder="Название шоу"
      value={name}
@@ -212,17 +221,21 @@ const ShowForm = ({
     ) : (
      <Input placeholder="Тип шоу" value={showType} setValue={setShowType} />
     )}
-    <Input
-     placeholder="Промоушен (Vendetta Federation по умолчанию)"
-     value={promotions}
-     setValue={setPromotions}
-    />
-    <Input
-     placeholder="Город проведения"
-     value={location}
-     setValue={setLocation}
-    />
-    <Input placeholder="Арена" value={arena} setValue={setArena} />
+    {mode === "show" && (
+     <>
+      <Input
+       placeholder="Промоушен (Vendetta Federation по умолчанию)"
+       value={promotions}
+       setValue={setPromotions}
+      />
+      <Input
+       placeholder="Город проведения"
+       value={location}
+       setValue={setLocation}
+      />
+      <Input placeholder="Арена" value={arena} setValue={setArena} />
+     </>
+    )}
     <div className="w-full h-full flex items-center">
      <label
       htmlFor="uploadImg"
@@ -255,15 +268,23 @@ const ShowForm = ({
     <Label size="medium" className="font-bold text-start mb-5">
      Если шоу уже прошло:
     </Label>
-    <div className="grid grid-cols-3 gap-5 items-center">
+    <div className="grid grid-cols-1 gap-5 items-center sm:grid-cols-2">
+     {mode === "content" ? (
+      <Input
+       placeholder="Длительность"
+       value={duration}
+       setValue={setDuration}
+      />
+     ) : (
+      <Input
+       placeholder="Посещаемость"
+       value={attendance}
+       type="number"
+       setValue={setAttendance}
+      />
+     )}
      <Input
-      placeholder="Посещаемость"
-      value={attendance}
-      type="number"
-      setValue={setAttendance}
-     />
-     <Input
-      placeholder="Дата загрузки записи"
+      placeholder={mode === "content" ? "Дата" : "Дата загрузки записи"}
       type="date"
       value={date}
       setValue={setDate}

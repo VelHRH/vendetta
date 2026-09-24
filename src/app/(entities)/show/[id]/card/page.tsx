@@ -31,6 +31,11 @@ const ShowCard = async ({ params }: { params: { id: string } }) => {
     <Label size="small">
      Дата загрузки: <InfoElement>{show.upload_date}</InfoElement>
     </Label>
+    {show.duration && (
+     <Label size="small">
+      Длительность: <InfoElement>{show.duration}</InfoElement>
+     </Label>
+    )}
     <Label size="small">
      Тип шоу: <InfoElement>{show.type}</InfoElement>
     </Label>

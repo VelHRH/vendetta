@@ -425,6 +425,7 @@ interface Database {
           attendance: number | null;
           avgRating: number;
           created_at: string;
+          duration: string | null;
           id: number;
           location: string;
           name: string;
@@ -438,6 +439,7 @@ interface Database {
           attendance?: number | null;
           avgRating?: number;
           created_at?: string;
+          duration?: string | null;
           id?: number;
           location: string;
           name: string;
@@ -451,6 +453,7 @@ interface Database {
           attendance?: number | null;
           avgRating?: number;
           created_at?: string;
+          duration?: string | null;
           id?: number;
           location?: string;
           name?: string;

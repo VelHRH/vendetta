@@ -56,6 +56,11 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
         : "Еще не состоялось"}
       </InfoElement>
      </Label>
+     {show.duration && (
+      <Label size="small">
+       Длительность: <InfoElement>{show.duration}</InfoElement>
+      </Label>
+     )}
      <Label size="small">
       Тип шоу: <InfoElement>{show.type}</InfoElement>
      </Label>
