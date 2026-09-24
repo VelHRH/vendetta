@@ -25,7 +25,11 @@ interface LayoutProps {
 
 const Layout = async ({ children, params }: LayoutProps) => {
   const supabase = createClient();
-  const { data: show } = await supabase.from('shows').select('*').eq('id', params.id).single();
+  const { data: show } = await supabase
+    .from('shows')
+    .select('*, matches(id)')
+    .eq('id', params.id)
+    .single();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -51,7 +55,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
         <SectionButton link={`/show/${params.id}`} isMain={2}>
           Обзор
         </SectionButton>
-        <SectionButton link={`/show/${params.id}/card`}>Кард</SectionButton>
+        {show.matches.length > 0 && (
+          <SectionButton link={`/show/${params.id}/card`}>Кард</SectionButton>
+        )}
       </div>
       {children}
     </div>

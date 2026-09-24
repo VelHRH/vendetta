@@ -39,6 +39,18 @@ const Add: FC = () => {
         <ChevronsRight size={30} />
       </Link>
       <Link
+        href="/show/add?mode=content"
+        className={cn(
+          buttonVariants({ variant: 'subtle' }),
+          'flex gap-1 items-center justify-between p-10',
+        )}
+      >
+        <Label size="medium" className="font-bold">
+          Новый контент
+        </Label>
+        <ChevronsRight size={30} />
+      </Link>
+      <Link
         href="/match/add"
         className={cn(
           buttonVariants({ variant: 'subtle' }),

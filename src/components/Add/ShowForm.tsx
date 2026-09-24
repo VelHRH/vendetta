@@ -11,12 +11,20 @@ import { CreateShowPayload } from "@/lib/validators/show";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import supabase from "@/lib/supabase-browser";
+import Dropdown from "../ui/Dropdown";
+
+const contentTypes = ["Фильм", "Сериал", "Спецвыпуск"];
 
 const ShowForm = ({
  show,
+ initialMode = "show",
 }: {
  show?: Database["public"]["Tables"]["shows"]["Row"];
+ initialMode?: "show" | "content";
 }) => {
+ const [mode, setMode] = useState<"show" | "content">(
+  show && contentTypes.includes(show.type) ? "content" : initialMode
+ );
  const [name, setName] = useState<string>(show?.name || "");
  const [date, setDate] = useState<string>(show?.upload_date || "");
  const [promotions, setPromotions] = useState<string>(
@@ -155,8 +163,36 @@ const ShowForm = ({
  return (
   <div className="flex flex-col items-center gap-10 w-full">
    <Label className="font-bold">
-    {show ? "Редактирование шоу..." : "Создание нового шоу..."}
+    {show
+     ? "Редактирование шоу..."
+     : mode === "content"
+     ? "Создание нового контента..."
+     : "Создание нового шоу..."}
    </Label>
+   <div className="grid grid-cols-2 gap-2 w-full max-w-2xl rounded-md bg-slate-200 p-1 dark:bg-slate-800">
+    <Button
+     type="button"
+     variant={mode === "show" ? "default" : "subtle"}
+     onClick={() => {
+      setMode("show");
+      if (contentTypes.includes(showType)) setShowType("");
+     }}
+     className="h-auto min-h-10 w-full py-2 text-xs sm:text-sm"
+    >
+     Шоу Vendetta
+    </Button>
+    <Button
+     type="button"
+     variant={mode === "content" ? "default" : "subtle"}
+     onClick={() => {
+      setMode("content");
+      if (!contentTypes.includes(showType)) setShowType("");
+     }}
+     className="h-auto min-h-10 w-full py-2 text-xs sm:text-sm"
+    >
+     Фильм / сериал / спецвыпуск
+    </Button>
+   </div>
    <div className="grid grid-cols-3 gap-5 w-full">
     <Input
      placeholder="Название шоу"
@@ -165,7 +201,17 @@ const ShowForm = ({
      isError={isError && name.length === 0}
     />
 
-    <Input placeholder="Тип шоу" value={showType} setValue={setShowType} />
+    {mode === "content" ? (
+     <Dropdown
+      array={contentTypes}
+      value={showType}
+      setValue={setShowType}
+      placeholder="Тип контента"
+      isError={isError && showType.length === 0}
+     />
+    ) : (
+     <Input placeholder="Тип шоу" value={showType} setValue={setShowType} />
+    )}
     <Input
      placeholder="Промоушен (Vendetta Federation по умолчанию)"
      value={promotions}

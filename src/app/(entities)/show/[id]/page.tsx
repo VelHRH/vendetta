@@ -77,7 +77,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
     </div>
     <RatingBlock comments={show.comments_shows} avgRating={show.avgRating} />
    </div>
-   {show.upload_date && (
+   {show.upload_date && show.matches.length > 0 && (
     <div className="w-full flex flex-col pb-10 mb-10 gap-2 border-b-2 border-slate-500">
      <Label className="font-bold">Результаты матчей:</Label>
      {show.matches

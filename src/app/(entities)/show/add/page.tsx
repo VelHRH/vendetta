@@ -6,8 +6,14 @@ export const metadata: Metadata = {
  description: "Добавление шоу",
 };
 
-const AddShow = () => {
- return <ShowForm />;
+const AddShow = ({
+ searchParams,
+}: {
+ searchParams: { mode?: string };
+}) => {
+ return (
+  <ShowForm initialMode={searchParams.mode === "content" ? "content" : "show"} />
+ );
 };
 
 export default AddShow;
