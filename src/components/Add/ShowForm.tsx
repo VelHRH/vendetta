@@ -12,8 +12,7 @@ import { Upload } from "lucide-react";
 import Image from "next/image";
 import supabase from "@/lib/supabase-browser";
 import Dropdown from "../ui/Dropdown";
-
-const contentTypes = ["Фильм", "Сериал", "Спецвыпуск"];
+import { contentTypes, isContentShow } from "@/lib/shows";
 
 const ShowForm = ({
  show,
@@ -23,7 +22,7 @@ const ShowForm = ({
  initialMode?: "show" | "content";
 }) => {
  const [mode, setMode] = useState<"show" | "content">(
-  show && contentTypes.includes(show.type) ? "content" : initialMode
+  show && isContentShow(show.type) ? "content" : initialMode
  );
  const [name, setName] = useState<string>(show?.name || "");
  const [date, setDate] = useState<string>(show?.upload_date || "");
@@ -37,6 +36,9 @@ const ShowForm = ({
   show?.attendance?.toString() || ""
  );
  const [duration, setDuration] = useState<string>(show?.duration || "");
+ const [description, setDescription] = useState<string>(
+  show?.description || ""
+ );
  const [imgUrl, setImgUrl] = useState<string | null>(show?.show_img || null);
  const [isError, setIsError] = useState<boolean>(false);
 
@@ -98,6 +100,7 @@ const ShowForm = ({
     attendance:
      mode === "content" ? undefined : parseFloat(attendance) || undefined,
     duration: mode === "content" ? duration.trim() || null : null,
+    description: mode === "content" ? description.trim() || null : null,
     show_img: imgUrl || undefined,
    };
    const { data } = await axios.post("/api/show", payload);
@@ -142,6 +145,7 @@ const ShowForm = ({
     attendance:
      mode === "content" ? undefined : parseFloat(attendance) || undefined,
     duration: mode === "content" ? duration.trim() || null : null,
+    description: mode === "content" ? description.trim() || null : null,
     show_img: imgUrl || undefined,
    };
    const { data } = await axios.put(`/api/show?id=${show!.id}`, payload);
@@ -184,7 +188,7 @@ const ShowForm = ({
      variant={mode === "show" ? "default" : "subtle"}
      onClick={() => {
       setMode("show");
-      if (contentTypes.includes(showType)) setShowType("");
+      if (isContentShow(showType)) setShowType("");
      }}
      className="h-auto min-h-10 w-full py-2 text-xs sm:text-sm"
     >
@@ -195,7 +199,7 @@ const ShowForm = ({
      variant={mode === "content" ? "default" : "subtle"}
      onClick={() => {
       setMode("content");
-      if (!contentTypes.includes(showType)) setShowType("");
+      if (!isContentShow(showType)) setShowType("");
      }}
      className="h-auto min-h-10 w-full py-2 text-xs sm:text-sm"
     >
@@ -264,6 +268,15 @@ const ShowForm = ({
      />
     </div>
    </div>
+   {mode === "content" && (
+    <textarea
+     placeholder="Описание (необязательно)"
+     value={description}
+     onChange={(event) => setDescription(event.target.value)}
+     rows={5}
+     className="w-full resize-y rounded-md border-[3px] border-slate-500 bg-transparent p-3 text-lg font-medium outline-none focus:ring-2 focus:ring-slate-400"
+    />
+   )}
    <div className="w-full">
     <Label size="medium" className="font-bold text-start mb-5">
      Если шоу уже прошло:

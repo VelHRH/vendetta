@@ -8,6 +8,7 @@ import Image from "next/image";
 import RatingBlock from "@/components/RatingBlock";
 import MatchShowElem from "@/components/Row/MatchShowElem";
 import { formatDateToDdMmYyyy } from "@/lib/utils";
+import { isContentShow } from "@/lib/shows";
 
 const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const supabase = createClient();
@@ -33,6 +34,7 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
  const loggedUserComment = user
   ? show.comments_shows.find((com) => com.author === user.id)
   : undefined;
+ const isContent = isContentShow(show.type);
 
  return (
   <>
@@ -48,11 +50,18 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
        />
       </div>
      )}
+     {show.description && (
+      <p className="whitespace-pre-wrap text-lg leading-relaxed">
+       {show.description}
+      </p>
+     )}
      <Label size="small">
-      Дата загрузки:{" "}
+      {isContent ? "Дата" : "Дата загрузки"}:{" "}
       <InfoElement>
        {show?.upload_date
         ? formatDateToDdMmYyyy(new Date(show.upload_date))
+        : isContent
+        ? "Еще не вышло"
         : "Еще не состоялось"}
       </InfoElement>
      </Label>
@@ -64,21 +73,25 @@ const ShowOverview = async ({ params }: { params: { id: string } }) => {
      <Label size="small">
       Тип шоу: <InfoElement>{show.type}</InfoElement>
      </Label>
-     <Label size="small">
-      Промоушен(ы):{" "}
-      {show.promotion!.map((p) => (
-       <InfoElement key={p}>{p}</InfoElement>
-      ))}
-     </Label>
-     <Label size="small">
-      Город и страна проведения: <InfoElement>{show.location}</InfoElement>
-     </Label>
-     <Label size="small">
-      Арена: <InfoElement>{show.arena}</InfoElement>
-     </Label>
-     <Label size="small">
-      Посещаемость: <InfoElement>{show.attendance}</InfoElement>
-     </Label>
+     {!isContent && (
+      <>
+       <Label size="small">
+        Промоушен(ы):{" "}
+        {show.promotion!.map((p) => (
+         <InfoElement key={p}>{p}</InfoElement>
+        ))}
+       </Label>
+       <Label size="small">
+        Город и страна проведения: <InfoElement>{show.location}</InfoElement>
+       </Label>
+       <Label size="small">
+        Арена: <InfoElement>{show.arena}</InfoElement>
+       </Label>
+       <Label size="small">
+        Посещаемость: <InfoElement>{show.attendance}</InfoElement>
+       </Label>
+      </>
+     )}
     </div>
     <RatingBlock comments={show.comments_shows} avgRating={show.avgRating} />
    </div>

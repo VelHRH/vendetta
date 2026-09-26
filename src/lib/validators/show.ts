@@ -9,6 +9,7 @@ export const ShowValidator = z.object({
  arena: z.string(),
  attendance: z.number().optional(),
  duration: z.string().nullable(),
+ description: z.string().nullable(),
  show_img: z.string().optional(),
 });
 
